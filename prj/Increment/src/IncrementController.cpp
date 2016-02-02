@@ -25,14 +25,13 @@ IncrementController::IncrementController( RobotWorldModel *wm )
     _minValue = -1.0;
 	_maxValue = 1.0;
 	_currentSigma = IncrementSharedData::gSigmaRef;
-
+    _currentFitness = 0.0;
+    _populationSize = IncrementSharedData::gPopulationSize;
 	resetRobot();
-
     // behaviour
     _iteration = 0; _birthdate = 0;
     _wm->updateLandmarkSensor();
-    
-    _wm->setAlive(true); _wm->setRobotLED_colorValues(255, 0, 0);
+    _wm->setRobotLED_colorValues(255, 0, 0);
 
 }
 
@@ -51,17 +50,18 @@ void IncrementController::reset()
 
 void IncrementController::resetRobot()
 {
+    //Number of sensors
     _nbInputs = 0;
 
-    if ( gExtendedSensoryInputs )     {
-        //  isItAnAgent? + agentAngleDifference? + isItAWall? + gathering object distance
-        _nbInputs = (1 + 1 + 1 + PhysicalObjectFactory::getNbOfTypes()) * _wm->_cameraSensorsNb;
-    }
+    // gathering object distance
+    _nbInputs =  _wm->_cameraSensorsNb;
+    //proximity sensors
+    _nbInputs += _wm->_cameraSensorsNb;
 
-    _nbInputs += _wm->_cameraSensorsNb; // proximity sensors
-
+    //Number of effectors
     _nbOutputs = 2;
 
+    //NN structure
     _nbHiddenLayers = IncrementSharedData::gNbHiddenLayers;
     _nbNeuronsPerHiddenLayer = new std::vector<unsigned int>(_nbHiddenLayers);
     for(unsigned int i = 0; i < _nbHiddenLayers; i++)
@@ -70,21 +70,20 @@ void IncrementController::resetRobot()
     createNN();
 
     unsigned int const nbGene = computeRequiredNumberOfWeights();
-
-    if ( gVerbose )
-        std::cout << std::flush ;
-
+    //std::cout << "W:" << nbGene << std::endl;
     _genome.clear();
     double w;
+    //Random genome (weights) initialization
     for ( unsigned int i = 0 ; i != nbGene ; i++ )
     {
         // weights: random init between -1 and +1
-        w = (double)(rand() % 1000)/500.0 - 1.0;
+        w = (double)(rand() % 10000)/5000.0 - 1.0;
         _genome.push_back(w);
     }
     _currentGenome = _genome;
     setNewGenomeStatus(true);
     _genomesList.clear();
+    _fitnessList.clear();
 
 }
 
@@ -92,31 +91,27 @@ void IncrementController::createNN()
 {
     delete nn;
     // MLP
-    nn = new MLP(_parameters, _nbInputs, _nbOutputs, *(_nbNeuronsPerHiddenLayer));
+    nn = new MLP(_parameters, _nbInputs, _nbOutputs, *(_nbNeuronsPerHiddenLayer), IncrementSharedData::gWithBias);
 }
 
+unsigned int IncrementController::computeRequiredNumberOfWeights()
+{
+    unsigned int res = nn->getRequiredNumberOfWeights();
+    return res;
+}
 
 void IncrementController::step()
 {
 	_iteration++;
     stepEvolution();
-    if ( _wm->isAlive() )
-	{
-        stepBehaviour();
-    }
-    else
-    {
-        _wm->_desiredTranslationalValue = 0.0;
-        _wm->_desiredRotationalVelocity = 0.0;
-    }
+    stepBehaviour();
 
+    //_wm->_desiredTranslationalValue = 0.0;
+    //_wm->_desiredRotationalVelocity = 0.0;
 }
 
 
-// ################ ######################## ################
 // ################ BEHAVIOUR METHOD(S)      ################
-// ################ ######################## ################
-
 void IncrementController::stepBehaviour()
 {
 
@@ -131,77 +126,23 @@ void IncrementController::stepBehaviour()
         (*inputs)[inputToUse] = _wm->getDistanceValueFromCameraSensor(i) / _wm->getCameraSensorMaximumDistanceValue(i);
         inputToUse++;
         
-        if ( gExtendedSensoryInputs )
+        int objectId = _wm->getObjectIdFromCameraSensor(i);
+
+        // input: physical object?
+        int type = 1; //sensing distance to energy item, 1.0 if not energy item
+        if ( PhysicalObject::isInstanceOf(objectId) )
         {
-            //      - inputs[N_physicalobjecttypes]: 0 or 1 is active, other are set to zero.
-            //      - inputs[2]: (a) is it a robot? (b) is it from the same group? (c) what is its relative orientation wrt. current robot
-            //      - inputs[1]: is it a wall (=1), or nothing (=0)
-            //      Comment: from 0 (nothing) to 2 (robot, same group) active inputs.
-            
-            int objectId = _wm->getObjectIdFromCameraSensor(i);
-
-            // input: physical object? which type?
-            if ( PhysicalObject::isInstanceOf(objectId) )
-            {
-                int nbOfTypes = 1 + PhysicalObjectFactory::getNbOfTypes();
-                for ( int i = 0 ; i != nbOfTypes ; i++ )                 
-                {
-                    // if ( i == ( objectId - gPhysicalObjectIndexStartOffset ) ) // [bug]: discovered by Inaki F. -- solved 2014-09-21
-                    if ( i == gPhysicalObjects[objectId - gPhysicalObjectIndexStartOffset]->getType() )
-                        (*inputs)[inputToUse] = 1; // match
-                    else
-                        (*inputs)[inputToUse] = 0;
-                    inputToUse++;
-                }
-            }
+            if ( 1 == gPhysicalObjects[objectId - gPhysicalObjectIndexStartOffset]->getType() )
+              (*inputs)[inputToUse] = _wm->getDistanceValueFromCameraSensor(i) / _wm->getCameraSensorMaximumDistanceValue(i);
             else
-            {
-                // not a physical object. But: should still fill in the inputs (with zeroes)
-                int nbOfTypes = PhysicalObjectFactory::getNbOfTypes();
-                for ( int i = 0 ; i != nbOfTypes ; i++ )
-                {
-                    (*inputs)[inputToUse] = 0;
-                    inputToUse++;
-                }
-            }
+                (*inputs)[inputToUse] = 1.0;
+            inputToUse++;
 
-            // input: another agent? If yes: same group?
-            if ( Agent::isInstanceOf(objectId) )
-            {
-                // this is an agent
-                (*inputs)[inputToUse] = 1;
-                inputToUse++;
-
-                // relative orientation? (ie. angle difference wrt. current agent)
-                double srcOrientation = _wm->_agentAbsoluteOrientation;
-                double tgtOrientation = gWorld->getRobot(objectId-gRobotIndexStartOffset)->getWorldModel()->_agentAbsoluteOrientation;
-
-                double delta_orientation = - ( srcOrientation - tgtOrientation );
-                if ( delta_orientation >= 180.0 )
-                    delta_orientation = - ( 360.0 - delta_orientation );
-                else
-                    if ( delta_orientation <= -180.0 )
-                        delta_orientation = - ( - 360.0 - delta_orientation );
-                (*inputs)[inputToUse] = delta_orientation/180.0;
-                inputToUse++;
-                
-            }
-            else
-            {
-                (*inputs)[inputToUse] = 0; // not an agent...
-                inputToUse++;
-                (*inputs)[inputToUse] = 0; // ...and no orientation.
-                inputToUse++;
-
-            }
-            
-            // input: wall or empty?
-            // not empty, but cannot be identified: this is a wall.
-            if ( objectId >= 0 && objectId < gPhysicalObjectIndexStartOffset )
-                (*inputs)[inputToUse] = 1;
-            else
-                // nothing. (objectId=-1)
-                (*inputs)[inputToUse] = 0;
+        }
+        else
+        {
+            // not a physical object. But: should still fill in the inputs (max distance, 1.0)
+            (*inputs)[inputToUse] = 1.0;
             inputToUse++;
         }
     }
@@ -210,48 +151,46 @@ void IncrementController::stepBehaviour()
     // ---- compute and read out ----
     
     nn->setWeigths(_parameters); // create NN
-    
+
     nn->setInputs(*inputs);
-    /*for(unsigned int i=0; i < inputs->size(); i++)
-    {
-        std::cout << (*inputs)[i] << ", ";
-    }
-    std::cout << " # ";*/
 
     nn->step();
     
     std::vector<double> outputs = nn->readOut();
-
-    /*for(unsigned int i=0; i< outputs.size(); i++)
+    /*
+    if ( gWorld->getIterations()%10 == 0 )
     {
-        std::cout << outputs[i] << ", ";
-    }
-    std::cout << std::endl << std::flush;*/
+        for(unsigned int i=0; i < inputs->size(); i++)
+        {
+            std::cout << (*inputs)[i] << ", ";
+        }
+        std::cout << " # ";
 
-    _wm->_desiredTranslationalValue = outputs[0]; _wm->_desiredRotationalVelocity = outputs[1];
+        for(unsigned int i=0; i< outputs.size(); i++)
+        {
+            std::cout << outputs[i] << ", ";
+        }
+        std::cout << std::endl << std::flush;
+    }*/
 
+    //Direct Kinematic model
+    //_wm->_desiredTranslationalValue = outputs[0]; _wm->_desiredRotationalVelocity = outputs[1];
+
+    //Differential model
+    double lW = outputs[0];
+    double rW = outputs[1];
+    _wm->_desiredTranslationalValue = (rW + lW) / 2; _wm->_desiredRotationalVelocity = (lW - rW) / 2;
     
     // normalize to motor interval values
-    _wm->_desiredTranslationalValue = _wm->_desiredTranslationalValue * gMaxTranslationalSpeed;
-    _wm->_desiredRotationalVelocity = _wm->_desiredRotationalVelocity * gMaxRotationalSpeed;
+    _wm->_desiredTranslationalValue =  _wm->_desiredTranslationalValue * gMaxTranslationalSpeed;//gMaxTranslationalSpeed;
+    _wm->_desiredRotationalVelocity = _wm->_desiredRotationalVelocity * gMaxRotationalSpeed; //0.0;
     
     delete (inputs);
 }
 
 
 
-
-
-unsigned int IncrementController::computeRequiredNumberOfWeights()
-{
-    unsigned int res = nn->getRequiredNumberOfWeights();
-    return res;
-}
-
-// ################ ######################## ################
 // ################ EVOLUTION ENGINE METHODS ################
-// ################ ######################## ################
-
 void IncrementController::stepEvolution()
 {
     // * broadcasting genome : robot broadcasts its genome to all neighbors (contact-based wrt proximity sensors)
@@ -263,6 +202,8 @@ void IncrementController::stepEvolution()
             >= IncrementSharedData::gEvaluationTime-1 )
 	{
         loadNewGenome();
+        std::cout << "R" << _wm -> _id << " Fit: " << _currentFitness << std::endl;
+        _currentFitness = 0.0;
     }
     
     if ( getNewGenomeStatus() ) // check for new NN parameters
@@ -272,6 +213,15 @@ void IncrementController::stepEvolution()
 	}
 }
 
+void IncrementController::loadNewGenome()
+{
+    // case: 1+ genome(s) imported, random pick.
+    if (_genomesList.size() > 0)
+        selectRandomGenome();
+    else
+        // case: no imported genome
+        resetRobot(); // destroy then create a new NN
+}
 
 void IncrementController::selectRandomGenome()
 {
@@ -293,21 +243,9 @@ void IncrementController::selectRandomGenome()
         
         _birthdate = gWorld->getIterations();
 
-        // Logging
-        std::string s = std::string("");
-        s += "{" + std::to_string(gWorld->getIterations()) + "} [" +
-                std::to_string(_wm->getId()) + "::" + std::to_string(_birthdate) +
-                "] descends from [" + std::to_string((*it).first) +
-                "::" + std::to_string(_birthdateList[(*it).first]) + "]\n";
-        gLogManager->write(s);
-        gLogManager->flush();
-        
         _genomesList.clear();
     }
 }
-
-
-
 
 void IncrementController::mutate( float sigma) // mutate within bounds.
 {
@@ -345,18 +283,15 @@ void IncrementController::mutate( float sigma) // mutate within bounds.
     
 	_currentGenome = _genome;
     
-    // Logging
-    std::string s = std::string("");
-    s += "{" + std::to_string(gWorld->getIterations()) + "} [" + std::to_string(_wm->getId()) + "::" +
-            std::to_string(_birthdate) + "] [sigma=" + std::to_string(_currentSigma) + "]\n";
-    gLogManager->write(s);
-    gLogManager->flush();
+    //gLogManager->write(s); gLogManager->flush();
 }
 
+void IncrementController::updateFitness(double delta)
+{
+    _currentFitness += delta;
+}
 
-
-
-
+// ################ COMMUNICATION METHODS ################
 void IncrementController::broadcastGenome()
 {
     if ( _wm->isAlive() == true )  	// only if agent is active (ie. not just revived) and deltaE>0.
@@ -376,9 +311,7 @@ void IncrementController::broadcastGenome()
                 
                 if ( ! targetRobotController )
                 {
-                    std::cerr << "Error from robot " << _wm->getId() <<
-                                 " : the observer of robot " << targetIndex <<
-                                 " is not compatible" << std::endl;
+                    std::cerr << "Error: observer not compatible" << std::endl;
                     exit(-1);
                 }
 
@@ -394,62 +327,3 @@ void IncrementController::storeGenome(std::vector<double> genome, int senderId, 
     _genomesList[senderId] = genome;
     _birthdateList[senderId] = senderBirthdate;
 }
-
-
-void IncrementController::loadNewGenome()
-{
-    if ( _wm->isAlive() || gEnergyRefill )
-    {
-        // Logging
-        std::string s = "{" + std::to_string(gWorld->getIterations()) + "} [" + std::to_string(_wm->getId()) +
-                "::" + std::to_string(_birthdate) + "] [genomeList:" + std::to_string(_genomesList.size()) + "]\n";
-        gLogManager->write(s);
-        gLogManager->flush();
-        
-        if (_genomesList.size() > 0)
-        {
-            // case: 1+ genome(s) imported, random pick.
-            
-            selectRandomGenome();
-            
-            _wm->setAlive(true);
-            if ( _wm->getEnergyLevel() == 0 )
-                _wm->setEnergyLevel(gEnergyInit);
-            _wm->setRobotLED_colorValues(255, 0, 0);
-            
-        }
-        else
-        {
-            // case: no imported genome - wait for new genome.
-            
-            // Logging
-            std::string s = std::string("");
-            s += "{" + std::to_string(gWorld->getIterations()) + "} [" + std::to_string(_wm->getId())
-                    + "::" + std::to_string(_birthdate) + "] no_genome.\n";
-            gLogManager->write(s);
-            gLogManager->flush();
-            
-            resetRobot(); // destroy then create a new NN
-
-            _wm->setAlive(true);
-        }
-        
-        // log the genome
-        
-        if ( _wm->isAlive() )
-        {
-            // Logging
-            std::string s = std::string("");
-            s += "{" + std::to_string(gWorld->getIterations()) + "} [" + std::to_string(_wm->getId()) + "::" +
-                    std::to_string(_birthdate) + "] new_genome: ";
-            for(unsigned int i=0; i<_genome.size(); i++)
-            {
-                s += std::to_string(_genome[i]) + " ";
-            }
-            s += "\n";
-            gLogManager->write(s);
-            gLogManager->flush();
-        }
-    }
-}
-

@@ -17,13 +17,15 @@ IncrementWorldObserver::IncrementWorldObserver( World* world ) : WorldObserver( 
 	// ==== loading project-specific properties
 
 	gProperties.checkAndGetPropertyValue("gSigmaRef",&IncrementSharedData::gSigmaRef,true);
-
-	gProperties.checkAndGetPropertyValue("gProbaMutation",&IncrementSharedData::gProbaMutation,true);
-	gProperties.checkAndGetPropertyValue("gEvaluationTime",&IncrementSharedData::gEvaluationTime,true);
+    gProperties.checkAndGetPropertyValue("gPopSize",&IncrementSharedData::gPopulationSize,true);
+    gProperties.checkAndGetPropertyValue("gFitness",&IncrementSharedData::gFitness,true);
+    gProperties.checkAndGetPropertyValue("gEvaluationTime",&IncrementSharedData::gEvaluationTime,true);
 
     gProperties.checkAndGetPropertyValue("gNbHiddenLayers",&IncrementSharedData::gNbHiddenLayers,true);
 	gProperties.checkAndGetPropertyValue("gNbNeuronsPerHiddenLayer",&IncrementSharedData::gNbNeuronsPerHiddenLayer,true);
 	gProperties.checkAndGetPropertyValue("gNeuronWeightRange",&IncrementSharedData::gNeuronWeightRange,true);
+    gProperties.checkAndGetPropertyValue("gWithBias",&IncrementSharedData::gWithBias,true);
+
 
 	// * iteration and generation counters
 

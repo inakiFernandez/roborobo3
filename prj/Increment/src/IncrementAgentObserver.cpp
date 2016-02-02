@@ -22,25 +22,14 @@ IncrementAgentObserver::IncrementAgentObserver( RobotWorldModel *wm )
 
 IncrementAgentObserver::~IncrementAgentObserver()
 {
-	// nothing to do.
 }
 
 void IncrementAgentObserver::reset()
 {
-	// nothing to do.
 }
 
 void IncrementAgentObserver::step()
 {
-    // * update energy if needed
-    if ( gEnergyLevel && _wm->isAlive() )
-        {
-            _wm->substractEnergy(1);
-            assert( _wm->getEnergyLevel() >= 0 );
-            if ( _wm->getEnergyLevel() == 0 )
-                _wm->setAlive(false);
-        }
-
     // * send callback messages to objects touched or walked upon.
     
     // through distance sensors
@@ -51,7 +40,6 @@ void IncrementAgentObserver::step()
         if ( PhysicalObject::isInstanceOf(targetIndex) )   // sensor ray bumped into a physical object
         {
             targetIndex = targetIndex - gPhysicalObjectIndexStartOffset;
-            //std::cout << "[DEBUG] Robot #" << _wm->getId() << " touched " << targetIndex << "\n";
             gPhysicalObjects[targetIndex]->isTouched(_wm->getId());
         }
     }
@@ -61,7 +49,17 @@ void IncrementAgentObserver::step()
     if ( PhysicalObject::isInstanceOf(targetIndex) ) // ground sensor is upon a physical object (OR: on a place marked with this physical object footprint, cf. groundsensorvalues image)
     {
         targetIndex = targetIndex - gPhysicalObjectIndexStartOffset;
-        //std::cout << "[DEBUG] #" << _wm->getId() << " walked upon " << targetIndex << "\n";
         gPhysicalObjects[targetIndex]->isWalked(_wm->getId());
+        switch (IncrementSharedData::gFitness) {
+        case 0:
+            //Floreano's increment: nothing to do
+            break;
+        case 1:
+            //Counting items
+            dynamic_cast<IncrementController*>(gWorld->getRobot(_wm -> _id)->getController())->updateFitness(1.0);
+            break;
+        default:
+            break;
+        }
     }
 }

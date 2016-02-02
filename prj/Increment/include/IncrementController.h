@@ -26,7 +26,7 @@ class IncrementController : public Controller
 	private:
 		int _iteration;
         int _birthdate; // evaluation when this controller was initialized.
-	double _currentFitness;
+        double _currentFitness;
 
 		std::vector<double> _parameters;
 		std::string _nnType;
@@ -50,13 +50,15 @@ class IncrementController : public Controller
     
         unsigned int computeRequiredNumberOfWeights();
     
-//        void setAliveStatus( bool isAlive ) { _isAlive = isAlive; }
         bool getNewGenomeStatus() { return _isNewGenome; }
         void setNewGenomeStatus( bool __status ) { _isNewGenome = __status; }
     
         // evolutionary engine
-        std::vector<double> _genome; // todo: accessing
+        std::vector<double> _genome; // current genome in evaluation
+        std::vector<double> _previousGenome; // 1+1-online-ES surviving genome
         std::map<int, std::vector<double> > _genomesList;
+        std::map<int, double > _fitnessList;
+        int _populationSize;
         std::map<int,int> _birthdateList; // store the birthdate of the received controllers (useful for monitoring).
         std::vector<double> _currentGenome;
         float _currentSigma;
@@ -79,13 +81,8 @@ class IncrementController : public Controller
 
 		void reset();
 		void step();
-    
+        void updateFitness(double delta);
         int getBirthdate() { return _birthdate; }
-    
-        //bool isAlive() { return _isAlive; }
-
-
-    
 
 };
 
