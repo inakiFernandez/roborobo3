@@ -18,6 +18,10 @@ IncrementWorldObserver::IncrementWorldObserver( World* world ) : WorldObserver( 
 
 	gProperties.checkAndGetPropertyValue("gSigmaRef",&IncrementSharedData::gSigmaRef,true);
     gProperties.checkAndGetPropertyValue("gPopSize",&IncrementSharedData::gPopulationSize,true);
+    gProperties.checkAndGetPropertyValue("gClearPopulation",&IncrementSharedData::gClearPopulation,true);
+    gProperties.checkAndGetPropertyValue("gStoreOwn",&IncrementSharedData::gStoreOwn,true);
+    gProperties.checkAndGetPropertyValue("gSelectionMethod",&IncrementSharedData::gSelectionMethod,true);
+
     gProperties.checkAndGetPropertyValue("gFitness",&IncrementSharedData::gFitness,true);
     gProperties.checkAndGetPropertyValue("gEvaluationTime",&IncrementSharedData::gEvaluationTime,true);
 
@@ -74,19 +78,37 @@ void IncrementWorldObserver::updateMonitoring()
 		int activeCount = 0;
 		for ( int i = 0 ; i != gNumberOfRobots ; i++ )
 		{
-			if ( (dynamic_cast<IncrementController*>(gWorld->getRobot(i)->getController()))->getWorldModel()->isAlive() == true )
+            if ( (dynamic_cast<IncrementController*>(gWorld->getRobot(i)->getController()))
+                 ->getWorldModel()->isAlive() == true )
 				activeCount++;
 		}
         
 		if ( gVerbose )
 		{
-			std::cout << "[gen:" << (gWorld->getIterations()/IncrementSharedData::gEvaluationTime) << ";pop:" << activeCount << "]\n";
+            std::cout << "[gen:" << (gWorld->getIterations()/IncrementSharedData::gEvaluationTime)
+                      << ";pop:" << activeCount << "]\n";
 		}
-        
-        // Logging
-        std::string s = std::string("") + "{" + std::to_string(gWorld->getIterations()) + "}[all] [pop_alive:" + std::to_string(activeCount) + "]\n";
-        gLogManager->write(s);
-		gLogManager->flush();
+        // Logging here TODO
+        double totalFitness = 0.0;
+        for ( int i = 0 ; i != gNumberOfRobots ; i++ )
+        {
+
+             totalFitness += (dynamic_cast<IncrementController*>(gWorld->getRobot(i)->getController()))
+                     -> getFitness();
+        }
+        std::cout << totalFitness  / gNumberOfRobots << std::endl;
 	}
+    if (gWorld->getIterations() % 500 == 0)
+    {
+        double totalFitness = 0.0;
+        for ( int i = 0 ; i != gNumberOfRobots ; i++ )
+        {
+
+             totalFitness += (dynamic_cast<IncrementController*>(gWorld->getRobot(i)->getController()))
+                     -> getFitness();
+        }
+        //std::cout << totalFitness  / gNumberOfRobots << std::endl;
+        //std::cout << "It: " << gWorld->getIterations() << std::endl;
+    }
 }
 

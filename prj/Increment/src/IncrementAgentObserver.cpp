@@ -17,7 +17,6 @@
 IncrementAgentObserver::IncrementAgentObserver( RobotWorldModel *wm )
 {
     _wm = (RobotWorldModel*)wm;
-
 }
 
 IncrementAgentObserver::~IncrementAgentObserver()
@@ -46,7 +45,8 @@ void IncrementAgentObserver::step()
     
     // through floor sensor
     int targetIndex = _wm->getGroundSensorValue();
-    if ( PhysicalObject::isInstanceOf(targetIndex) ) // ground sensor is upon a physical object (OR: on a place marked with this physical object footprint, cf. groundsensorvalues image)
+    // ground sensor is upon a physical object (OR: on a place marked with this physical object footprint, cf. groundsensorvalues image)
+    if ( PhysicalObject::isInstanceOf(targetIndex) )
     {
         targetIndex = targetIndex - gPhysicalObjectIndexStartOffset;
         gPhysicalObjects[targetIndex]->isWalked(_wm->getId());
