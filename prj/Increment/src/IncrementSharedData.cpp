@@ -24,3 +24,6 @@ int IncrementSharedData::gNeuronWeightRange = 800;
 bool IncrementSharedData::gWithBias = false;
 
 int IncrementSharedData::gFitness = -1;
+
+std::string IncrementSharedData::gOutGenomeFile = "";
+bool IncrementSharedData::gSaveGenome = true;

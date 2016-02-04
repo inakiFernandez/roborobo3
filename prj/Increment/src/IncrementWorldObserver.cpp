@@ -30,6 +30,7 @@ IncrementWorldObserver::IncrementWorldObserver( World* world ) : WorldObserver( 
 	gProperties.checkAndGetPropertyValue("gNeuronWeightRange",&IncrementSharedData::gNeuronWeightRange,true);
     gProperties.checkAndGetPropertyValue("gWithBias",&IncrementSharedData::gWithBias,true);
 
+    gProperties.checkAndGetPropertyValue("gOutGenomeFile",&IncrementSharedData::gOutGenomeFile,true);
 
 	// * iteration and generation counters
 
@@ -73,42 +74,49 @@ void IncrementWorldObserver::updateMonitoring()
     
     if( _lifeIterationCount >= IncrementSharedData::gEvaluationTime ) // end of generation.
 	{
-		// * monitoring: count number of active agents.
-        
-		int activeCount = 0;
-		for ( int i = 0 ; i != gNumberOfRobots ; i++ )
-		{
-            if ( (dynamic_cast<IncrementController*>(gWorld->getRobot(i)->getController()))
-                 ->getWorldModel()->isAlive() == true )
-				activeCount++;
-		}
-        
 		if ( gVerbose )
 		{
             std::cout << "[gen:" << (gWorld->getIterations()/IncrementSharedData::gEvaluationTime)
-                      << ";pop:" << activeCount << "]\n";
+                      << "]\n";
 		}
-        // Logging here TODO
-        double totalFitness = 0.0;
+        // Logging here
+        double sumFitness = 0.0;
+        double sumAvgLocalPopFitness = 0.0;
         for ( int i = 0 ; i != gNumberOfRobots ; i++ )
         {
 
-             totalFitness += (dynamic_cast<IncrementController*>(gWorld->getRobot(i)->getController()))
+             sumFitness += (dynamic_cast<IncrementController*>(gWorld->getRobot(i)->getController()))
                      -> getFitness();
+             sumAvgLocalPopFitness += (dynamic_cast<IncrementController*>
+                                       (gWorld->getRobot(i)->getController())) -> getAvgPopFitness();
         }
-        std::cout << totalFitness  / gNumberOfRobots << std::endl;
+        std::cout << "It: " << gWorld->getIterations() << std::endl;
+        std::cout << sumFitness  / gNumberOfRobots << std::endl;
+        //std::cout << sumAvgLocalPopFitness  / gNumberOfRobots << std::endl;
+
 	}
-    if (gWorld->getIterations() % 500 == 0)
+
+    if (gWorld->getIterations() == (gMaxIt - 1))
     {
-        double totalFitness = 0.0;
+        double sumFitness = 0.0;
         for ( int i = 0 ; i != gNumberOfRobots ; i++ )
         {
 
-             totalFitness += (dynamic_cast<IncrementController*>(gWorld->getRobot(i)->getController()))
+             sumFitness += (dynamic_cast<IncrementController*>(gWorld->getRobot(i)->getController()))
                      -> getFitness();
+
         }
-        //std::cout << totalFitness  / gNumberOfRobots << std::endl;
-        //std::cout << "It: " << gWorld->getIterations() << std::endl;
+
+        std::cout << "End fitness: " << sumFitness  / gNumberOfRobots
+                  << " at it: " << gWorld->getIterations() << std::endl;
+        if(IncrementSharedData::gSaveGenome)
+        {
+            for (int i = 0 ; i != gNumberOfRobots ; i++ )
+            {
+                (dynamic_cast<IncrementController*>(gWorld->getRobot(i)->getController()))
+                        -> logGenome(IncrementSharedData::gOutGenomeFile + std::to_string(i) + ".log");
+            }
+        }
     }
 }
 

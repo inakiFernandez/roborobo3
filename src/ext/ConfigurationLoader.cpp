@@ -6,6 +6,7 @@
 #include "Config/TemplateMedeaConfigurationLoader.h"
 #include "Config/TemplateRandomwalkConfigurationLoader.h"
 #include "Config/IncrementConfigurationLoader.h"
+#include "Config/TestNNConfigurationLoader.h"
 //###DO-NOT-DELETE-THIS-LINE###TAG:INCLUDE###//
 
 
@@ -53,6 +54,12 @@ ConfigurationLoader* ConfigurationLoader::make_ConfigurationLoader (std::string 
 	else if (configurationLoaderObjectName == "IncrementConfigurationLoader" )
 	{
 		return new IncrementConfigurationLoader();
+	}
+#endif
+#if defined PRJ_TESTNN || !defined MODULAR
+	else if (configurationLoaderObjectName == "TestNNConfigurationLoader" )
+	{
+		return new TestNNConfigurationLoader();
 	}
 #endif
     //###DO-NOT-DELETE-THIS-LINE###TAG:SWITCH###//
