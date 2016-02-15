@@ -76,7 +76,6 @@ private:
     std::vector<double> _previousGenome; // 1+1-online-ES surviving genome
     std::map<GC, std::vector<double> > _genomesList;
     std::map<GC, double > _fitnessList;
-    unsigned int _populationSize;
     std::vector<double> _currentGenome;
     float _currentSigma;
     int _lifetime;

@@ -5,10 +5,15 @@
 
 
 #include <string>
-#ifndef INCREMENTSHAREDDATA_H
-#define INCREMENTSHAREDDATA_H
+#ifndef ODNEATSHAREDDATA_H
+#define ODNEATSHAREDDATA_H
+#include "odneatgc/genome.h"
 
-class IncrementSharedData {
+using namespace ODNEATGC;
+//Genome, energy, node counter, link gene counter
+typedef std::tuple<Genome*, double, int,int> message;
+
+class odNeatSharedData {
 	
 	public: 
 	
@@ -24,18 +29,31 @@ class IncrementSharedData {
 
 	static bool gPropertiesLoaded;
 
-    static int gControllerType; // MLP, Perceptron, Elman
-    static int gNbHiddenLayers; // default: 1
-    static int gNbNeuronsPerHiddenLayer; // default: 5
-    static int gNeuronWeightRange; // default: 800.0 (ie. weights are in [-400,+400[
-    static bool gWithBias;
-
     static bool gCommunicationBySensors; // comm. with sensors or by distance (slower)
     static int gFitness; //indicates which fitness to use
 
     static std::string gOutGenomeFile; //filename for last genome (text format)
 
     static bool gSaveGenome;
+
+    //OdNeat parameters
+    static double gDefaultInitialEnergy;
+    static double gEnergyThreshold;
+    static double gMaxEnergy;
+
+    static int gMaturationPeriod;
+
+    static double gCompatThreshold;
+
+    static int gFitnessFreq;
+    static int gTabuTimeout;
+    static double gTabuThreshold;
+
+    static double gEnergyItemValue;
+    // -----
+    static double gEnergyConsumption;
+
+    static bool gUpdateGC;
 };
 
 

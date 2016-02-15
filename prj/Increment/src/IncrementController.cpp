@@ -26,7 +26,6 @@ IncrementController::IncrementController( RobotWorldModel *wm )
     _maxValue = 3.0;
 	_currentSigma = IncrementSharedData::gSigmaRef;
     _currentFitness = 0.0;
-    _populationSize = IncrementSharedData::gPopulationSize;
     _genomeId.robot_id = _wm->_id;
     _genomeId.gene_id = 0;
 	resetRobot();
@@ -74,7 +73,8 @@ void IncrementController::resetRobot()
         // gathering object distance
         _nbInputs +=  _wm->_cameraSensorsNb;
     }
-
+    //Current translational and rotational speeds
+    //_nbInputs += 2;
     //Number of effectors
     _nbOutputs = 2;
 
@@ -107,9 +107,35 @@ void IncrementController::resetRobot()
 void IncrementController::createNN()
 {
     delete nn;
+    switch ( IncrementSharedData::gControllerType )
+    {
+        case 0:
+        {
+            // MLP
+            nn = new MLP(_parameters, _nbInputs, _nbOutputs,
+                         *(_nbNeuronsPerHiddenLayer), IncrementSharedData::gWithBias);
+            break;
+        }
+        case 1:
+        {
+            // PERCEPTRON
+            nn = new Perceptron(_parameters, _nbInputs, _nbOutputs);
+            break;
+        }
+        case 2:
+        {
+            // ELMAN
+            nn = new Elman(_parameters, _nbInputs, _nbOutputs, *(_nbNeuronsPerHiddenLayer));
+            break;
+        }
+        default: // default: no controller
+            std::cerr << "[ERROR] gController type unknown (value: "
+                      << IncrementSharedData::gControllerType << ").\n";
+            exit(-1);
+    };
     // MLP
-    nn = new MLP(_parameters, _nbInputs, _nbOutputs, *(_nbNeuronsPerHiddenLayer),
-                 IncrementSharedData::gWithBias);
+    //nn = new MLP(_parameters, _nbInputs, _nbOutputs, *(_nbNeuronsPerHiddenLayer),
+    //             IncrementSharedData::gWithBias);
 }
 
 unsigned int IncrementController::computeRequiredNumberOfWeights()
@@ -165,41 +191,67 @@ void IncrementController::stepBehaviour()
     std::vector<double>* inputs = new std::vector<double>(_nbInputs);
     int inputToUse = 0;
     
-    // distance sensors
+    int type = 1; //object type= energy
     for(int i  = 0; i < _wm->_cameraSensorsNb; i++)
     {
-        (*inputs)[inputToUse] = _wm->getDistanceValueFromCameraSensor(i) /
-                _wm->getCameraSensorMaximumDistanceValue(i);
-        inputToUse++;
+        // distance sensors
+        //If there is object but not energy item => wall (get distance sensor) else 0.0 [not1.0]
+        int objId = _wm->getObjectIdFromCameraSensor(i);
+        if ( PhysicalObject::isInstanceOf(objId) )
+        {
+
+            //(*inputs)[inputToUse] = 1.0;
+            (*inputs)[inputToUse] = 0.0;
+            inputToUse++;
+        }
+        else
+        {
+            //(*inputs)[inputToUse] = _wm->getDistanceValueFromCameraSensor(i) /
+            // _wm->getCameraSensorMaximumDistanceValue(i);
+            (*inputs)[inputToUse] = 1.0 - _wm->getDistanceValueFromCameraSensor(i) /
+                          _wm->getCameraSensorMaximumDistanceValue(i);
+            inputToUse++;
+        }
         
         //If task=collect, add object sensors
         if (IncrementSharedData::gFitness == 1)
         {
             int objectId = _wm->getObjectIdFromCameraSensor(i);
             // input: physical object?
-            //sensing distance to energy item, 1.0 if not energy item
-            int type = 1;
+            //sensing distance to energy item, 0.0 [not 1.0] if not energy item
             if ( PhysicalObject::isInstanceOf(objectId) )
             {
                 if ( type == gPhysicalObjects[objectId - gPhysicalObjectIndexStartOffset]->getType() )
-                  (*inputs)[inputToUse] = _wm->getDistanceValueFromCameraSensor(i) /
-                        _wm->getCameraSensorMaximumDistanceValue(i);
+                  //(*inputs)[inputToUse] = _wm->getDistanceValueFromCameraSensor(i) /
+                  //      _wm->getCameraSensorMaximumDistanceValue(i);
+                  (*inputs)[inputToUse] = 1.0 - _wm->getDistanceValueFromCameraSensor(i) /
+                      _wm->getCameraSensorMaximumDistanceValue(i);
                 else
-                    (*inputs)[inputToUse] = 1.0;
+                    //(*inputs)[inputToUse] = 1.0;
+                    (*inputs)[inputToUse] = 0.0;
                 inputToUse++;
 
             }
             else
             {
                 //Not a physical object.
-                //But: should still fill in the inputs (max distance, 1.0)
-                (*inputs)[inputToUse] = 1.0;
+                //But: should still fill in the inputs 0.0 //(max distance, 1.0)
+                //(*inputs)[inputToUse] = 1.0;
+                (*inputs)[inputToUse] = 0.0;
                 inputToUse++;
             }
        }
     }
-    
 
+
+    //Previous translational and rotational speeds (acts as recurrent connections from last step)
+    /*(*inputs)[inputToUse] = _wm->_desiredTranslationalValue / gMaxTranslationalSpeed;
+    inputToUse++;
+    (*inputs)[inputToUse] = _wm->_desiredRotationalVelocity / gMaxRotationalSpeed;
+    inputToUse++;*/
+    /*for(auto it = inputs->begin(); it < inputs->end(); it++)
+        std::cout << (*it) << " ";
+    std::cout << std::endl;*/
     // ---- compute and read out ----
     nn->setWeigths(_parameters); // set genome
     nn->setInputs(*inputs);
@@ -233,7 +285,7 @@ void IncrementController::stepEvolution()
     _lifetime++;
     //agent's lifetime ended: replace genome (if possible)
     if(_lifetime >= IncrementSharedData::gEvaluationTime)
-	{
+    {
         if (IncrementSharedData::gStoreOwn)
             storeOwnGenome();
 
@@ -435,43 +487,76 @@ void IncrementController::updateFitness(double delta)
 // ################ COMMUNICATION METHODS ################
 void IncrementController::broadcastGenome()
 {
-    for( int i = 0 ; i < _wm->_cameraSensorsNb; i++)
+    if (IncrementSharedData::gCommunicationBySensors)
     {
-        int targetIndex = _wm->getObjectIdFromCameraSensor(i);
-
-        // sensor ray bumped into a robot : communication is possible
-        if ( targetIndex >= gRobotIndexStartOffset )
+        for( int i = 0 ; i < _wm->_cameraSensorsNb; i++)
         {
-            // convert image registering index into robot id.
-            targetIndex = targetIndex - gRobotIndexStartOffset;
+            int targetIndex = _wm->getObjectIdFromCameraSensor(i);
 
-            IncrementController* targetRobotController =
-                    dynamic_cast<IncrementController*>
-                    (gWorld->getRobot(targetIndex)->getController());
-
-            if ( ! targetRobotController )
+            // sensor ray bumped into a robot : communication is possible
+            if ( targetIndex >= gRobotIndexStartOffset )
             {
-                std::cerr << "Error: observer not compatible" << std::endl;
-                exit(-1);
-            }
+                // convert image registering index into robot id.
+                targetIndex = targetIndex - gRobotIndexStartOffset;
 
-            // other agent stores my genome.
-            //Genome id as gene clock (different for each agent)
-            targetRobotController->storeGenome(_currentGenome, _genomeId, _currentFitness);
+                IncrementController* targetRobotController =
+                        dynamic_cast<IncrementController*>
+                        (gWorld->getRobot(targetIndex)->getController());
+
+                if ( ! targetRobotController )
+                {
+                    std::cerr << "Error: observer not compatible" << std::endl;
+                    exit(-1);
+                }
+
+                // other agent stores my genome.
+                //Genome id as gene clock (different for each agent)
+                targetRobotController->storeGenome(_currentGenome, _genomeId, _currentFitness);
+            }
+        }
+    }
+    else
+    {
+        for (int i = 0; i < gNumberOfRobots; i++)
+        {
+            //Do not send to self
+            if (i != _wm->_id)
+            {
+                IncrementController* targetRobotController =
+                        dynamic_cast<IncrementController*>
+                        (gWorld->getRobot(i)->getController());
+
+                if ( ! targetRobotController )
+                {
+                    std::cerr << "Error: observer not compatible" << std::endl;
+                    exit(-1);
+                }
+                double distance = sqrt((_wm->_xReal - targetRobotController->_wm->_xReal)*
+                        (_wm->_xReal - targetRobotController->_wm->_xReal) +
+                        (_wm->_yReal - targetRobotController->_wm->_yReal)*
+                        (_wm->_yReal - targetRobotController->_wm->_yReal));
+
+                if (distance <= gMaxRadioDistance)
+                {
+                    //std::cout << "Close range => send from R" << _wm->_id << " to R"
+                    //          << targetRobotController->_wm->_id << std::endl;
+                    // other agent stores my genome.
+                    targetRobotController->storeGenome(_currentGenome, _genomeId, _currentFitness);
+                }
+            }
         }
     }
 }
 
 void IncrementController::storeGenome(std::vector<double> genome, GC senderId, double fitness)
 {
-    if (_genomesList.size() < _populationSize)
+    if (_genomesList.size() < (unsigned int)IncrementSharedData::gPopulationSize)
     {
         _genomesList[senderId] = genome;
         _fitnessList[senderId] = fitness;
     }
     else
     {
-        //TOTEST replace worse individual in population
         double minFitness = std::numeric_limits<double>::max();
         struct GC indexWorse;
         indexWorse.robot_id = -1; indexWorse.gene_id = -1;
@@ -498,9 +583,7 @@ void IncrementController::storeGenome(std::vector<double> genome, GC senderId, d
 
 void IncrementController::storeOwnGenome()
 {
-    //std::cout << _currentFitness << std::endl;
     storeGenome(_currentGenome, _genomeId, _currentFitness);
-    //std::cout << "Pop: " << _fitnessList.size() << " # " << _genomesList.size() << std::endl;
 }
 
 void IncrementController::logGenome(std::string s)

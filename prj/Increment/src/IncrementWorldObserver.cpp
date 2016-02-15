@@ -22,9 +22,11 @@ IncrementWorldObserver::IncrementWorldObserver( World* world ) : WorldObserver( 
     gProperties.checkAndGetPropertyValue("gStoreOwn",&IncrementSharedData::gStoreOwn,true);
     gProperties.checkAndGetPropertyValue("gSelectionMethod",&IncrementSharedData::gSelectionMethod,true);
 
+    gProperties.checkAndGetPropertyValue("gCommunicationBySensors",&IncrementSharedData::gCommunicationBySensors,true);
     gProperties.checkAndGetPropertyValue("gFitness",&IncrementSharedData::gFitness,true);
     gProperties.checkAndGetPropertyValue("gEvaluationTime",&IncrementSharedData::gEvaluationTime,true);
 
+    gProperties.checkAndGetPropertyValue("gControllerType",&IncrementSharedData::gControllerType,true);
     gProperties.checkAndGetPropertyValue("gNbHiddenLayers",&IncrementSharedData::gNbHiddenLayers,true);
 	gProperties.checkAndGetPropertyValue("gNbNeuronsPerHiddenLayer",&IncrementSharedData::gNbNeuronsPerHiddenLayer,true);
 	gProperties.checkAndGetPropertyValue("gNeuronWeightRange",&IncrementSharedData::gNeuronWeightRange,true);
@@ -95,7 +97,7 @@ void IncrementWorldObserver::updateMonitoring()
         //std::cout << sumAvgLocalPopFitness  / gNumberOfRobots << std::endl;
 
 	}
-
+    //std::cout << "It: " << gWorld->getIterations() << std::endl;
     if (gWorld->getIterations() == (gMaxIt - 1))
     {
         double sumFitness = 0.0;

@@ -16,7 +16,6 @@
 #include "Observers/WorldObserver.h"
 #include "WorldModels/RobotWorldModel.h"
 #include "Increment/include/IncrementSharedData.h"
-#include "Increment/include/IncrementSharedData.h"
 
 //class World;
 

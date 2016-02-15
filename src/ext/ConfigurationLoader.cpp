@@ -7,6 +7,7 @@
 #include "Config/TemplateRandomwalkConfigurationLoader.h"
 #include "Config/IncrementConfigurationLoader.h"
 #include "Config/TestNNConfigurationLoader.h"
+#include "Config/odNeatConfigurationLoader.h"
 //###DO-NOT-DELETE-THIS-LINE###TAG:INCLUDE###//
 
 
@@ -60,6 +61,12 @@ ConfigurationLoader* ConfigurationLoader::make_ConfigurationLoader (std::string 
 	else if (configurationLoaderObjectName == "TestNNConfigurationLoader" )
 	{
 		return new TestNNConfigurationLoader();
+	}
+#endif
+#if defined PRJ_ODNEAT || !defined MODULAR
+	else if (configurationLoaderObjectName == "odNeatConfigurationLoader" )
+	{
+		return new odNeatConfigurationLoader();
 	}
 #endif
     //###DO-NOT-DELETE-THIS-LINE###TAG:SWITCH###//
