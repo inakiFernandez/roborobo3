@@ -25,5 +25,4 @@ Link::Link(const Link& link)
 Link::~Link()
 {
     //Delete link
-
 }

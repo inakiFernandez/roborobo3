@@ -34,7 +34,7 @@ NNode::NNode(nodetype ntype,innov nodeid, nodeplace placement)
 	analogue=0;
 }
 
-NNode::NNode(NNode *n)
+NNode::NNode(NNode* n)
 {
 	active_flag=false;
 	activation=0;
@@ -67,30 +67,12 @@ NNode::NNode (const char *argline)
   gen_node_label = (nodeplace)nodepl;
 
 }
-
-// This one might be incomplete
-NNode::NNode (const NNode& nnode)
-{
-	active_flag = nnode.active_flag;
-	activesum = nnode.activesum;
-	activation = nnode.activation;
-	type = nnode.type; //NEURON or SENSOR type
-	activation_count = nnode.activation_count; //Inactive upon creation
-	node_id = nnode.node_id;
-	ftype = nnode.ftype;
-	gen_node_label = nnode.gen_node_label;
-	dup = nnode.dup;
-	analogue = nnode.dup;
-}
-
 NNode::~NNode() 
 {
   std::vector<Link*>::iterator curlink;
 	//Kill off all incoming links
     for(curlink=incoming.begin();curlink!=incoming.end();++curlink)
-    {
 		delete (*curlink);
-	}
 }
 
 //Returns the type of the node, NEURON or SENSOR
@@ -111,7 +93,8 @@ bool NNode::sensor_load(double value)
 {
     if (type==SENSOR)
     {
-		activation_count++;  //Puts sensor into next time-step
+        //Puts sensor into next time-step
+        activation_count++;
 		activation=value;
 		return true;
 	}
@@ -162,7 +145,6 @@ void NNode::flushback()
         activation_count=0;
         activation=0;
     }
-  
 }
 
 // This recursively checks everything leading into and including this NNode, 
@@ -205,7 +187,7 @@ void NNode::flushback_check(std::vector<NNode*> &seenlist)
     }
 }
 
-// Returns the gene that created the node
+// Returns the "node" gene that created the node
 NNode *NNode::get_analogue()
 {
 	return analogue;

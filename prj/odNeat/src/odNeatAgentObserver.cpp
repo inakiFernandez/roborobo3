@@ -53,7 +53,7 @@ void odNeatAgentObserver::step()
             //Counting items
             dynamic_cast<odNeatController*>(gWorld->getRobot(_wm -> _id)->
                                             getController())->pickItem();
-
+            dynamic_cast<odNeatWorldObserver*>(gWorld->getWorldObserver())->_numberItems++;
             break;
         default:
             break;

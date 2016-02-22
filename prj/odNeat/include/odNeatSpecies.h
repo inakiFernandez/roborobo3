@@ -7,19 +7,34 @@
 #include <map>
 
 using namespace ODNEATGC;
+struct genomeFitness
+{
+    Genome* g;
+    double f;
+    genomeFitness()
+    {
+        g=NULL;
+        f = -1.0;
+    }
+    ~genomeFitness()
+    {
+        g=NULL;
+        f = -2.0;
+    }
+};
 
 class odNeatSpecies
 {
     public:
         int _id;
-        std::map<GC, message> _lGenomes;
         double _speciesFitness;
+        //map from Genome ID to (Genome and fitness)
+        std::map<GC, genomeFitness> _lGenomes;
 
-        void add(message m);
-        void remove(GC idG);
+        void add(Genome* g, double f); int remove(GC idG);
+        bool has(GC gId);
+
         void computeSpeciesFitness();
-
-        bool has(Genome* g);
 
         odNeatSpecies(int id);
         ~odNeatSpecies();

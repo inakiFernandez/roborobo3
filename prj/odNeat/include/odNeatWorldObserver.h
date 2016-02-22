@@ -25,9 +25,10 @@ class odNeatWorldObserver : public WorldObserver
 	public:
 		odNeatWorldObserver(World *world);
 		~odNeatWorldObserver();
+        int _numberItems;
         //Counters for OdNeat
-        std::set<int> usedGeneCounters;
-        /*for collisions in OdNeat
+        /*std::set<int> usedGeneCounters;
+        for collisions in OdNeat
          * void incrementCollisions();
         void incrementCounterGenes();*/
         //----------

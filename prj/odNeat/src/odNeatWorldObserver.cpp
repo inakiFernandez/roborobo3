@@ -41,6 +41,7 @@ odNeatWorldObserver::odNeatWorldObserver( World* world ) : WorldObserver( world 
     gProperties.checkAndGetPropertyValue("gMaturationPeriod",&odNeatSharedData::gMaturationPeriod,true);
     gProperties.checkAndGetPropertyValue("gCompatThreshold",&odNeatSharedData::gCompatThreshold,true);
     gProperties.checkAndGetPropertyValue("gTabuThreshold",&odNeatSharedData::gTabuThreshold,true);
+    gProperties.checkAndGetPropertyValue("gTabuTimeout",&odNeatSharedData::gTabuTimeout,true);
 
     //----------------------------------
 	// * iteration and generation counters
@@ -48,6 +49,7 @@ odNeatWorldObserver::odNeatWorldObserver( World* world ) : WorldObserver( world 
 	_lifeIterationCount = -1;
 	_generationCount = -1;
 
+    _numberItems = 0;
     /*//For counting concurrent gene counters
     //Initialize WorldObserver::usedGeneCounters (set<int>)
     int lastInnov = dynamic_cast<odNeatGCController*>
@@ -96,31 +98,41 @@ void odNeatWorldObserver::updateMonitoring()
     if( _lifeIterationCount >= odNeatSharedData::gEvaluationTime )
 	{
         // Logging here
-        double sumFitness = 0.0;
-        int sumLinks = 0.0;
+        double sumFitness = 0.0; int sumLinks = 0.0; int sumItems = 0;
         for ( int i = 0 ; i != gNumberOfRobots ; i++ )
         {
              sumFitness += (dynamic_cast<odNeatController*>(gWorld->getRobot(i)->getController()))
                      -> getFitness()/odNeatSharedData::gMaxEnergy;//Normalize by max energy
              sumLinks += (dynamic_cast<odNeatController*>(gWorld->getRobot(i)->getController()))
                      ->_genome->genes.size();
+             sumItems += (dynamic_cast<odNeatController*>(gWorld->getRobot(i)->getController()))
+                     -> getItems();
         }
         //std::cout << "It: " << gWorld->getIterations() << std::endl;
-        std::cout << sumFitness  / gNumberOfRobots << ", " << (double)sumLinks/ gNumberOfRobots << std::endl;
+        std::cout << "Fitness: " <<  sumFitness  / gNumberOfRobots << ", links: " << (double)sumLinks/ gNumberOfRobots << std::endl;
+        //std::cout << "Number of items: " << sumItems << std::endl;
+        std::cout << "Number of items: " << _numberItems << std::endl;
+        _numberItems = 0;
 	}
     if (gWorld->getIterations() == (gMaxIt - 1))
     {
-        double sumFitness = 0.0;
+        double sumFitness = 0.0; int sumItems = 0;
         for ( int i = 0 ; i != gNumberOfRobots ; i++ )
         {
 
              sumFitness += (dynamic_cast<odNeatController*>(gWorld->getRobot(i)->getController()))
                      -> getFitness();
+             sumItems += (dynamic_cast<odNeatController*>(gWorld->getRobot(i)->getController()))
+                     -> getItems();
 
         }
 
         std::cout << "End fitness: " << sumFitness/odNeatSharedData::gMaxEnergy / gNumberOfRobots
                   << " at it: " << gWorld->getIterations() << std::endl;
+        if (odNeatSharedData::gFitness == 1)
+        {
+            //std::cout << "Number of items: " << sumItems << std::endl;
+        }
         if(odNeatSharedData::gSaveGenome)
         {
             for (int i = 0 ; i != gNumberOfRobots ; i++ )

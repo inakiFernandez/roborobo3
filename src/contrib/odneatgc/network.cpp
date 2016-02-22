@@ -18,27 +18,6 @@ Network::Network(GC netid)
     numnodes=-1; numlinks=-1; net_id=netid;
 }
 
-Network::Network(const Network& network)
-{
-    std::vector<NNode*>::const_iterator curnode;
-
-    // Copy all the inputs
-    for(curnode = network.inputs.begin(); curnode != network.inputs.end(); ++curnode)
-    {
-        NNode* n = new NNode(**curnode);
-        inputs.push_back(n);
-        all_nodes.push_back(n);
-    }
-    // Copy all the outputs
-    for(curnode = network.outputs.begin(); curnode != network.outputs.end(); ++curnode)
-    {
-        NNode* n = new NNode(**curnode);
-        outputs.push_back(n);
-        all_nodes.push_back(n);
-    }
-    numnodes = network.numnodes; numlinks = network.numlinks; net_id = network.net_id;
-}
-
 Network::~Network() 
 {
     // Kill off all the nodes and links

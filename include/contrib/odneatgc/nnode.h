@@ -7,26 +7,10 @@
 
 namespace ODNEATGC
 {
-  
-  enum nodetype 
-  {
-    NEURON = 0,
-    SENSOR = 1
-  };
-  
-  enum nodeplace 
-  {
-    HIDDEN = 0,
-    INPUT = 1,
-    OUTPUT = 2,
-    BIAS = 3
-  };
+  enum nodetype {NEURON = 0, SENSOR = 1};
+  enum nodeplace {HIDDEN = 0, INPUT = 1,OUTPUT = 2, BIAS = 3 };
 
-  enum functype 
-  {
-    SIGMOID = 0
-  };
-  
+  enum functype {SIGMOID = 0};
   class Link; class Network; class Genome;
 
   // ----------------------------------------------------------------------- 
@@ -36,17 +20,16 @@ namespace ODNEATGC
   // Use an activation count to avoid flushing
   class NNode 
   {
-    friend class Network;
-    friend class Genome;
+    friend class Network; friend class Genome;
+
   protected:
-    
     int activation_count;  // keeps track of which activation the node is currently in
 
     NNode *dup;       // Used for Genome duplication    
     NNode *analogue;  // Used for Gene decoding
     
   public:
-    functype ftype; // type is either SIGMOID ..or others that can be added
+    functype ftype; // type SIGMOID
     nodetype type; // type is either NEURON or SENSOR 
     
     double activesum;  // The incoming activity before being processed 
@@ -95,8 +78,6 @@ namespace ODNEATGC
     //Find the greatest depth starting from this neuron at depth d
     int depth(int d,Network *mynet);   
   };
-  
-  
 } // namespace ODNEATGC
 
 #endif

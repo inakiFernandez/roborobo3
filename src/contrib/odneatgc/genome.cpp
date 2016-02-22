@@ -14,81 +14,6 @@
 
 using namespace ODNEATGC;
 
-Genome::Genome(GC id, std::vector<NNode*> n, std::vector<Gene*> g)
-{
-    GC m = {id.robot_id, -1}; GC d = {id.robot_id, -1};
-    genome_id=id; nodes=n; genes=g; mom_id = m; dad_id = d; species = -1; phenotype =NULL;
-}
-Genome& Genome::operator=(const Genome& genome)
-{
-    genome_id = genome.genome_id;
-
-    std::vector<NNode*>::const_iterator curnode;
-    std::vector<Gene*>::const_iterator curgene;
-
-    //Duplicate NNodes
-    for(curnode=genome.nodes.begin();curnode!=genome.nodes.end();++curnode)
-    {
-        NNode* newnode=new NNode(*curnode); (*curnode)->dup=newnode;
-        //Remember this node's old copy
-        nodes.push_back(newnode);
-    }
-    //For forming a gene
-    NNode *inode; NNode *onode;
-
-    //Duplicate Genes
-    for(curgene=genome.genes.begin(); curgene!=genome.genes.end(); ++curgene)
-    {
-        //First find the nodes connected by the gene's link
-        inode=(((*curgene)->lnk)->in_node)->dup;
-        onode=(((*curgene)->lnk)->out_node)->dup;
-
-        Gene* newgene=new Gene(*curgene,inode,onode);
-        genes.push_back(newgene);
-    }
-    mom_id = genome.mom_id; dad_id = genome.dad_id;
-
-    species = -1;
-    phenotype =NULL;
-
-    return *this;
-}
-
-Genome::Genome(const Genome& genome)
-{
-    genome_id = genome.genome_id;
-
-    std::vector<NNode*>::const_iterator curnode;
-    std::vector<Gene*>::const_iterator curgene;
-
-    //Duplicate NNodes
-    for(curnode=genome.nodes.begin();curnode!=genome.nodes.end();++curnode)
-    {
-        NNode* newnode=new NNode(*curnode);
-        (*curnode)->dup=newnode;
-        //Remember this node's old copy
-        nodes.push_back(newnode);
-    }
-    //For forming a gene
-    NNode *inode; NNode *onode;
-    
-    //Duplicate Genes
-    for(curgene=genome.genes.begin(); curgene!=genome.genes.end(); ++curgene)
-    {
-        //First find the nodes connected by the gene's link
-        inode=(((*curgene)->lnk)->in_node)->dup;
-        onode=(((*curgene)->lnk)->out_node)->dup;
-
-        Gene* newgene=new Gene(*curgene,inode,onode);
-        genes.push_back(newgene);
-
-    }
-    mom_id = genome.mom_id; dad_id = genome.dad_id;
-
-    species = -1;
-    phenotype =NULL;
-}
-
 Genome::Genome(GC id, std::ifstream &iFile)
 {
     //max word size of 128 characters
@@ -170,6 +95,7 @@ Genome::Genome(GC id, std::ifstream &iFile)
     }
     species = -1;
     phenotype =NULL;
+    nbFitnessUpdates = 0;
 }
 
 Genome::Genome(GC id,int num_in,int num_out) {
@@ -189,7 +115,7 @@ Genome::Genome(GC id,int num_in,int num_out) {
     //Build the input nodes. Last one is bias
     for(ncount=1;ncount<=num_in;ncount++)
     {
-        //Set common initial time
+        //Set common initial Gene Clock
         innov innovClock; innovClock.idR = -1; innovClock.gc = ncount;
 
         if (ncount<num_in)
@@ -224,12 +150,58 @@ Genome::Genome(GC id,int num_in,int num_out) {
             //Add the gene to the genome
             genes.push_back(newgene);
         }
-
     }
     GC m = {id.robot_id, -1}; GC d = {id.robot_id, -1};
     mom_id = m; dad_id = d; species = -1;
+    nbFitnessUpdates = 0;
 }
 
+Genome *Genome::duplicate()
+{
+    //Collections for the new Genome
+    std::vector<NNode*> nodes_dup; std::vector<Gene*> genes_dup;
+    //Iterators for the old Genome
+    std::vector<NNode*>::iterator curnode; std::vector<Gene*>::iterator curgene;
+
+    //New item pointers
+    NNode *newnode; Gene *newgene;
+    //For forming a gene
+    NNode *inode; NNode *onode;
+    Genome *newgenome;
+
+    //Duplicate NNodes
+    for(curnode=nodes.begin();curnode!=nodes.end();++curnode)
+    {
+        newnode=new NNode(*curnode);
+        //Remember this node's old copy
+        (*curnode)->dup=newnode;
+        nodes_dup.push_back(newnode);
+    }
+    //Duplicate Genes
+    for(curgene=genes.begin();curgene!=genes.end();++curgene)
+    {
+        //First find the nodes connected by the gene's link
+        inode=(((*curgene)->lnk)->in_node)->dup;
+        onode=(((*curgene)->lnk)->out_node)->dup;
+
+        newgene=new Gene(*curgene,inode,onode);
+        genes_dup.push_back(newgene);
+    }
+
+    //Finally, return the genome
+    newgenome=new Genome(this->genome_id,nodes_dup,genes_dup);
+    newgenome->mom_id = this->mom_id; newgenome->dad_id = this->dad_id;
+    newgenome->nbFitnessUpdates = 0;
+    newgenome->species = -1;
+    //newgenome->genesis();
+
+    return newgenome;
+}
+Genome::Genome(GC id, std::vector<NNode*> n, std::vector<Gene*> g)
+{
+    GC m = {id.robot_id, -1}; GC d = {id.robot_id, -1};
+    genome_id=id; nodes=n; genes=g; mom_id = m; dad_id = d; species = -1; phenotype =NULL; nbFitnessUpdates = 0;
+}
 Genome::~Genome() 
 {    
     std::vector<NNode*>::iterator curnode;
@@ -237,9 +209,10 @@ Genome::~Genome()
 
     for(curnode=nodes.begin();curnode!=nodes.end();++curnode)
         delete (*curnode);
-    
+    nodes.clear();
     for(curgene=genes.begin();curgene!=genes.end();++curgene)
         delete (*curgene);
+    genes.clear();
 
     //delete (phenotype);
 }
@@ -257,7 +230,7 @@ Network *Genome::genesis()
 
     //Gene translation variables
     NNode *inode; NNode *onode;
-    //The new network
+    //New network
     Network *newnet;
 
     //Create the nodes
@@ -266,11 +239,9 @@ Network *Genome::genesis()
         newnode=new NNode((*curnode)->type,(*curnode)->node_id);
 
         //Check for input or output designation of node
-        if (((*curnode)->gen_node_label)==INPUT)
+        if ((((*curnode)->gen_node_label)==INPUT) || (((*curnode)->gen_node_label)==BIAS))
             inlist.push_back(newnode);
-        if (((*curnode)->gen_node_label)==BIAS)
-            inlist.push_back(newnode);
-        if (((*curnode)->gen_node_label)==OUTPUT)
+        else if (((*curnode)->gen_node_label)==OUTPUT)
             outlist.push_back(newnode);
         //Keep track of all nodes, not just input and output
         all_list.push_back(newnode);
@@ -307,139 +278,6 @@ Network *Genome::genesis()
     return newnet;
 }
 
-bool Genome::verify() 
-{
-    std::vector<NNode*>::iterator curnode;
-    std::vector<Gene*>::iterator curgene; std::vector<Gene*>::iterator curgene2;
-    NNode *inode;
-    NNode *onode;
-
-    innov last_innov; int last_id = -1, last_idR = -1;
-
-    //Check each gene's nodes
-    for(curgene=genes.begin();curgene!=genes.end();++curgene)
-    {
-        inode=((*curgene)->lnk)->in_node; onode=((*curgene)->lnk)->out_node;
-
-        //Look for inode
-        curnode=nodes.begin();
-        while((curnode!=nodes.end())&&
-              ((*curnode)!=inode))
-            ++curnode;
-
-        if (curnode==nodes.end())
-            return false;
-
-        //Look for onode
-        curnode=nodes.begin();
-        while((curnode!=nodes.end())&&
-              ((*curnode)!=onode))
-            ++curnode;
-
-        if (curnode==nodes.end())
-            return false;
-    }
-
-    //Check for NNodes being out of order
-    last_innov.idR=last_idR;
-    last_innov.gc=last_id;
-
-    for(curnode=nodes.begin();curnode!=nodes.end();++curnode)
-    {
-        if ((*curnode)->node_id < last_innov)
-            return false;
-        if((*curnode)->node_id == last_innov)
-            return false;
-        last_innov=(*curnode)->node_id;
-    }
-
-
-    //Make sure there are no duplicate genes
-    for(curgene=genes.begin();curgene!=genes.end();++curgene)
-    {
-        for(curgene2=genes.begin();curgene2!=genes.end();++curgene2)
-        {
-            if (((*curgene)!=(*curgene2))&&
-                    ((((*curgene)->lnk)->is_recurrent)==
-                     (((*curgene2)->lnk)->is_recurrent))&&
-                    ((((((*curgene2)->lnk)->in_node)->node_id)==
-                      ((((*curgene)->lnk)->in_node)->node_id))&&
-                     (((((*curgene2)->lnk)->out_node)->node_id)==
-                      ((((*curgene)->lnk)->out_node)->node_id))))
-                return false;
-        }
-    }
-    return true;
-}
-
-void Genome::print_to_file(std::ostream &outFile)
-{
-    std::vector<NNode*>::iterator curnode;
-    std::vector<Gene*>::iterator curgene;
-    outFile<<"genomestart " << "R" <<genome_id.robot_id << ", G" << genome_id.gene_id <<std::endl;
-
-    //Output the nodes
-    for(curnode=nodes.begin();curnode!=nodes.end();++curnode) {
-        (*curnode)->print_to_file(outFile);
-    }
-    //Output the genes
-    for(curgene=genes.begin();curgene!=genes.end();++curgene) {
-        (*curgene)->print_to_file(outFile);
-    }
-    outFile << "genomeend " << "R" <<genome_id.robot_id << ", G" << genome_id.gene_id << std::endl;
-}
-
-void Genome::print_to_filename(char *filename) 
-{
-    std::ofstream oFile(filename);
-    print_to_file(oFile);
-    oFile.close();
-}
-
-Genome *Genome::duplicate() 
-{
-    //Collections for the new Genome
-    std::vector<NNode*> nodes_dup;
-    std::vector<Gene*> genes_dup;
-    //Iterators for the old Genome
-    std::vector<NNode*>::iterator curnode;
-    std::vector<Gene*>::iterator curgene;
-
-    //New item pointers
-    NNode *newnode; Gene *newgene;
-    //For forming a gene
-    NNode *inode; NNode *onode;
-
-    Genome *newgenome;
-    //verify();
-    //Duplicate NNodes
-    for(curnode=nodes.begin();curnode!=nodes.end();++curnode)
-    {
-        newnode=new NNode(*curnode);
-        //Remember this node's old copy
-        (*curnode)->dup=newnode;
-        nodes_dup.push_back(newnode);
-    }
-    //Duplicate Genes
-    for(curgene=genes.begin();curgene!=genes.end();++curgene)
-    {
-        //First find the nodes connected by the gene's link
-        inode=(((*curgene)->lnk)->in_node)->dup;
-        onode=(((*curgene)->lnk)->out_node)->dup;
-
-        newgene=new Gene(*curgene,inode,onode);
-        genes_dup.push_back(newgene);
-    }
-
-    //Finally, return the genome
-    newgenome=new Genome(this->genome_id,nodes_dup,genes_dup);
-    newgenome->mom_id = this->mom_id; newgenome->dad_id = this->dad_id;
-
-    newgenome->species = -1;
-    //newgenome->genesis();
-
-    return newgenome;
-}
 
 Genome *Genome::mutate(float sigma, int idR,GC idNewGenome,int &nodeId,int &gc)
 {    
@@ -601,8 +439,8 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
 
     int nodecount;  //Counter for finding nodes
     int trycount; //Iterates over attempts to find an unconnected pair of nodes
-    NNode *nodep1; //Pointers to the nodes
-    NNode *nodep2; //Pointers to the nodes
+    NNode* nodep1; //Pointers to the nodes
+    NNode* nodep2; //Pointers to the nodes
     std::vector<Gene*>::iterator thegene; //Searches for existing link
     bool found=false;  //Tells whether an open pair was found
 
@@ -611,7 +449,7 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
 
     double newweight;  //The new weight for the new link
 
-    bool done; bool do_recur; bool loop_recur; int first_nonsensor;
+    bool do_recur; bool loop_recur; int first_nonsensor;
 
     //These are used to avoid getting stuck in an infinite loop checking
     //for recursion
@@ -677,13 +515,16 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
             nodep1=(*thenode1);
             nodep2=(*thenode2);
 
-            //See if a recur link already exists  ALSO STOP AT END OF GENES!!
+            //See if an active link already exists  ALSO STOP AT END OF GENES!!
+            //Don't allow SENSORS to get input
             thegene=genes.begin();
-            while ((thegene!=genes.end()) &&
-                   ((nodep2->type)!=SENSOR) &&   //Don't allow SENSORS to get input
-                   (!((((*thegene)->lnk)->in_node==nodep1)&&
-                      (((*thegene)->lnk)->out_node==nodep2)&&
-                      ((*thegene)->lnk)->is_recurrent)))
+            while ( (thegene!=genes.end()) && ((nodep2->type)!=SENSOR) &&
+                   (!(
+                        (((*thegene)->lnk)->in_node==nodep1)&&
+                        (((*thegene)->lnk)->out_node==nodep2) &&
+                        (*thegene)->enable
+                      )))
+                      //&& ((*thegene)->lnk)->is_recurrent)))
                 ++thegene;
 
 
@@ -692,7 +533,9 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
             else
             {
                 count=0;
-                recurflag=phenotype->is_recur(nodep1->analogue,nodep2->analogue,count,thresh);
+                recurflag=phenotype->is_recur(nodep1, nodep2, count, thresh);
+                /*recurflag=phenotype->is_recur(nodep1->analogue,nodep2->analogue,
+                                              count,thresh);*/
 
                 //ADDED: CONSIDER connections out of outputs recurrent
                 if ((nodep1->gen_node_label)==OUTPUT)
@@ -732,12 +575,16 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
             nodep1=(*thenode1); nodep2=(*thenode2);
 
             //See if a link already exists  ALSO STOP AT END OF GENES!!!!
+            //Don't allow SENSORS to get input
             thegene=genes.begin();
             while ((thegene!=genes.end()) &&
-                   ((nodep2->type)!=SENSOR) &&   //Don't allow SENSORS to get input
-                   (!((((*thegene)->lnk)->in_node==nodep1)&&
-                      (((*thegene)->lnk)->out_node==nodep2)&&
-                      (!(((*thegene)->lnk)->is_recurrent)))))
+                   ((nodep2->type)!=SENSOR) &&
+                   (!(
+                        (((*thegene)->lnk)->in_node==nodep1)&&
+                        (((*thegene)->lnk)->out_node==nodep2)&&
+                        (*thegene)->enable
+                      )))
+                      //&& (!(((*thegene)->lnk)->is_recurrent)))))
                 ++thegene;
 
 
@@ -746,7 +593,9 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
             else
             {
                 count=0;
-                recurflag=phenotype->is_recur(nodep1->analogue,nodep2->analogue,count,thresh);
+                recurflag=phenotype->is_recur(nodep1,nodep2, count,thresh);
+                /*recurflag=phenotype->is_recur(nodep1->analogue,nodep2->analogue,
+                                              count,thresh);*/
 
                 //ADDED: CONSIDER connections out of outputs recurrent
                 if ((nodep1->gen_node_label)==OUTPUT)
@@ -760,37 +609,30 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
                     trycount=tries;
                     found=true;
                 }
-
             }
 
         } //End of normal link finding loop
     }
-
     //Continue only if an open link was found
     if (found)
     {
         //If it was supposed to be recurrent, make sure it gets labeled that way
         if (do_recur) recurflag=1;
 
-        done=false;
+        //If the phenotype does not exist, exit on false,print error
+        //Note: This should never happen- if it does there is a bug
+        /*if (phenotype==0)
+            return false;*/
 
-        while(!done)
-        {
-            //If the phenotype does not exist, exit on false,print error
-            //Note: This should never happen- if it does there is a bug
-            if (phenotype==0)
-                return false;
+        //Choose the new weight (uniform between -1.0 and 1.0)
+        newweight=Helper::randPosNeg()*Helper::randFloat()*1.0;
 
-            //Choose the new weight (uniform between -1.0 and 1.0)
-            newweight=Helper::randPosNeg()*Helper::randFloat()*1.0;
+        innov innovClock; innovClock.idR = idR; innovClock.gc = gc;
 
-            innov innovClock; innovClock.idR = idR; innovClock.gc = gc;
+        //Create the new gene
+        newgene=new Gene(newweight,nodep1,nodep2,recurflag,innovClock);
+        gc++;
 
-            //Create the new gene
-            newgene=new Gene(newweight,nodep1,nodep2,recurflag,innovClock);
-            gc++;
-            done=true;
-        }
         //Now add the new Genes to the Genom in correct order
         add_gene(genes,newgene);
         return true;
@@ -1058,21 +900,8 @@ Genome *Genome::mate(Genome *g,GC genomeid,double fitness1,double fitness2)
     new_genome->dad_id = g->genome_id;
     //Return the baby Genome
     return (new_genome);
-
 }
 
-int Genome::extrons() 
-{
-    //Number of enabled genes
-    std::vector<Gene*>::iterator curgene;
-    int total=0;
-
-    for(curgene=genes.begin();curgene!=genes.end();curgene++)
-        if ((*curgene)->enable)
-            ++total;
-    
-    return total;
-}
 double Genome::dissimilarity(Genome *g)
 {
     double result = 0.0;
@@ -1138,4 +967,28 @@ double Genome::dissimilarity(Genome *g)
             + (Helper::coefD * disj/maxLength)
             + (Helper::coefW * weight);
     return result;
+}
+
+void Genome::print_to_file(std::ostream &outFile)
+{
+    std::vector<NNode*>::iterator curnode;
+    std::vector<Gene*>::iterator curgene;
+    outFile<<"genomestart " << "R" <<genome_id.robot_id << ", G" << genome_id.gene_id <<std::endl;
+
+    //Output the nodes
+    for(curnode=nodes.begin();curnode!=nodes.end();++curnode) {
+        (*curnode)->print_to_file(outFile);
+    }
+    //Output the genes
+    for(curgene=genes.begin();curgene!=genes.end();++curgene) {
+        (*curgene)->print_to_file(outFile);
+    }
+    outFile << "genomeend " << "R" <<genome_id.robot_id << ", G" << genome_id.gene_id << std::endl;
+}
+
+void Genome::print_to_filename(char *filename)
+{
+    std::ofstream oFile(filename);
+    print_to_file(oFile);
+    oFile.close();
 }

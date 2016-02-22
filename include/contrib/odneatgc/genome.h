@@ -35,9 +35,6 @@ namespace ODNEATGC
 
     Network *phenotype; //Allows Genome to be matched with its Network
     
-    // Copy constructor
-    Genome(const Genome& genome);
-    Genome& operator=(const Genome& genome);
     //Special constructor which spawns off an input file
     //This constructor assumes that some routine has already read in GENOMESTART
     Genome(GC id, std::ifstream &iFile);
@@ -61,12 +58,6 @@ namespace ODNEATGC
     
     // Duplicate this Genome to create a new one 
     Genome *duplicate();
-    
-    // For debugging: A number of tests can be run on a genome to check its
-    // integrity
-    // Note: Some of these tests do not indicate a bug, but rather are meant
-    // to be used to detect specific system states
-    bool verify();
     
     // ******* MUTATORS *******    
     //Launch all mutations and returns the mutated genome
@@ -102,9 +93,6 @@ namespace ODNEATGC
     Genome *mate(Genome *g,GC genomeid,double fitness1, double fitness2);
     
     double dissimilarity(Genome *g);
-
-    // Return number of non-disabled genes 
-    int extrons();
     
   protected:
     //Inserts a NNode into a given ordered list of NNodes in order

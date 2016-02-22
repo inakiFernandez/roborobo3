@@ -20,7 +20,7 @@ using namespace ODNEATGC;
 
 //Population (map int to species) including genome and species
 //Species are local, received genomes have to be assigned a new species
-typedef std::vector<odNeatSpecies> local_population;
+typedef std::vector<odNeatSpecies*> local_population;
 
 class odNeatController : public Controller
 {
@@ -35,35 +35,29 @@ private:
     double update_energy_level();
     void updateFitness();
     bool in_maturation_period();
-    Genome* selectBestGenome();
+    //Genome* selectBestGenome();
 
     //TabuList: set of dropped genomes, with corresponding timeout
     std::map<Genome*, int> _tabu;
     void add_to_tabu_list(Genome* g);
     bool tabu_list_approves(Genome* g);
     int tabu_contains(Genome* g);
+    bool update_tabu_list(Genome* g);
 
     //Population
-    bool findInPopulation(Genome* g);
-    void add_to_population(message msg);
+    bool findInPopulation(GC gId);
+    void add_to_population(Genome* g, double f);
     bool population_accepts(double f);
     int computeSpeciesOfGenome(Genome* g);
 
     void add_to_species(message msg);
     double speciesFitness(int sp);
     void adjustSpeciesFitness();
-    /*
-    int findInSpecies(Genome* g);
-    void cleanPopAndSpecies();
-    int computeSpeciesId(Genome* g);
-    void recompute_all_species();
-    void adjust_population_size();
-    void adjust_species_fitness();
-    void adjust_active_species_fitness(int species);
-    int selectSpecies();*/
+    odNeatSpecies* selectSpecies();
+    Genome* selectParent(odNeatSpecies* sp);
+    /*void recompute_all_species();
+    void cleanPopAndSpecies();*/
 
-    /*Genome* selectParent(int spId);
-    void update_population(Genome* offspring);*/
     Genome* generate_offspring();
     bool doBroadcast();
     //EndOdNeat--------------------------------------------------------------------
@@ -81,6 +75,8 @@ private:
     unsigned int _nbInputs; unsigned int _nbOutputs;
     //gene (link) and neuron local counters
     int _g_count; int _n_count;
+    //Number of gathered items
+    int _items;
         
     void resetRobot();
     
@@ -97,6 +93,7 @@ public:
     double getFitness(){ return _currentFitness;}
     void logGenome(std::string s);
     void pickItem();
+    int getItems();
 };
 
 
