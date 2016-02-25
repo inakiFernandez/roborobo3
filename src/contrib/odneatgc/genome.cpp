@@ -966,7 +966,7 @@ double Genome::dissimilarity(Genome *g)
 
     result = (Helper::coefE * exc/maxLength)
             + (Helper::coefD * disj/maxLength)
-            + (Helper::coefW * weight /common);
+            + (Helper::coefW * weight);// /common);
     return result;
 }
 

@@ -34,7 +34,7 @@ odNeatController::odNeatController( RobotWorldModel *wm )
     _items = 0;
 
     resetRobot();
-    /*for (int i=0; i < 50; i++)
+    /*for (int i=0; i < 20; i++)
     {
         Genome* off = _genome->
                 mutate(odNeatSharedData::gSigmaRef, _wm->_id,_genomeId,_n_count,_g_count);
@@ -172,6 +172,21 @@ void odNeatController::stepEvolution()
     //Update own genome's energy in population with final estimate
     add_to_population(_genome->duplicate(), _currentFitness);
     add_to_tabu_list(_genome->duplicate());
+
+    /*for(auto itP = _pop.begin(); itP != _pop.end(); itP++)
+    {
+        for(auto itS = (*itP)->_lGenomes.begin();
+            itS != (*itP)->_lGenomes.end(); itS++)
+        {
+            for(auto itS2 = (*itP)->_lGenomes.begin();
+                itS2 != (*itP)->_lGenomes.end(); itS2++)
+            {
+                std::cout << itS->second.g->dissimilarity(itS2->second.g) << std::endl;
+            }
+
+        }
+        std::cout << "####################" << std::endl;
+    }*/
 
     Genome* offspring =  generate_offspring();
     delete _genome;

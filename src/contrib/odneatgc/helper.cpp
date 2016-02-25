@@ -20,7 +20,7 @@ using namespace ODNEATGC;
 
     double     Helper::coefE=0.5;
     double     Helper::coefD=1.5;
-    double     Helper::coefW=0.1;
+    double     Helper::coefW=0.4;
 
     double     Helper::rangeW=10.0;
 
