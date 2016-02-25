@@ -92,9 +92,8 @@ void IncrementWorldObserver::updateMonitoring()
              sumAvgLocalPopFitness += (dynamic_cast<IncrementController*>
                                        (gWorld->getRobot(i)->getController())) -> getAvgPopFitness();
         }
-        //std::cout << "It: " << gWorld->getIterations() << std::endl;
+        std::cout << "It: " << gWorld->getIterations() << std::endl;
         std::cout << sumFitness  / gNumberOfRobots << std::endl;
-        //std::cout << sumAvgLocalPopFitness  / gNumberOfRobots << std::endl;
 
 	}
     //std::cout << "It: " << gWorld->getIterations() << std::endl;

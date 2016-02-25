@@ -48,15 +48,15 @@ private:
     bool findInPopulation(GC gId);
     void add_to_population(Genome* g, double f);
     bool population_accepts(double f);
-    int computeSpeciesOfGenome(Genome* g);
+    odNeatSpecies* computeSpeciesOfGenome(Genome* g);
 
     void add_to_species(message msg);
     double speciesFitness(int sp);
     void adjustSpeciesFitness();
     odNeatSpecies* selectSpecies();
-    Genome* selectParent(odNeatSpecies* sp);
-    /*void recompute_all_species();
-    void cleanPopAndSpecies();*/
+    genomeFitness selectParent(odNeatSpecies* sp);
+    void recompute_all_species();
+    /*void cleanPopAndSpecies();*/
 
     Genome* generate_offspring();
     bool doBroadcast();
@@ -67,7 +67,7 @@ private:
     
     void broadcastGenome(); void storeGenome(message m);
 
-    GC _genomeId; local_population _pop; int _newSpId;
+    int _newSpId;
 
     int _lifetime;    
     // ANN
@@ -85,7 +85,7 @@ public:
     odNeatController(RobotWorldModel *wm);
     ~odNeatController();
     Genome *_genome; // current genome in evaluation
-
+    GC _genomeId; local_population _pop;
     void reset();
     void step();
 

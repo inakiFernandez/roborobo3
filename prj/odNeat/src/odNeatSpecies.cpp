@@ -7,12 +7,14 @@ odNeatSpecies::odNeatSpecies(int id)
 {
     _id = id;
     _speciesFitness = 0.0;
+    _lGenomes.clear();
 }
 
 odNeatSpecies::~odNeatSpecies()
 {
-    std::cerr << "TODO destructor species\n";
+    //std::cerr << "TODO destructor species\n";
     //TODO => do not destroy genomes. Needed when recomputing species
+    _lGenomes.clear();
 }
 bool odNeatSpecies::has(GC gId)
 {
@@ -56,16 +58,4 @@ int odNeatSpecies::remove(GC idG)
     computeSpeciesFitness();
     return result;
 }
-/*
-double odNeatSpecies::worseAdjFitness()
-{
-    double result = 10000.0;
-    for (auto itS = _lGenomes.begin(); itS != _lGenomes.end(); itS++)
-    {
-        double adjF = std::get<1>(itS->second) / _lGenomes.size();
-        if ( adjF < result)
-            result = adjF;
-    }
-    return result;
-}*/
 

@@ -910,7 +910,7 @@ double Genome::dissimilarity(Genome *g)
     std::vector<Gene*>::iterator it1 = genes.begin();
     std::vector<Gene*>::iterator it2 = g->genes.begin();
 
-    int maxLength;
+    int maxLength; int common = 0;
     if(genes.size() < g->genes.size())
         maxLength = g->genes.size();
     else
@@ -941,6 +941,7 @@ double Genome::dissimilarity(Genome *g)
                 if(g1 -> enable && g2 ->enable)
                 {
                     weight += fabs( (g1->lnk)->weight - (g2->lnk)->weight );
+                    common++;
                 }
                 it1++;
                 it2++;
@@ -965,7 +966,7 @@ double Genome::dissimilarity(Genome *g)
 
     result = (Helper::coefE * exc/maxLength)
             + (Helper::coefD * disj/maxLength)
-            + (Helper::coefW * weight);
+            + (Helper::coefW * weight /common);
     return result;
 }
 

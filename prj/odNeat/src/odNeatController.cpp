@@ -29,8 +29,23 @@ odNeatController::odNeatController( RobotWorldModel *wm )
 
     _genomeId.robot_id = _wm->_id;
     _genomeId.gene_id = 0;
+    _currentFitness = 0.0;
+    _energy  = 0.0;
+    _items = 0;
 
     resetRobot();
+    /*for (int i=0; i < 50; i++)
+    {
+        Genome* off = _genome->
+                mutate(odNeatSharedData::gSigmaRef, _wm->_id,_genomeId,_n_count,_g_count);
+        for (int j = 0; j < 10; j++)
+        {
+            off = off-> mutate(odNeatSharedData::gSigmaRef,
+                                   _wm->_id,_genomeId,_n_count,_g_count);
+        }
+        std::cout << _genome->dissimilarity(off) << std::endl;
+    }
+    exit(-1);*/
     _genome->genome_id = _genomeId;
     _lifetime = -1;
     // behaviour
@@ -38,13 +53,11 @@ odNeatController::odNeatController( RobotWorldModel *wm )
     _wm->updateLandmarkSensor();
     _wm->setRobotLED_colorValues(255, 0, 0);
     _newSpId = 0;
-
-    add_to_population(_genome->duplicate(),_energy);
 }
 
 odNeatController::~odNeatController()
 {
-    //TODO invoke delete on each object
+    //TODO invoke delete on each object?
     _pop.clear();
     _tabu.clear();
     delete nn;
@@ -54,7 +67,8 @@ odNeatController::~odNeatController()
 
 void odNeatController::reset()
 {
-
+    //std::cout << "Changed genome at it. " << gWorld->getIterations()
+    //          << " with fitness: " << _currentFitness << std::endl;
     _fitnessUpdateCounter = 0;
     _genome -> nbFitnessUpdates = 0;
     _energy = odNeatSharedData::gDefaultInitialEnergy;
@@ -68,31 +82,10 @@ void odNeatController::reset()
     _birthdate = gWorld->getIterations();
     _lifetime = -1;
 
-    /*std::cout << _genome->genes.size() << std::endl;
-    for(int i = 0; i < 1; i++)
-    {
-        add_to_population(_genome->duplicate(), _energy + i);
-        _genomeId.gene_id++;
-        createNN();
-        _genome = _genome->mutate (odNeatSharedData::gSigmaRef,
-                                   _wm->_id,_genomeId,_n_count,_g_count);
-        _genome->genome_id = _genomeId;
-        Helper::mutateAddNodeProb = 0.0;
-        //_genome->print_to_file(std::cout);
-
-        std::cout << _genome->genes.size() << std::endl;
-        //std::cout<< "------------------------------" << std::endl;
-    }
-    for(int i = 0; i < 50; i++)
-    {
-        _genome->mutate_link_weights(odNeatSharedData::gSigmaRef);
-        _genome -> print_to_file(std::cout);
-    }
-    exit(-1);*/
-
     createNN();
 
-    //Add own genome (even if fitness is not yet measured)
+    recompute_all_species();
+    //Add new genome (even if fitness is not yet measured)
     add_to_population(_genome->duplicate(),_energy);
 }
 
@@ -109,7 +102,7 @@ void odNeatController::resetRobot()
         _nbInputs +=  _wm->_cameraSensorsNb;
     }
     //Energy
-    _nbInputs += 1;
+    //_nbInputs += 1;
     //Bias
     _nbInputs += 1;
 
@@ -142,17 +135,20 @@ void odNeatController::step()
     _lifetime++;
     //If Inter-robot reproduction event
     //robot broadcasts genome to all neighbors
-    if(doBroadcast()) broadcastGenome();
+    if(doBroadcast())
+        broadcastGenome();
 
     stepBehaviour ();
 
-    _energy = update_energy_level(); updateFitness();    
+    _energy = update_energy_level(); updateFitness();
 
-    _wm->setRobotLED_colorValues((int) _energy / odNeatSharedData::gMaxEnergy, 0, 0);
+    _wm->setRobotLED_colorValues((int) (256 * _energy / odNeatSharedData::gMaxEnergy),
+                                 0, (int) (256 * _energy / odNeatSharedData::gMaxEnergy));
 
     if ((_energy <=odNeatSharedData::gEnergyThreshold)
             && !(in_maturation_period()))
     {
+        //std::cout << "Changed" << std::endl;
         //TODO LOGS
         stepEvolution();
         reset();
@@ -189,34 +185,24 @@ Genome* odNeatController::generate_offspring()
     Genome* result;
     //Mutate already calls duplicate
     odNeatSpecies* sp = selectSpecies();
-    Genome* g1 = selectParent(sp); Genome* g2 = selectParent(sp);
-
-    //TOTEST Selection on species
-
-    /*//Mate with probability, only if selected genomes are not the same
+    genomeFitness gF1 = selectParent(sp); genomeFitness gF2 = selectParent(sp);
+    Genome* g1 = gF1.g; double f1 = gF1.f;
+    Genome* g2 = gF1.g; double f2 = gF2.f;
+    //Mate with probability, only if selected genomes are not the same
     if((Helper::randFloat() < Helper::mateOnlyProb) && !(g1->genome_id == g2->genome_id))
-        result = g1->mate(g2,_genomeId, fitnessG1,fitnessG2);
+        result = g1 -> mate(g2,_genomeId, f1,f2);
     else
-    {*/
-    result = g1;
-
-    /*}*/
+    {
+        result = g1;
+    }
     if(Helper::randFloat() < Helper::mutateProb)//Mutate
     {
         result = result-> mutate(odNeatSharedData::gSigmaRef,
                                   _wm->_id,_genomeId,_n_count,_g_count);
     }
-    if((result->mom_id.gene_id != -1)
-            && (result->genome_id.gene_id != -1)
-            && (result->dad_id.gene_id != -1))
-    {
-        //offspring comes from mating with the right id's
-    }
-    else
-    {
-        /*result->genome_id = newId; result->mom_id = g1->genome_id;
-        result->dad_id.gene_id = -1; result->dad_id.robot_id = -1;*/
-    }
+
+    //TODO check mom and dad id's
+
     result->genome_id = _genomeId;
     return result;
 }
@@ -270,18 +256,12 @@ void odNeatController::add_to_population(Genome* g, double f)
         g->nbFitnessUpdates++;
         if(popSize < odNeatSharedData::gPopulationSize)
         {
-            int species = computeSpeciesOfGenome(g);
-            if(species != -1)
+            odNeatSpecies* species = computeSpeciesOfGenome(g);
+
+            if(species != NULL)
             {
-                //Add to existing species
-                for(auto itP = _pop.begin(); itP != _pop.end(); itP++)
-                {
-                    if((*itP)->_id == species)
-                    {
-                        (*itP)->add(g, f);
-                        break;
-                    }
-                }
+                species->add(g, f);
+                g->species = species->_id;
             }
             else
             {
@@ -289,6 +269,7 @@ void odNeatController::add_to_population(Genome* g, double f)
                 odNeatSpecies* newSpecies = new odNeatSpecies(_newSpId);
                 _newSpId++;
                 newSpecies->add(g, f);
+                g->species = newSpecies->_id;
                 _pop.push_back(newSpecies);
             }
         }
@@ -304,7 +285,8 @@ void odNeatController::add_to_population(Genome* g, double f)
                 for (auto itS = lGenomes.begin(); itS != lGenomes.end(); itS++)
                 {
                     //Compare to adjusted fitness
-                    if( (itS->second.f/lGenomes.size() < worseF))
+                    if( (itS->second.f/lGenomes.size() < worseF)
+                            && !(itS->first == _genome->genome_id))
                     {
                         worseF = itS->second.f/lGenomes.size();
                         worseId = itS->first;
@@ -325,18 +307,12 @@ void odNeatController::add_to_population(Genome* g, double f)
             {
                 _pop.erase(itSpeciesToEraseFrom);
             }
-            int species = computeSpeciesOfGenome(g);
-            if(species != -1)
+            odNeatSpecies* species = computeSpeciesOfGenome(g);
+            if(species != NULL)
             {
                 //Add to existing species
-                for(auto itP = _pop.begin(); itP != _pop.end(); itP++)
-                {
-                    if((*itP)->_id == species)
-                    {
-                        (*itP)->add(g, f);
-                        break;
-                    }
-                }
+                species->add(g, f);
+                g->species = species->_id;
             }
             else
             {
@@ -344,11 +320,14 @@ void odNeatController::add_to_population(Genome* g, double f)
                 odNeatSpecies* newSpecies = new odNeatSpecies(_newSpId);
                 _newSpId++;
                 newSpecies->add(g, f);
+                g->species = newSpecies->_id;
                 _pop.push_back(newSpecies);
             }
         }
     }
     adjustSpeciesFitness();
+    if(_genome->genome_id == g->genome_id)
+        _genome->species = g->species;
 }
 
 bool odNeatController::findInPopulation(GC gId)
@@ -387,22 +366,60 @@ bool odNeatController::population_accepts(double f)
     return false;
 }
 
-int odNeatController::computeSpeciesOfGenome(Genome* g)
+odNeatSpecies* odNeatController::computeSpeciesOfGenome(Genome* g)
 {
-    int result = -1;
-    for(auto itP = _pop.begin(); itP != _pop.end(); itP++)
+    odNeatSpecies* result = NULL;
+    if(g->species == -1)
     {
-        //Representative genome
-        Genome* repr = (*itP)->_lGenomes.begin()->second.g;
-        //Find first compatible representative genome
-        if(g->dissimilarity(repr) < odNeatSharedData::gCompatThreshold)
+        for(auto itP = _pop.begin(); itP != _pop.end(); itP++)
         {
-            result = (*itP)->_id;
-            break;
+            //Representative genome
+            Genome* repr = (*itP)->_lGenomes.begin()->second.g;
+            //Find first compatible representative genome
+            if(g->dissimilarity(repr) < odNeatSharedData::gCompatThreshold)
+            {
+                result = (*itP);
+                break;
+            }
+        }
+    }
+    else
+    {
+        for(auto itP = _pop.begin(); itP != _pop.end(); itP++)
+        {
+            if((*itP)->_id == g->species)
+            {
+                result = (*itP);
+                break;
+            }
         }
     }
     return result;
 }
+void odNeatController::recompute_all_species()
+{
+    std::map<GC, genomeFitness> allGenomes;
+    //Regroup all genomes in population
+    for(auto itP = _pop.begin(); itP != _pop.end(); )
+    {
+        for(auto itS = (*itP)->_lGenomes.begin();
+            itS != (*itP)->_lGenomes.end(); itS++)
+        {
+            allGenomes.insert((*itS));
+        }
+        delete (*itP);
+        itP = _pop.erase(itP);
+    }
+    _pop.clear();
+    //Reset species counter
+    _newSpId = 0;
+    for(auto itAll = allGenomes.begin(); itAll != allGenomes.end();
+        itAll++)
+    {
+        add_to_population(itAll->second.g, itAll->second.f);
+    }
+}
+
 void odNeatController::adjustSpeciesFitness()
 {
     for(auto itP = _pop.begin(); itP != _pop.end(); itP++)    
@@ -438,10 +455,11 @@ odNeatSpecies* odNeatController::selectSpecies()
     }
     return result;
 }
-Genome* odNeatController::selectParent(odNeatSpecies* sp)
+genomeFitness odNeatController::selectParent(odNeatSpecies* sp)
 {
-    Genome* result = NULL;
-    /*//Intraspecies binary tournament
+    Genome* result = NULL; double rF = -1.0;
+
+    //Intraspecies binary tournament
     auto randomIt1 = sp->_lGenomes.begin(), randomIt2 = sp->_lGenomes.begin();
 
     if(sp->_lGenomes.size() > 1)
@@ -449,6 +467,7 @@ Genome* odNeatController::selectParent(odNeatSpecies* sp)
         int ind1 =  rand () % sp->_lGenomes.size();
         int ind2 =  rand () % sp->_lGenomes.size();
 
+        //Sampling without replacement
         while(ind1 == ind2)
         {
             ind2 =  rand () % sp->_lGenomes.size();
@@ -457,28 +476,34 @@ Genome* odNeatController::selectParent(odNeatSpecies* sp)
         std::advance(randomIt1,ind1);
         std::advance(randomIt2,ind2);
 
+        //Pick the best of the two sampled genomes
         if(randomIt1->second.f >= randomIt2->second.f)
         {
             result = randomIt1 -> second.g;
+            rF = randomIt1 -> second.f;
         }
         else
         {
             result = randomIt2-> second.g;
+            rF = randomIt2 -> second.f;
         }
     }
     else
-        result = sp->_lGenomes.begin() -> second.g;*/
-    //TOERASE BEST
-    double bestF = -1.0;
+    {
+        result = sp->_lGenomes.begin()-> second.g;
+        rF = sp->_lGenomes.begin()-> second.f;
+    }
+    //TOERASE BEST in species
+    /*double bestF = -1.0;
     for(auto it = sp->_lGenomes.begin(); it != sp->_lGenomes.end(); it++)
     {
         if(it -> second.f > bestF)
         {
             result = it -> second.g;
         }
-    }
-
-    return result;
+    }*/
+    genomeFitness r; r.g = result; r.f = rF;
+    return r;
 }
 
 // ##############TABU LIST############################
@@ -499,12 +524,12 @@ bool odNeatController::tabu_list_approves(Genome* g)
 bool odNeatController::update_tabu_list(Genome* g)
 {
     //Returns "is it different than all in tabu?"
+    //Updates timeout of different genomes
     bool result = true;
-    auto it = _tabu.begin(), tabuEnd = _tabu.end();
+    auto it = _tabu.begin(), tabuEnd = _tabu.end();    
 
     for(;it != tabuEnd;it++)
     {
-        //std::cout << it->first->dissimilarity(g) << std::endl;
         if(it->first->dissimilarity(g) < odNeatSharedData::gTabuThreshold)
         {
             it->second = odNeatSharedData::gTabuTimeout;
@@ -540,19 +565,19 @@ void odNeatController::add_to_tabu_list(Genome* g)
 // ################ COMMUNICATION METHODS ################
 bool odNeatController::doBroadcast()
 {
-    bool result = true; //TODO false FALSE!!
-    /*
-    double adjustedFitness = std::get<1>(species[_genome->species]);
+    bool result = false;
+
+    double adjustedFitness = computeSpeciesOfGenome(_genome)->_speciesFitness;
+
     double totalAdjFitness = 0.0;
-    std::map<GC,double>::iterator it = species.begin();
-    for(; it != species.end(); it++)
+    for(auto it = _pop.begin(); it != _pop.end(); it++)
     {
-        totalAdjFitness += it->second;
+        totalAdjFitness += (*it)->_speciesFitness;
     }
 
     if(!(totalAdjFitness == 0.0))
-        if(randFloat() < (adjustedFitness / totalAdjFitness))
-            result = true;*/
+        if(Helper::randFloat() < (adjustedFitness / totalAdjFitness))
+            result = true;
     return result;
 }
 void odNeatController::broadcastGenome()
@@ -609,7 +634,7 @@ void odNeatController::storeGenome(message m)
     }
     else
     {
-        //Delete genome to free memory
+        //Delete genome because not used
         delete std::get<0>(m);
     }
 }
@@ -677,7 +702,7 @@ void odNeatController::stepBehaviour()
         }
     }
 
-    (*inputs)[inputToUse++] = _energy / odNeatSharedData::gMaxEnergy;
+    //(*inputs)[inputToUse++] = _energy / odNeatSharedData::gMaxEnergy;
     //Bias
     (*inputs)[inputToUse++] = 1.0;
 
@@ -742,7 +767,8 @@ double odNeatController::update_energy_level()
         {
             if (_wm->getDistanceValueFromCameraSensor(i)/_wm->getCameraSensorMaximumDistanceValue(i)
                     < coef_obstacle)
-                coef_obstacle = _wm->getDistanceValueFromCameraSensor(i)/_wm->getCameraSensorMaximumDistanceValue(i);
+                coef_obstacle = _wm->getDistanceValueFromCameraSensor(i)
+                        /_wm->getCameraSensorMaximumDistanceValue(i);
         }
 
         //deltaFitness: energy contribution at current time-step
@@ -775,117 +801,15 @@ void odNeatController::updateFitness ()
         _currentFitness = (_currentFitness) + ((_energy -  _currentFitness)/_genome->nbFitnessUpdates);
         _fitnessUpdateCounter =  0;        
     }
+    //Update genome's fitness in population
     for(auto itP = _pop.begin(); itP != _pop.end(); itP++)
     {
+        //Search in current species
         if((*itP)->_lGenomes.find(_genomeId) != (*itP)->_lGenomes.end())
         {
             (*itP)->_lGenomes.find(_genomeId)->second.f = _currentFitness;
+            break;
         }
     }
+    adjustSpeciesFitness();
 }
-/*
-Genome* odNeatController::selectBestGenome()
-{
-    Genome* result = NULL;
-    if(_pop.size() != 0)
-    {
-        double maxFitness = -1.0, curFit;
-        struct GC indexBest;
-        indexBest.robot_id = -1; indexBest.gene_id = -1;
-        local_population::iterator itP = _pop.begin();
-        for(; itP != _pop.end(); itP++)
-        {
-            std::map<GC, message> lGenomes = std::get<0>(itP->second);
-            for(auto itS = lGenomes.begin(); itS != lGenomes.end(); itS++)
-            {
-                curFit = std::get<1>(itS->second);
-                if (curFit > maxFitness)
-                {
-                    maxFitness = curFit;
-                    result = std::get<0>(itS->second);
-                }
-            }
-        }
-
-        //if best individual found, return it
-        if (result != NULL)
-        {
-           //Do nothing (current genome will be mutated)
-        }
-        else
-        {
-            //This should never happen
-            std::cout << "ERROR in best selection" << std::endl;
-            exit(-1);
-        }
-    }
-    else
-    {
-        //This should never happen
-        std::cout << "ERROR in best selection: empty pop" << std::endl;
-        exit(-1);
-    }
-    return result;
-}
-*/
-/*
-void odNeatController::cleanPopAndSpecies()
-{
-    bool ok = true;
-    std::map<int,std::pair<std::set<Genome*>,double>>::iterator itTestSp = species.begin();
-    std::set<Genome*>::iterator itG;
-    std::map<int,message>::iterator itNull = population.begin();
-    //Erase Null genomes  (?)
-    for(;itNull!= population.end();itNull++)
-    {
-        if(std::get<0>((itNull->second)) == NULL)
-        {
-            //Iterator is not invalidated
-            population.erase(itNull->first);
-        }
-    }
-    for(;itTestSp != species.end();itTestSp++)
-    {
-        if(std::get<0>(itTestSp->second).size() == 0 )
-            itTestSp = species.erase(itTestSp);
-        else
-        {
-            itG = ((std::get<0>(itTestSp->second)).begin());
-            for(; itG != (std::get<0>(itTestSp->second)).end(); itG++)
-            {
-                if(!findInPopulation(*itG))
-                {
-                    std::cerr << "[ERROR] Indiv in species not in pop" << std::endl;
-                    ok = false;
-                }
-                if((*itG)->species == -1)
-                {
-                    std::cerr << "[ERROR] Id species == -1 on cleaning species. Genome == " << (*itG)->genome_id << std::endl;
-                    exit(-1);
-                }
-            }
-        }
-    }
-
-    std::map<int,message>::iterator itTest = population.begin();
-
-    for(;itTest != population.end();itTest++)
-    {
-        if(findInSpecies(std::get<0>(itTest->second)) == -1)
-        {
-            std::cerr << "[ERROR] Cleaning, indiv. in pop not in species" << std::endl;
-            ok = false;
-        }
-        if(std::get<0>(itTest->second)->species == -1)
-        {
-            std::cerr << "[ERROR] Id species == -1 on cleaning pop. Genome == " << std::get<0>(itTest->second)->genome_id << std::endl;
-            exit(-1);
-        }
-
-    }
-    if(!ok)
-    {
-        std::cerr << "[ERROR] Something happened on cleaning" << std::endl;
-        exit(-1);
-    }
-}*/
