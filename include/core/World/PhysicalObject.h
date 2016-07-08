@@ -63,6 +63,15 @@ public :
     {
         return _position;
     }
+    double getXCenter()
+    {
+        return _xCenterPixel;
+    }
+    double getYCenter()
+    {
+        return _yCenterPixel;
+    }
+
     
     virtual void step() = 0;
     void stepPhysicalObject(); // default step method. Suggested: call this method from step().

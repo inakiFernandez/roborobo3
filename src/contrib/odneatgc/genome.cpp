@@ -756,7 +756,8 @@ Genome *Genome::mate(Genome *g,GC genomeid,double fitness1,double fitness2)
         else
         {
             //Extract current innovation numbers
-            p1innov=(*p1gene)->innovation_num; p2innov=(*p2gene)->innovation_num;
+            p1innov=(*p1gene)->innovation_num;
+            p2innov=(*p2gene)->innovation_num;
 
             if (p1innov==p2innov)
             {
@@ -940,7 +941,8 @@ double Genome::dissimilarity(Genome *g)
             {
                 if(g1 -> enable && g2 ->enable)
                 {
-                    weight += fabs( (g1->lnk)->weight - (g2->lnk)->weight );
+                    weight += fabs( (g1->lnk)->weight
+                                    - (g2->lnk)->weight );
                     common++;
                 }
                 it1++;
@@ -956,7 +958,8 @@ double Genome::dissimilarity(Genome *g)
             }
             else
             {
-                std::cerr << "[ERROR] Innovation numbers not comparable (?)" << std::endl;
+                std::cerr << "[ERROR] Innovation numbers not comparable (?)"
+                          << std::endl;
                 exit(-1);
             }
         }
@@ -966,7 +969,18 @@ double Genome::dissimilarity(Genome *g)
 
     result = (Helper::coefE * exc/maxLength)
             + (Helper::coefD * disj/maxLength)
-            + (Helper::coefW * weight);// /common);
+            + (Helper::coefW * weight /common);
+
+    //std::cout << "E: " << (Helper::coefE * exc/maxLength)
+    //          << ", D: " << (Helper::coefD * disj/maxLength)
+    //            << ", W: " << (Helper::coefW * weight /common) << std::endl;
+    //std::cout << "E: " << (exc/maxLength)
+    //          << ", D: " << (disj/maxLength)
+    //            << ", W: " << (weight /common) << std::endl;
+    /*std::cout << "E: " << exc
+                  << ", D: " << disj
+                    << ", W: " << weight/common << std::endl;*/
+    //std::cout << result << std::endl;
     return result;
 }
 
@@ -974,7 +988,8 @@ void Genome::print_to_file(std::ostream &outFile)
 {
     std::vector<NNode*>::iterator curnode;
     std::vector<Gene*>::iterator curgene;
-    outFile<<"genomestart " << "R" <<genome_id.robot_id << ", G" << genome_id.gene_id <<std::endl;
+    outFile <<"genomestart " << "R" <<genome_id.robot_id << ", G"
+            << genome_id.gene_id <<std::endl;
 
     //Output the nodes
     for(curnode=nodes.begin();curnode!=nodes.end();++curnode) {

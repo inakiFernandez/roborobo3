@@ -34,18 +34,38 @@ odNeatController::odNeatController( RobotWorldModel *wm )
     _items = 0;
 
     resetRobot();
+
     /*for (int i=0; i < 20; i++)
     {
         Genome* off = _genome->
                 mutate(odNeatSharedData::gSigmaRef, _wm->_id,_genomeId,_n_count,_g_count);
-        for (int j = 0; j < 10; j++)
+        off -> mutate_link_weights(odNeatSharedData::gSigmaRef);
+        //Genome* off2 = _genome->
+        //        mutate(odNeatSharedData::gSigmaRef, _wm->_id,_genomeId,_n_count,_g_count);
+
+        // Genome* mated = _genome -> mate(off,_genomeId, 0.1,0.2);
+        for (int j = 0; j < 0; j++)
         {
             off = off-> mutate(odNeatSharedData::gSigmaRef,
                                    _wm->_id,_genomeId,_n_count,_g_count);
+            off -> mutate_link_weights(odNeatSharedData::gSigmaRef);
         }
+
+        //for (int j = 0; j < 10; j++)
+        //{
+        //    off2 = off2-> mutate(odNeatSharedData::gSigmaRef,
+                                   _wm->_id,_genomeId,_n_count,_g_count);
+        //}
+        //std::cout << _genome->dissimilarity(mated)
+        //          << ", " << off->dissimilarity(mated)
+        //          << std::endl;
+        //if (_genome->dissimilarity(off) != 0.0)
+        //    std::cout << "";
         std::cout << _genome->dissimilarity(off) << std::endl;
+        //std::cout << off->dissimilarity(off2) << std::endl;
     }
     exit(-1);*/
+
     _genome->genome_id = _genomeId;
     _lifetime = -1;
     // behaviour
@@ -102,7 +122,7 @@ void odNeatController::resetRobot()
         _nbInputs +=  _wm->_cameraSensorsNb;
     }
     //Energy
-    //_nbInputs += 1;
+    _nbInputs += 1;
     //Bias
     _nbInputs += 1;
 
@@ -133,6 +153,7 @@ void odNeatController::step()
 {
     _iteration++;
     _lifetime++;
+
     //If Inter-robot reproduction event
     //robot broadcasts genome to all neighbors
     if(doBroadcast())
@@ -142,13 +163,12 @@ void odNeatController::step()
 
     _energy = update_energy_level(); updateFitness();
 
-    _wm->setRobotLED_colorValues((int) (256 * _energy / odNeatSharedData::gMaxEnergy),
-                                 0, (int) (256 * _energy / odNeatSharedData::gMaxEnergy));
+    _wm->setRobotLED_colorValues((int) (255 * _energy / odNeatSharedData::gMaxEnergy),
+                                 0, (int) (255 * _energy / odNeatSharedData::gMaxEnergy));
 
     if ((_energy <=odNeatSharedData::gEnergyThreshold)
             && !(in_maturation_period()))
     {
-        //std::cout << "Changed" << std::endl;
         //TODO LOGS
         stepEvolution();
         reset();
@@ -204,8 +224,11 @@ Genome* odNeatController::generate_offspring()
     Genome* g1 = gF1.g; double f1 = gF1.f;
     Genome* g2 = gF1.g; double f2 = gF2.f;
     //Mate with probability, only if selected genomes are not the same
-    if((Helper::randFloat() < Helper::mateOnlyProb) && !(g1->genome_id == g2->genome_id))
+    if((Helper::randFloat() < Helper::mateOnlyProb)
+            && !(g1->genome_id == g2->genome_id))
+    {
         result = g1 -> mate(g2,_genomeId, f1,f2);
+    }
     else
     {
         result = g1;
@@ -214,6 +237,11 @@ Genome* odNeatController::generate_offspring()
     {
         result = result-> mutate(odNeatSharedData::gSigmaRef,
                                   _wm->_id,_genomeId,_n_count,_g_count);
+    }
+    else
+    {
+        //TOTEST if keep same genome, what happens?
+        result = result-> duplicate();
     }
 
     //TODO check mom and dad id's
@@ -246,13 +274,14 @@ void odNeatController::add_to_population(Genome* g, double f)
             {
                 if(itS->first == receivedId)
                 {
-                    Genome* existingG = itS->second.g; double existingF = itS->second.f;
+                    Genome* existingG = itS->second.g;
+                    double existingF = itS->second.f;
 
                     existingG->nbFitnessUpdates++;
                     itS->second.f = existingF + (receivedF - existingF)
                             /existingG->nbFitnessUpdates;
                     delete g;
-
+                    //g = NULL;
                     found = true;
                     break;
                 }
@@ -281,7 +310,8 @@ void odNeatController::add_to_population(Genome* g, double f)
             else
             {
                 //Create new species
-                odNeatSpecies* newSpecies = new odNeatSpecies(_newSpId);
+                odNeatSpecies* newSpecies =
+                        new odNeatSpecies(_newSpId);
                 _newSpId++;
                 newSpecies->add(g, f);
                 g->species = newSpecies->_id;
@@ -332,7 +362,8 @@ void odNeatController::add_to_population(Genome* g, double f)
             else
             {
                 //Create new species
-                odNeatSpecies* newSpecies = new odNeatSpecies(_newSpId);
+                odNeatSpecies* newSpecies =
+                        new odNeatSpecies(_newSpId);
                 _newSpId++;
                 newSpecies->add(g, f);
                 g->species = newSpecies->_id;
@@ -341,7 +372,8 @@ void odNeatController::add_to_population(Genome* g, double f)
         }
     }
     adjustSpeciesFitness();
-    if(_genome->genome_id == g->genome_id)
+    if((_genome->genome_id == g->genome_id)
+            && (_genome->species == -1))
         _genome->species = g->species;
 }
 
@@ -677,15 +709,17 @@ void odNeatController::stepBehaviour()
         if ( PhysicalObject::isInstanceOf(objId) )
         {
 
-            //(*inputs)[inputToUse] = 1.0;
-            (*inputs)[inputToUse] = 0.0; inputToUse++;
+            (*inputs)[inputToUse] = 1.0;
+            //(*inputs)[inputToUse] = 0.0;
+            inputToUse++;
         }
         else
         {
-            //(*inputs)[inputToUse] = _wm->getDistanceValueFromCameraSensor(i) /
-            // _wm->getCameraSensorMaximumDistanceValue(i);
-            (*inputs)[inputToUse] = 1.0 - _wm->getDistanceValueFromCameraSensor(i) /
-                    _wm->getCameraSensorMaximumDistanceValue(i); inputToUse++;
+            (*inputs)[inputToUse] = _wm->getDistanceValueFromCameraSensor(i) /
+             _wm->getCameraSensorMaximumDistanceValue(i);
+            //(*inputs)[inputToUse] = 1.0 - _wm->getDistanceValueFromCameraSensor(i) /
+            //        _wm->getCameraSensorMaximumDistanceValue(i);
+            inputToUse++;
         }
 
         //If task=collect, add object sensors
@@ -697,13 +731,13 @@ void odNeatController::stepBehaviour()
             if ( PhysicalObject::isInstanceOf(objectId) )
             {
                 if ( type == gPhysicalObjects[objectId - gPhysicalObjectIndexStartOffset]->getType() )
-                    //(*inputs)[inputToUse] = _wm->getDistanceValueFromCameraSensor(i) /
-                    //      _wm->getCameraSensorMaximumDistanceValue(i);
-                    (*inputs)[inputToUse] = 1.0 - _wm->getDistanceValueFromCameraSensor(i) /
-                        _wm->getCameraSensorMaximumDistanceValue(i);
+                    (*inputs)[inputToUse] = _wm->getDistanceValueFromCameraSensor(i) /
+                          _wm->getCameraSensorMaximumDistanceValue(i);
+                    //(*inputs)[inputToUse] = 1.0 - _wm->getDistanceValueFromCameraSensor(i) /
+                    //    _wm->getCameraSensorMaximumDistanceValue(i);
                 else
-                    //(*inputs)[inputToUse] = 1.0;
-                    (*inputs)[inputToUse] = 0.0;
+                    (*inputs)[inputToUse] = 1.0;
+                    //(*inputs)[inputToUse] = 0.0;
                 inputToUse++;
 
             }
@@ -711,13 +745,14 @@ void odNeatController::stepBehaviour()
             {
                 //Not a physical object.
                 //But: should still fill in the inputs 0.0 //(max distance, 1.0)
-                //(*inputs)[inputToUse] = 1.0;
-                (*inputs)[inputToUse] = 0.0; inputToUse++;
+                (*inputs)[inputToUse] = 1.0;
+                //(*inputs)[inputToUse] = 0.0;
+                inputToUse++;
             }
         }
     }
 
-    //(*inputs)[inputToUse++] = _energy / odNeatSharedData::gMaxEnergy;
+    (*inputs)[inputToUse++] = _energy / odNeatSharedData::gMaxEnergy;
     //Bias
     (*inputs)[inputToUse++] = 1.0;
 

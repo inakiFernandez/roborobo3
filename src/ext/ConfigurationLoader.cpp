@@ -8,6 +8,9 @@
 #include "Config/IncrementConfigurationLoader.h"
 #include "Config/TestNNConfigurationLoader.h"
 #include "Config/odNeatConfigurationLoader.h"
+#include "Config/Collect2ConfigurationLoader.h"
+#include "Config/Collect2RobotSensorsConfigurationLoader.h"
+#include "Config/OriginalConfigurationLoader.h"
 //###DO-NOT-DELETE-THIS-LINE###TAG:INCLUDE###//
 
 
@@ -67,6 +70,24 @@ ConfigurationLoader* ConfigurationLoader::make_ConfigurationLoader (std::string 
 	else if (configurationLoaderObjectName == "odNeatConfigurationLoader" )
 	{
 		return new odNeatConfigurationLoader();
+	}
+#endif
+#if defined PRJ_COLLECT2 || !defined MODULAR
+	else if (configurationLoaderObjectName == "Collect2ConfigurationLoader" )
+	{
+		return new Collect2ConfigurationLoader();
+	}
+#endif
+#if defined PRJ_COLLECT2ROBOTSENSORS || !defined MODULAR
+	else if (configurationLoaderObjectName == "Collect2RobotSensorsConfigurationLoader" )
+	{
+		return new Collect2RobotSensorsConfigurationLoader();
+	}
+#endif
+#if defined PRJ_ORIGINAL || !defined MODULAR
+	else if (configurationLoaderObjectName == "OriginalConfigurationLoader" )
+	{
+		return new OriginalConfigurationLoader();
 	}
 #endif
     //###DO-NOT-DELETE-THIS-LINE###TAG:SWITCH###//

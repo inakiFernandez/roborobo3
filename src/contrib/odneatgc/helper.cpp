@@ -18,9 +18,9 @@ using namespace ODNEATGC;
     // Number of tries mutate_add_link or mutate_add_node will attempt to find an open link
     int        Helper::newStructureTries=0;
 
-    double     Helper::coefE=0.5;
-    double     Helper::coefD=1.5;
-    double     Helper::coefW=0.4;
+    double     Helper::coefE= 5.0; //1.0;
+    double     Helper::coefD= 10.0; //1.5;
+    double     Helper::coefW= 0.4;
 
     double     Helper::rangeW=10.0;
 

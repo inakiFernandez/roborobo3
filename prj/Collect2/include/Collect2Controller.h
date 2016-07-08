@@ -5,15 +5,15 @@
 
 
 
-#ifndef INCREMENTCONTROLLER_H
-#define INCREMENTCONTROLLER_H
+#ifndef COLLECT2CONTROLLER_H
+#define COLLECT2CONTROLLER_H
 
 #include "RoboroboMain/common.h"
 #include "RoboroboMain/roborobo.h"
 #include "Utilities/Graphics.h"
 #include "Controllers/Controller.h"
 #include "WorldModels/RobotWorldModel.h"
-#include "Increment/include/IncrementAgentObserver.h"
+#include "Collect2/include/Collect2AgentObserver.h"
 #include <neuralnetworks/NeuralNetwork.h>
 
 #include <iomanip>
@@ -35,7 +35,7 @@ struct GC
     friend std::ostream& operator<<(std::ostream& os, const GC& gene_clock);
 };
 
-class IncrementController : public Controller
+class Collect2Controller : public Controller
 {
 private:
     int _iteration;
@@ -93,8 +93,8 @@ private:
     
 public:
 
-    IncrementController(RobotWorldModel *wm);
-    ~IncrementController();
+    Collect2Controller(RobotWorldModel *wm);
+    ~Collect2Controller();
 
     void reset();
     void step();

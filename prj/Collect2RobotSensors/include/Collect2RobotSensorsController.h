@@ -5,15 +5,15 @@
 
 
 
-#ifndef INCREMENTCONTROLLER_H
-#define INCREMENTCONTROLLER_H
+#ifndef COLLECT2ROBOTSENSORSCONTROLLER_H
+#define COLLECT2ROBOTSENSORSCONTROLLER_H
 
 #include "RoboroboMain/common.h"
 #include "RoboroboMain/roborobo.h"
 #include "Utilities/Graphics.h"
 #include "Controllers/Controller.h"
 #include "WorldModels/RobotWorldModel.h"
-#include "Increment/include/IncrementAgentObserver.h"
+#include "Collect2RobotSensors/include/Collect2RobotSensorsAgentObserver.h"
 #include <neuralnetworks/NeuralNetwork.h>
 
 #include <iomanip>
@@ -35,18 +35,23 @@ struct GC
     friend std::ostream& operator<<(std::ostream& os, const GC& gene_clock);
 };
 
-class IncrementController : public Controller
+class Collect2RobotSensorsController : public Controller
 {
 private:
     int _iteration;
     int _birthdate; // evaluation when this controller was initialized.
-    double _currentFitness;
+    double _currentFitness;    
 
     std::vector<double> _parameters;
     std::string _nnType;
     std::vector<int> _nbHiddenNeuronsPerLayer;
     std::vector<int> _nbBiaisNeuronsPerLayer;
     NeuralNetwork* nn;
+    //previous neural net todo
+    //NeuralNetwork* previousNN;
+
+    //forgetting measure todo
+    //double forget();
 
     void createNN();
     
@@ -93,8 +98,8 @@ private:
     
 public:
 
-    IncrementController(RobotWorldModel *wm);
-    ~IncrementController();
+    Collect2RobotSensorsController(RobotWorldModel *wm);
+    ~Collect2RobotSensorsController();
 
     void reset();
     void step();

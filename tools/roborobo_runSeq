@@ -11,7 +11,7 @@ else
 		echo =-=-=-=-=-=
 		echo Exp. $cnt of $1
 		echo =-=-=-=-=-=
-		./roborobo -l $2
+		./roborobo -l $2 | tee "logs/run-$cnt.log"
 		echo -
 	done
 fi

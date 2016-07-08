@@ -27,6 +27,7 @@ IncrementWorldObserver::IncrementWorldObserver( World* world ) : WorldObserver( 
     gProperties.checkAndGetPropertyValue("gEvaluationTime",&IncrementSharedData::gEvaluationTime,true);
 
     gProperties.checkAndGetPropertyValue("gControllerType",&IncrementSharedData::gControllerType,true);
+
     gProperties.checkAndGetPropertyValue("gNbHiddenLayers",&IncrementSharedData::gNbHiddenLayers,true);
 	gProperties.checkAndGetPropertyValue("gNbNeuronsPerHiddenLayer",&IncrementSharedData::gNbNeuronsPerHiddenLayer,true);
 	gProperties.checkAndGetPropertyValue("gNeuronWeightRange",&IncrementSharedData::gNeuronWeightRange,true);
@@ -84,6 +85,7 @@ void IncrementWorldObserver::updateMonitoring()
         // Logging here
         double sumFitness = 0.0;
         double sumAvgLocalPopFitness = 0.0;
+        int gatheredGenomes = 0;
         for ( int i = 0 ; i != gNumberOfRobots ; i++ )
         {
 
@@ -91,9 +93,13 @@ void IncrementWorldObserver::updateMonitoring()
                      -> getFitness();
              sumAvgLocalPopFitness += (dynamic_cast<IncrementController*>
                                        (gWorld->getRobot(i)->getController())) -> getAvgPopFitness();
+             gatheredGenomes += (dynamic_cast<IncrementController*>
+                                 (gWorld->getRobot(i)->getController())) ->_genomesList.size();
         }
-        std::cout << "It: " << gWorld->getIterations() << std::endl;
-        std::cout << sumFitness  / gNumberOfRobots << std::endl;
+        std::cout << gWorld->getIterations() << " ";
+        std::cout << (sumFitness  / gNumberOfRobots) / IncrementSharedData::gEvaluationTime << " ";
+        //std::cout << sumFitness << std::endl;
+        std::cout << gatheredGenomes << std::endl;
 
 	}
     //std::cout << "It: " << gWorld->getIterations() << std::endl;

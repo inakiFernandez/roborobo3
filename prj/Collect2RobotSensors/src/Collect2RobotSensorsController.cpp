@@ -3,8 +3,8 @@
  * NNlib: Leo Cazenille <leo.cazenille@upmc.fr>
  */
 
-#include "Increment/include/IncrementController.h"
-#include "Increment/include/IncrementWorldObserver.h"
+#include "Collect2RobotSensors/include/Collect2RobotSensorsController.h"
+#include "Collect2RobotSensors/include/Collect2RobotSensorsWorldObserver.h"
 
 #include "World/World.h"
 #include "Utilities/Misc.h"
@@ -17,32 +17,32 @@
 
 using namespace Neural;
 
-IncrementController::IncrementController( RobotWorldModel *wm )
+Collect2RobotSensorsController::Collect2RobotSensorsController( RobotWorldModel *wm )
 {
     _wm = wm; nn = NULL;
 
-    // evolutionary engine
-    _minValue = -IncrementSharedData::gNeuronWeightRange/2;
-    _maxValue = IncrementSharedData::gNeuronWeightRange/2;
-	_currentSigma = IncrementSharedData::gSigmaRef;
+    // neural weights limits
+    _minValue = -Collect2RobotSensorsSharedData::gNeuronWeightRange/2;
+    _maxValue = Collect2RobotSensorsSharedData::gNeuronWeightRange/2;
+	_currentSigma = Collect2RobotSensorsSharedData::gSigmaRef;
 
+    //Evo variables
     _currentFitness = 0.0;
     _genomeId.robot_id = _wm->_id;
     _genomeId.gene_id = 0;
 
     resetRobot();
 
-    _lifetime = -1;
+    _lifetime = -1; _iteration = 0; _birthdate = 0;
 
-    // behaviour
-    _iteration = 0; _birthdate = 0;
     _wm->updateLandmarkSensor();
     _wm->setRobotLED_colorValues(255, 0, 0);
+
     if(_wm->_id == 0)
     {
         std::cout << "W:" << computeRequiredNumberOfWeights() << std::endl;
         std::cout << "(I:" << nn->getNbInputs();
-        if (IncrementSharedData::gWithBias)
+        if (Collect2RobotSensorsSharedData::gWithBias)
             std::cout << ", B)";
         else
             std::cout << ")";
@@ -50,43 +50,50 @@ IncrementController::IncrementController( RobotWorldModel *wm )
     }
 }
 
-IncrementController::~IncrementController()
+Collect2RobotSensorsController::~Collect2RobotSensorsController()
 {
     _parameters.clear();
     delete nn;
     nn = NULL;
 }
 
-void IncrementController::reset()
+void Collect2RobotSensorsController::reset()
 {   
     _parameters.clear();
     _parameters = _currentGenome;
 }
 
-void IncrementController::resetRobot()
+void Collect2RobotSensorsController::resetRobot()
 {
     //Number of sensors
     _nbInputs = 0;
-
+    if (Collect2RobotSensorsSharedData::gWithBias)
+        _nbInputs += 1;
     //proximity sensors
     _nbInputs += _wm->_cameraSensorsNb;
 
     //If task=collect, add object sensors
-    if (IncrementSharedData::gFitness == 1)
+    if ((Collect2RobotSensorsSharedData::gFitness == 1) || (Collect2RobotSensorsSharedData::gFitness == 2))
     {
         // gathering object distance
         _nbInputs +=  _wm->_cameraSensorsNb;
+        // agents
+        _nbInputs +=  _wm->_cameraSensorsNb;
+        //TEST agent: is gathering?
+        //_nbInputs +=  _wm->_cameraSensorsNb;
     }
+
     //Current translational and rotational speeds
     //_nbInputs += 2;
+
     //Number of effectors
     _nbOutputs = 2;
 
     //NN structure
-    _nbHiddenLayers = IncrementSharedData::gNbHiddenLayers;
+    _nbHiddenLayers = Collect2RobotSensorsSharedData::gNbHiddenLayers;
     _nbNeuronsPerHiddenLayer = new std::vector<unsigned int>(_nbHiddenLayers);
     for(unsigned int i = 0; i < _nbHiddenLayers; i++)
-        (*_nbNeuronsPerHiddenLayer)[i] = IncrementSharedData::gNbNeuronsPerHiddenLayer;
+        (*_nbNeuronsPerHiddenLayer)[i] = Collect2RobotSensorsSharedData::gNbNeuronsPerHiddenLayer;
 
     createNN();
 
@@ -109,47 +116,36 @@ void IncrementController::resetRobot()
 
 }
 
-void IncrementController::createNN()
+void Collect2RobotSensorsController::createNN()
 {
     delete nn;
-    switch ( IncrementSharedData::gControllerType )
+    switch ( Collect2RobotSensorsSharedData::gControllerType )
     {
         case 0:
-        {
-            // MLP
             nn = new MLP(_parameters, _nbInputs, _nbOutputs,
-                         *(_nbNeuronsPerHiddenLayer), IncrementSharedData::gWithBias);
+                         *(_nbNeuronsPerHiddenLayer),false);
             break;
-        }
         case 1:
-        {
-            // PERCEPTRON
             nn = new Perceptron(_parameters, _nbInputs, _nbOutputs);
             break;
-        }
         case 2:
-        {
-            // ELMAN
             nn = new Elman(_parameters, _nbInputs, _nbOutputs, *(_nbNeuronsPerHiddenLayer));
             break;
-        }
         default: // default: no controller
             std::cerr << "[ERROR] gController type unknown (value: "
-                      << IncrementSharedData::gControllerType << ").\n";
+                      << Collect2RobotSensorsSharedData::gControllerType << ").\n";
             exit(-1);
     };
-    // MLP
-    //nn = new MLP(_parameters, _nbInputs, _nbOutputs, *(_nbNeuronsPerHiddenLayer),
-    //             IncrementSharedData::gWithBias);
+
 }
 
-unsigned int IncrementController::computeRequiredNumberOfWeights()
+unsigned int Collect2RobotSensorsController::computeRequiredNumberOfWeights()
 {
     unsigned int res = nn->getRequiredNumberOfWeights();
     return res;
 }
 
-void IncrementController::step()
+void Collect2RobotSensorsController::step()
 {
 	_iteration++;
 
@@ -162,9 +158,9 @@ void IncrementController::step()
     double rot = _wm->_desiredRotationalVelocity  / gMaxRotationalSpeed;
     double deltaFitness;
     //Fitness measurement and update
-    switch (IncrementSharedData::gFitness) {
+    switch (Collect2RobotSensorsSharedData::gFitness) {
     case 0:
-        //Floreano's increment
+        //Navigation fitness instant increment
         for(int i  = 0; i < _wm->_cameraSensorsNb; i++)
         {
             distance_sensor = _wm->getDistanceValueFromCameraSensor(i) /
@@ -182,6 +178,9 @@ void IncrementController::step()
     case 1:
         //Counting items: already done in agent observer
         break;
+    case 2:
+        //Counting items cooperatively:  already done in agent observer
+        break;
     default:
         break;
     }
@@ -189,7 +188,7 @@ void IncrementController::step()
 
 
 //################BEHAVIOUR METHODS################
-void IncrementController::stepBehaviour()
+void Collect2RobotSensorsController::stepBehaviour()
 {
     // ---- Build inputs ----
     std::vector<double>* inputs = new std::vector<double>(_nbInputs);
@@ -199,26 +198,23 @@ void IncrementController::stepBehaviour()
     for(int i  = 0; i < _wm->_cameraSensorsNb; i++)
     {
         // distance sensors
-        //If there is object but not "Physical object" => wall (get distance sensor) else 0.0
+        //If object but not "Physical object"
+        //=> wall (get distance sensor) else 0.0
         int objId = _wm->getObjectIdFromCameraSensor(i);
-        if ( PhysicalObject::isInstanceOf(objId) )
+        if ( PhysicalObject::isInstanceOf(objId) || Agent::isInstanceOf(objId))
         {
-
-            //(*inputs)[inputToUse] = 1.0;
             (*inputs)[inputToUse] = 0.0;
             inputToUse++;
         }
         else
         {
-            //(*inputs)[inputToUse] = _wm->getDistanceValueFromCameraSensor(i) /
-             //_wm->getCameraSensorMaximumDistanceValue(i);
             (*inputs)[inputToUse] = 1.0 - _wm->getDistanceValueFromCameraSensor(i) /
                           _wm->getCameraSensorMaximumDistanceValue(i);
             inputToUse++;
         }
         
         //If task=collect, add object sensors
-        if (IncrementSharedData::gFitness == 1)
+        if ((Collect2RobotSensorsSharedData::gFitness == 1) ||(Collect2RobotSensorsSharedData::gFitness == 2))
         {
             int objectId = _wm->getObjectIdFromCameraSensor(i);
             // input: physical object?
@@ -226,36 +222,67 @@ void IncrementController::stepBehaviour()
             if ( PhysicalObject::isInstanceOf(objectId) )
             {
                 if ( type == gPhysicalObjects[objectId - gPhysicalObjectIndexStartOffset]->getType() )
-                  //(*inputs)[inputToUse] = _wm->getDistanceValueFromCameraSensor(i) /
-                  //      _wm->getCameraSensorMaximumDistanceValue(i);
                   (*inputs)[inputToUse] = 1.0 - _wm->getDistanceValueFromCameraSensor(i) /
                       _wm->getCameraSensorMaximumDistanceValue(i);
                 else
-                    //(*inputs)[inputToUse] = 1.0;
                     (*inputs)[inputToUse] = 0.0;
                 inputToUse++;
-
             }
             else
             {
-                //Not a physical object.
-                //But: should still fill in the inputs 0.0 //(max distance, 1.0)
-                //(*inputs)[inputToUse] = 1.0;
+                //Not a physical object. But: should still fill in the inputs 0.0
                 (*inputs)[inputToUse] = 0.0;
                 inputToUse++;
             }
        }
+        //Agent sensors
+       if ( Agent::isInstanceOf(objId) )
+       {
+           (*inputs)[inputToUse] = 1.0 - _wm->getDistanceValueFromCameraSensor(i) /
+               _wm->getCameraSensorMaximumDistanceValue(i);
+           inputToUse++;
+           /*if ( objId >= gRobotIndexStartOffset )
+           {
+                Robot* r = (gWorld->getRobot(objId - gRobotIndexStartOffset));
+                RobotWorldModel* wm = r -> getWorldModel();
+                int otherObjId = wm -> getGroundSensorValue();
+                if(PhysicalObject::isInstanceOf(otherObjId))
+                {
+                    (*inputs)[inputToUse] = 1.0;
+                    inputToUse++;
+                }
+               else
+               {
+                   (*inputs)[inputToUse] = 0.0;
+                   inputToUse++;
+               }
+           }*/
+       }
+       else
+       {
+           (*inputs)[inputToUse] = 0.0;
+           inputToUse++;
+          /* (*inputs)[inputToUse] = 0.0;
+           inputToUse++;*/
+       }
     }
 
+    if (Collect2RobotSensorsSharedData::gWithBias)
+        (*inputs)[inputToUse] = 1.0;
+        inputToUse++;
 
     //Previous translational and rotational speeds (acts as recurrent connections from last step)
     //(*inputs)[inputToUse] = _wm->_desiredTranslationalValue / gMaxTranslationalSpeed;
     //inputToUse++;
     //(*inputs)[inputToUse] = _wm->_desiredRotationalVelocity / gMaxRotationalSpeed;
     //inputToUse++;
-    /*for(auto it = inputs->begin(); it < inputs->end(); it++)
-        std::cout << (*it) << " ";
-    std::cout << std::endl;*/
+    /*if(_wm->_id == 0)
+    {
+        for(auto it = inputs->begin(); it < inputs->end(); it++)
+            std::cout << (*it) << " | ";
+        std::cout << std::endl;
+    }*/
+
     // ---- compute and read out ----
     nn->setWeigths(_parameters); // set genome
     nn->setInputs(*inputs);
@@ -271,7 +298,7 @@ void IncrementController::stepBehaviour()
 
     _wm->_desiredTranslationalValue = (rW + lW) / 2;
     _wm->_desiredRotationalVelocity = (lW - rW) / 2;
-    
+
     // normalize to motor interval values
     _wm->_desiredTranslationalValue =  _wm->_desiredTranslationalValue * gMaxTranslationalSpeed;
     _wm->_desiredRotationalVelocity = _wm->_desiredRotationalVelocity * gMaxRotationalSpeed;
@@ -282,16 +309,17 @@ void IncrementController::stepBehaviour()
 
 
 //################ EVOLUTION ENGINE METHODS ################
-void IncrementController::stepEvolution()
+void Collect2RobotSensorsController::stepEvolution()
 {
     //broadcasting genome : robot broadcasts its genome
     //to all neighbors (contact-based wrt proximity sensors)
     broadcastGenome();
     _lifetime++;
+
     //agent's lifetime ended: replace genome (if possible)
-    if(_lifetime >= IncrementSharedData::gEvaluationTime)
+    if(_lifetime >= Collect2RobotSensorsSharedData::gEvaluationTime)
     {
-        if (IncrementSharedData::gStoreOwn)
+        if (Collect2RobotSensorsSharedData::gStoreOwn)
             storeOwnGenome();
 
         loadNewGenome();
@@ -301,7 +329,7 @@ void IncrementController::stepEvolution()
         _currentFitness = 0.0;
         _lifetime = 0;
 
-       if (IncrementSharedData::gClearPopulation)
+       if (Collect2RobotSensorsSharedData::gClearPopulation)
        {
            _genomesList.clear();
            _fitnessList.clear();
@@ -316,149 +344,75 @@ void IncrementController::stepEvolution()
 	}
 }
 
-void IncrementController::loadNewGenome()
+void Collect2RobotSensorsController::loadNewGenome()
 {
-    switch(IncrementSharedData::gSelectionMethod)
-    {
-        case 0:
-            // case: 1+ genome(s) imported, random pick.
-            if (_genomesList.size() > 0)
-            {
-                selectRandomGenome();
-            }
-            else
-            {
-                // case: no imported genome
-                resetRobot(); // destroy then create a new NN
-            }
-            break;
-       case 1:
-            // case: 1+ genome(s) imported, select best.
-            if (_genomesList.size() > 0)
-            {
-                selectBestGenome();
-            }
-            else
-            {
-                // case: no imported genome: mutate current
-                mutate(_currentSigma);
-                setNewGenomeStatus(true);
-
-                _birthdate = gWorld->getIterations();
-            }
-            break;
-        case 2:
-             // case: 1+ genome(s) imported, select rank-based.
-             if (_genomesList.size() > 0)
-             {
-                 selectRankBasedGenome();
-             }
-             else
-             {
-                 // case: no imported genome: mutate current
-                 mutate(_currentSigma);
-                 setNewGenomeStatus(true);
-
-                 _birthdate = gWorld->getIterations();
-             }
-             break;
-       default:
-            std::cout << "Error: unknown selection method: "
-                      << IncrementSharedData::gSelectionMethod << std::endl;
-            exit(-1);
-    }
+   // If 1+ genome(s) imported, select best.
+   if (_genomesList.size() > 0)
+   {
+       selectBestGenome();
+       //selectRankBasedGenome();
+   }
+   else
+   {
+        // case: no imported genome: mutate current
+   }
+   mutate(_currentSigma);
+   setNewGenomeStatus(true);
+   _birthdate = gWorld->getIterations();
 }
 
-void IncrementController::selectRandomGenome()
+void Collect2RobotSensorsController::selectBestGenome()
 {
-    if(_genomesList.size() != 0)
+
+    double maxFitness = std::numeric_limits<double>::lowest();
+
+    struct GC indexBest;
+
+    indexBest.robot_id = -1; indexBest.gene_id = -1;
+    std::map<GC, double>::iterator it = _fitnessList.begin();
+    for(; it != _fitnessList.end(); it++)
     {
-        int randomIndex = rand()%_genomesList.size();
-        std::map<GC, std::vector<double> >::iterator it = _genomesList.begin();
-        while (randomIndex !=0 )
+        if ((*it).second > maxFitness)
         {
-            it ++;
-            randomIndex --;
+            maxFitness = (*it).second;
+            indexBest = (*it).first;
         }
-        
-        _currentGenome = (*it).second;
-        
-        mutate(_currentSigma);
-        
-        setNewGenomeStatus(true);
-        
-        _birthdate = gWorld->getIterations();
     }
-}
 
-void IncrementController::selectBestGenome()
-{
-    if(_genomesList.size() != 0)
+    //if best individual found => replace
+    if (indexBest.robot_id != -1)
     {
-        double maxFitness = std::numeric_limits<double>::lowest();
-
-        struct GC indexBest;
-        indexBest.robot_id = -1; indexBest.gene_id = -1;
-        std::map<GC, double>::iterator it = _fitnessList.begin();
-        for(; it != _fitnessList.end(); it++)
-        {
-            if ((*it).second > maxFitness)
-            {
-                maxFitness = (*it).second;
-                indexBest = (*it).first;
-            }
-        }
-
-        //if best individual found => replace
-        if (indexBest.robot_id != -1)
-        {
-            _currentGenome = _genomesList[indexBest];
-        }
-        else
-        {
-            //This should never happen
-            std::cout << "ERROR in best selection" << std::endl;
-            exit(-1);
-            //Do nothing (current genome will be mutated)
-        }
-
-        mutate(_currentSigma);
-
-        setNewGenomeStatus(true);
-        _birthdate = gWorld->getIterations();
+        _currentGenome = _genomesList[indexBest];
     }
-}
+    else
+    {
+        //This should never happen
+        std::cout << "ERROR in best selection" << std::endl;
+        exit(-1);
+    }
 
-void IncrementController::selectRankBasedGenome()
+}
+void Collect2RobotSensorsController::selectRankBasedGenome()
 {
     unsigned int n = _genomesList.size();
-    if(n != 0)
-    {
-        double total_prob = n * (n + 1) / 2;
+    double total_prob = n * (n + 1) / 2;
 
-        int i = 0;
-        double p = (rand() / static_cast<double>(RAND_MAX)) * total_prob;
-        //choose i-th index with i/total_prob
-        while((p -= (i+1)) > 0)
-            i++;
-        std::vector<std::pair<GC, double>> pairs;
-        for (auto itr = _fitnessList.begin(); itr != _fitnessList.end(); ++itr)
-            pairs.push_back(*itr);
-        
-        sort(pairs.begin(), pairs.end(),
-             [=](const std::pair<GC, double> &a,
-                 const std::pair<GC, double> &b){ return a.second < b.second;});
+    int i = 0;
+    double p = (rand() / static_cast<double>(RAND_MAX)) * total_prob;
+    //choose i-th index with i/total_prob
+    while((p -= (i+1)) > 0)
+        i++;
+    std::vector<std::pair<GC, double>> pairs;
+    for (auto itr = _fitnessList.begin(); itr != _fitnessList.end(); ++itr)
+        pairs.push_back(*itr);
 
-        _currentGenome = _genomesList[pairs[i].first];
+    sort(pairs.begin(), pairs.end(),
+         [=](const std::pair<GC, double> &a,
+             const std::pair<GC, double> &b){ return a.second < b.second;});
 
-        mutate(_currentSigma);
-
-        setNewGenomeStatus(true);
-        _birthdate = gWorld->getIterations();
-    }
+    _currentGenome = _genomesList[pairs[i].first];
 }
-
-void IncrementController::mutate( float sigma) // mutate within bounds.
+void Collect2RobotSensorsController::mutate(float sigma) // mutate within bounds.
 {
 	_genome.clear();
     
@@ -496,15 +450,15 @@ void IncrementController::mutate( float sigma) // mutate within bounds.
     //gLogManager->write(s); gLogManager->flush();
 }
 
-void IncrementController::updateFitness(double delta)
+void Collect2RobotSensorsController::updateFitness(double delta)
 {
     _currentFitness += delta;
 }
 
 // ################ COMMUNICATION METHODS ################
-void IncrementController::broadcastGenome()
+void Collect2RobotSensorsController::broadcastGenome()
 {
-    if (IncrementSharedData::gCommunicationBySensors)
+    if (Collect2RobotSensorsSharedData::gCommunicationBySensors)
     {
         for( int i = 0 ; i < _wm->_cameraSensorsNb; i++)
         {
@@ -516,8 +470,8 @@ void IncrementController::broadcastGenome()
                 // convert image registering index into robot id.
                 targetIndex = targetIndex - gRobotIndexStartOffset;
 
-                IncrementController* targetRobotController =
-                        dynamic_cast<IncrementController*>
+                Collect2RobotSensorsController* targetRobotController =
+                        dynamic_cast<Collect2RobotSensorsController*>
                         (gWorld->getRobot(targetIndex)->getController());
 
                 if ( ! targetRobotController )
@@ -539,8 +493,8 @@ void IncrementController::broadcastGenome()
             //Do not send to self
             if (i != _wm->_id)
             {
-                IncrementController* targetRobotController =
-                        dynamic_cast<IncrementController*>
+                Collect2RobotSensorsController* targetRobotController =
+                        dynamic_cast<Collect2RobotSensorsController*>
                         (gWorld->getRobot(i)->getController());
 
                 if ( ! targetRobotController )
@@ -565,45 +519,52 @@ void IncrementController::broadcastGenome()
     }
 }
 
-void IncrementController::storeGenome(std::vector<double> genome, GC senderId, double fitness)
+void Collect2RobotSensorsController::storeGenome(std::vector<double> genome, GC senderId, double fitness)
 {
-    if (_genomesList.size() < (unsigned int)IncrementSharedData::gPopulationSize)
+    if(_genomesList.find(senderId) != _genomesList.end())
     {
-        _genomesList[senderId] = genome;
+        //Update fitness
         _fitnessList[senderId] = fitness;
     }
     else
     {
-        double minFitness = std::numeric_limits<double>::max();
-        struct GC indexWorse;
-        indexWorse.robot_id = -1; indexWorse.gene_id = -1;
-        std::map<GC, double>::iterator it = _fitnessList.begin();
-        for(; it != _fitnessList.end(); it++)
+        if (_genomesList.size() < (unsigned int)Collect2RobotSensorsSharedData::gPopulationSize)
         {
-            if ((*it).second < minFitness)
+            _genomesList[senderId] = genome;
+            _fitnessList[senderId] = fitness;
+        }
+        else
+        {
+            double minFitness = std::numeric_limits<double>::max();
+            struct GC indexWorse;
+            indexWorse.robot_id = -1; indexWorse.gene_id = -1;
+            std::map<GC, double>::iterator it = _fitnessList.begin();
+            for(; it != _fitnessList.end(); it++)
             {
-                minFitness = (*it).second;
-                indexWorse = (*it).first;
+                if ((*it).second < minFitness)
+                {
+                    minFitness = (*it).second;
+                    indexWorse = (*it).first;
+                }
+            }
+            if (minFitness <= fitness)
+            {
+                _fitnessList.erase(indexWorse);
+                _genomesList.erase(indexWorse);
+
+                _fitnessList[senderId] = fitness;
+                _genomesList[senderId] = genome;
             }
         }
-        if ((indexWorse.robot_id != -1) && (minFitness < fitness))
-        {
-            _fitnessList.erase(indexWorse);
-            _genomesList.erase(indexWorse);
-
-            _fitnessList[senderId] = fitness;
-            _genomesList[senderId] = genome;
-        }
     }
-
 }
 
-void IncrementController::storeOwnGenome()
+void Collect2RobotSensorsController::storeOwnGenome()
 {
     storeGenome(_currentGenome, _genomeId, _currentFitness);
 }
 
-void IncrementController::logGenome(std::string s)
+void Collect2RobotSensorsController::logGenome(std::string s)
 {
     std::ofstream genomeF;
     genomeF.open(s);
@@ -618,21 +579,15 @@ void IncrementController::logGenome(std::string s)
     genomeF << "[F\n" << _currentFitness << "\n";
     //Structure (NN)
     genomeF << "[I\n" << _nbInputs << "\n";//Inputs
-    if(IncrementSharedData::gWithBias)
+    if(Collect2RobotSensorsSharedData::gWithBias)
         genomeF << "[B\n" << 1 << "\n";//Bias
     else
         genomeF << "[B\n" << 0 << "\n";
     genomeF << "[H\n" << _nbHiddenLayers << "\n"
-            << "[N\n" << IncrementSharedData::gNbNeuronsPerHiddenLayer << "\n";//Neur per hidden layer
+            << "[N\n" << Collect2RobotSensorsSharedData::gNbNeuronsPerHiddenLayer << "\n";//Neur per hidden layer
     genomeF << "[O\n" << _nbOutputs << "\n";
 
     genomeF.close();
 }
 
-//#################AUXILIARY#############################
-std::ostream& operator<<(std::ostream& os, const GC& gene_clock)
-{
-    os << "(R" << gene_clock.robot_id << "; G" << gene_clock.gene_id << ")";
-    return os;
-}
 

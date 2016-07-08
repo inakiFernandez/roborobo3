@@ -5,15 +5,15 @@
 
 
 
-#ifndef INCREMENTCONTROLLER_H
-#define INCREMENTCONTROLLER_H
+#ifndef ORIGINALCONTROLLER_H
+#define ORIGINALCONTROLLER_H
 
 #include "RoboroboMain/common.h"
 #include "RoboroboMain/roborobo.h"
 #include "Utilities/Graphics.h"
 #include "Controllers/Controller.h"
 #include "WorldModels/RobotWorldModel.h"
-#include "Increment/include/IncrementAgentObserver.h"
+#include "Original/include/OriginalAgentObserver.h"
 #include <neuralnetworks/NeuralNetwork.h>
 
 #include <iomanip>
@@ -35,28 +35,28 @@ struct GC
     friend std::ostream& operator<<(std::ostream& os, const GC& gene_clock);
 };
 
-class IncrementController : public Controller
+class OriginalController : public Controller
 {
 private:
     int _iteration;
-    int _birthdate; // evaluation when this controller was initialized.
-    double _currentFitness;
+    int _birthdate; // iteration when this genome was initialized
 
-    std::vector<double> _parameters;
     std::string _nnType;
     std::vector<int> _nbHiddenNeuronsPerLayer;
     std::vector<int> _nbBiaisNeuronsPerLayer;
     NeuralNetwork* nn;
 
+    //previous neural net todo
+    //NeuralNetwork* previousNN;
+    //forgetting measure todo
+    //double forget();
+
     void createNN();
-    
-    //bool _isAlive; // agent stand still if not.
-    bool _isNewGenome;
     
     void selectRandomGenome();
     void selectBestGenome();
     void selectRankBasedGenome();
-
+    void selectTournament(double sp);
     void mutate(float sigma);
 
     void stepBehaviour();
@@ -67,18 +67,16 @@ private:
     
     unsigned int computeRequiredNumberOfWeights();
 
-    bool getNewGenomeStatus() { return _isNewGenome; }
-    void setNewGenomeStatus( bool __status ) { _isNewGenome = __status; }
-    
+    std::vector<double> _braitWeights;
     // evolutionary engine
     std::vector<double> _genome; // current genome in evaluation
     GC _genomeId;
-    std::vector<double> _previousGenome; // 1+1-online-ES surviving genome
 
-    std::vector<double> _currentGenome;
+    double _currentFitness;
     float _currentSigma;
     int _lifetime;
     
+
     // ANN
     double _minValue;
     double _maxValue;
@@ -93,24 +91,15 @@ private:
     
 public:
 
-    IncrementController(RobotWorldModel *wm);
-    ~IncrementController();
+    OriginalController(RobotWorldModel *wm);
+    ~OriginalController();
 
     void reset();
     void step();
     void updateFitness(double delta);
     int getBirthdate() { return _birthdate; }
     double getFitness(){ return _currentFitness;}
-    double getAvgPopFitness()
-    {
-        double result = 0.0;
-        for (auto it = _fitnessList.begin(); it != _fitnessList.end();++it)
-            result += (*it).second;
-        if (_fitnessList.size() != 0)
-            return result / _fitnessList.size();
-        else
-            return 0.0;
-    }
+
     void logGenome(std::string s);
     std::map<GC, std::vector<double> > _genomesList;
     std::map<GC, double > _fitnessList;
