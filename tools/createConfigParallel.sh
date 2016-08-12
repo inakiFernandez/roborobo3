@@ -23,7 +23,7 @@ do
     #name="$BASENAME-run$i.properties" 
     #cp $1 $name
 
-    RESULT="$RESULT$COMMAND $DIRPATH/$name.$EXTENSION > logs/$BASENAME/$BASENAME-run$i.log\n"
+    RESULT="$RESULT$COMMAND $DIRPATH/$BASENAME.$EXTENSION > logs/$BASENAME/$BASENAME-run$i.log\n"
 
 done
 
