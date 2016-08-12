@@ -260,7 +260,7 @@ void OriginalController::stepBehaviour()
             //sensing distance to energy item, 0.0 [not 1.0] if not energy item
             if ( PhysicalObject::isInstanceOf(objectId) )
             {
-                if ( type == gPhysicalObjects[objectId - gPhysicalObjectIndexStartOffset])
+                if ( type == gPhysicalObjects[objectId - gPhysicalObjectIndexStartOffset]->getType() )
                   (*inputs)[inputToUse] = 1.0 - _wm->getDistanceValueFromCameraSensor(i) /
                       _wm->getCameraSensorMaximumDistanceValue(i);
                 else
