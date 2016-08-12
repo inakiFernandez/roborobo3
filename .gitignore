@@ -26,3 +26,9 @@
 *.exe
 *.out
 *.app
+
+# logs
+logs/*.log
+logs/*.txt
+logs/genomes
+sandbox/
