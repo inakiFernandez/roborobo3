@@ -57,8 +57,8 @@ OriginalController::OriginalController( RobotWorldModel *wm )
     _wm->updateLandmarkSensor();
     //_wm->setRobotLED_colorValues(255, 0, 0);
 
-    bool withRobotType = true;
-    if(withRobotType)
+    _withRobotType = false;
+    if(_withRobotType)
     {
         //Set the type of the robot RED (even) or BLUE (odd)
         if((_wm->_id % 2) == 0)
@@ -114,7 +114,7 @@ void OriginalController::resetRobot()
         _nbInputs +=  _wm->_cameraSensorsNb;
         //TEST agent: is gathering?
         //_nbInputs +=  _wm->_cameraSensorsNb;
-        if(withRobotType)
+        if(_withRobotType)
         {
             //TAG SENSOR TYPE OF ROBOT
             _nbInputs += _wm->_cameraSensorsNb;
@@ -297,7 +297,7 @@ void OriginalController::stepBehaviour()
                    inputToUse++;
                }
            }*/
-           if(withRobotType)
+           if(_withRobotType)
            {
                OriginalController* c = dynamic_cast<OriginalController*>(
                            (gWorld->getRobot(objId - gRobotIndexStartOffset))->getRobotController());
@@ -315,7 +315,7 @@ void OriginalController::stepBehaviour()
            inputToUse++;
           /* (*inputs)[inputToUse] = 0.0;
            inputToUse++;*/
-          if(withRobotType)
+          if(_withRobotType)
           {
               (*inputs)[inputToUse] = 0.0;
               inputToUse++;

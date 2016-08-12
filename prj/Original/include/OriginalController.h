@@ -42,7 +42,8 @@ class OriginalController : public Controller
 private:
     int _iteration;
     int _birthdate; // iteration when this genome was initialized
-    int _typeOfAgent; //
+    int _typeOfRobot; //RED or BLUE
+    bool _withRobotType;
 
     std::string _nnType;
     std::vector<int> _nbHiddenNeuronsPerLayer;
@@ -104,7 +105,7 @@ public:
     double getFitness(){ return _currentFitness;}
     int getRobotType()
     {
-        return _typeOfAgent;
+        return _typeOfRobot;
     }
 
     void readGenome(std::string s);
