@@ -14,6 +14,8 @@
 #include <neuralnetworks/MLP.h>
 #include <neuralnetworks/Perceptron.h>
 #include <neuralnetworks/Elman.h>
+#include <boost/algorithm/string.hpp>
+
 
 using namespace Neural;
 
@@ -32,15 +34,44 @@ OriginalController::OriginalController( RobotWorldModel *wm )
     _genomeId.gene_id = 0;
 
     resetRobot();
-    //braitenberg genome
-    static const double arr[] = {};
+    //braitenberg genome (8sensors)
+    static const double arr[] = {0.5, -0.5, -1.0, 1.0, 0.75, -0.25, //W
+                                 0.5, -0.5, -1.0, 1.0, 0.75, -0.25, //NW
+                                 -0.5, -0.5, 1.0, 1.0, -0.5, -0.5, //N
+                                 -0.5, 0.5, 1.0,-1.0, -0.25, 0.75, //NE
+                                 -0.5, 0.5, 1.0,-1.0, -0.25, 0.75, //E
+                                 -0.5, 0.5, 1.0,-1.0, -0.25, 0.75, //SE
+                                 0.5, 0.5, -1.0, -1.0, 0.5, 0.5, //S
+                                 0.5, -0.5, -1.0, 1.0, 0.75, 0.0, //SW
+                                 0.5, 0.5, //bias
+                                 0.0, 0.0, //lW recurrent
+                                 0.0, 0.0, //rW recurrent
+                                };
+
+
     std::vector<double> vec (arr, arr + sizeof(arr) / sizeof(arr[0]) );
     _braitWeights = vec;
 
     _lifetime = -1; _iteration = 0; _birthdate = 0;
 
     _wm->updateLandmarkSensor();
-    _wm->setRobotLED_colorValues(255, 0, 0);
+    //_wm->setRobotLED_colorValues(255, 0, 0);
+
+    bool withRobotType = true;
+    if(withRobotType)
+    {
+        //Set the type of the robot RED (even) or BLUE (odd)
+        if((_wm->_id % 2) == 0)
+        {
+            _typeOfRobot = RED;
+            _wm->setRobotLED_colorValues(255, 0, 0);
+        }
+        else
+        {
+            _typeOfRobot = BLUE;
+            _wm->setRobotLED_colorValues(0, 0, 255);
+        }
+    }
 
     if(_wm->_id == 0)
     {
@@ -83,6 +114,11 @@ void OriginalController::resetRobot()
         _nbInputs +=  _wm->_cameraSensorsNb;
         //TEST agent: is gathering?
         //_nbInputs +=  _wm->_cameraSensorsNb;
+        if(withRobotType)
+        {
+            //TAG SENSOR TYPE OF ROBOT
+            _nbInputs += _wm->_cameraSensorsNb;
+        }
     }
 
     //Current translational and rotational speeds
@@ -110,6 +146,8 @@ void OriginalController::resetRobot()
         w = (double)(rand() % 10000)/5000.0 - 1.0;
         _genome.push_back(w);
     }
+    if(OriginalSharedData::gIsLoadGenome)
+        readGenome(OriginalSharedData::gOutGenomeFile + std::to_string(_wm->_id) + ".log");
 
     _genomesList.clear();
     _fitnessList.clear();
@@ -148,8 +186,8 @@ unsigned int OriginalController::computeRequiredNumberOfWeights()
 void OriginalController::step()
 {
 	_iteration++;
-
-    stepEvolution();
+    if(!OriginalSharedData::gIsLoadGenome)
+        stepEvolution();
     stepBehaviour();
     double distance_sensor;
     double coef_obstacle = 1.0;
@@ -242,6 +280,7 @@ void OriginalController::stepBehaviour()
            (*inputs)[inputToUse] = 1.0 - _wm->getDistanceValueFromCameraSensor(i) /
                _wm->getCameraSensorMaximumDistanceValue(i);
            inputToUse++;
+
            /*if ( objId >= gRobotIndexStartOffset )
            {
                 Robot* r = (gWorld->getRobot(objId - gRobotIndexStartOffset));
@@ -258,6 +297,17 @@ void OriginalController::stepBehaviour()
                    inputToUse++;
                }
            }*/
+           if(withRobotType)
+           {
+               OriginalController* c = dynamic_cast<OriginalController*>(
+                           (gWorld->getRobot(objId - gRobotIndexStartOffset))->getRobotController());
+               if(c->getType() == RED)
+                  (*inputs)[inputToUse] = 1.0;
+               else
+                  (*inputs)[inputToUse] = -1.0;
+
+               inputToUse++;
+           }
        }
        else
        {
@@ -265,6 +315,11 @@ void OriginalController::stepBehaviour()
            inputToUse++;
           /* (*inputs)[inputToUse] = 0.0;
            inputToUse++;*/
+          if(withRobotType)
+          {
+              (*inputs)[inputToUse] = 0.0;
+              inputToUse++;
+          }
        }
     }
 
@@ -274,11 +329,13 @@ void OriginalController::stepBehaviour()
 
     //Previous translational and rotational speeds (acts as recurrent connections from last step)
     //TODO Should take wheel speed instead
-    double lW;
-    double rW;
-    (*inputs)[inputToUse] = _wm->_desiredTranslationalValue / gMaxTranslationalSpeed; //lW;
+    double lW = _wm->_desiredTranslationalValue / gMaxTranslationalSpeed
+            + _wm->_desiredRotationalVelocity / gMaxRotationalSpeed;
+    double rW = _wm->_desiredTranslationalValue / gMaxTranslationalSpeed
+            - _wm->_desiredRotationalVelocity / gMaxRotationalSpeed;
+    (*inputs)[inputToUse] = lW;
     inputToUse++;
-    (*inputs)[inputToUse] = _wm->_desiredRotationalVelocity / gMaxRotationalSpeed; //rW;
+    (*inputs)[inputToUse] = rW;
     inputToUse++;
     /*if(_wm->_id == 0)
     {
@@ -289,6 +346,9 @@ void OriginalController::stepBehaviour()
 
     // ---- compute and read out ----
     nn->setWeigths(_genome); // set genome
+    bool doBraitenberg = false; //true; //
+    if (doBraitenberg)
+        nn->setWeigths(_braitWeights);
     nn->setInputs(*inputs);
     nn->step();
     std::vector<double> outputs = nn->readOut();
@@ -327,9 +387,7 @@ void OriginalController::stepEvolution()
             storeOwnGenome();
 
         loadNewGenome();
-        //std::cout << _currentFitness << std::endl;
-        //for(auto it = _fitnessList.begin(); it != _fitnessList.end(); it++)
-        //    std::cout << it->second << std::endl;
+
         _currentFitness = 0.0;
         _lifetime = 0;
 
@@ -443,12 +501,10 @@ void OriginalController::selectTournament(double sp){
         j++;
     }
 
-    /* printGenomeList() ;
-    std::cout << "\t\tShuffled :[" << v[0];
-    for (int i=1 ; i<inspected ; i++)
-        std::cout << ", " << v[i];
-    std::cout << "] "
-    << "selected = " << best_g << std::endl; */
+    /*for (int i=0 ; i<inspected ; i++)
+        std::cout << _fitnessList[v[i]] << ", ";
+    std::cout << std::endl;*/
+
     _genome = _genomesList[best_g];
 }
 void OriginalController::mutate(float sigma) // mutate within bounds.
@@ -579,26 +635,85 @@ void OriginalController::logGenome(std::string s)
 {
     std::ofstream genomeF;
     genomeF.open(s);
-    genomeF << "[W\n";
+
+    genomeF << "[F " << _currentFitness << "\n";
+    //Structure (NN)
+    genomeF << "[I " << _nbInputs << "\n";//Inputs
+    if(OriginalSharedData::gWithBias)
+        genomeF << "[B " << 1 << "\n";//Bias
+    else
+        genomeF << "[B " << 0 << "\n";
+    genomeF << "[H " << _nbHiddenLayers << "\n"
+            << "[N " << OriginalSharedData::gNbNeuronsPerHiddenLayer << "\n";//Neur per hidden layer
+    genomeF << "[O " << _nbOutputs << "\n";
+
+
+    genomeF << "[W ";
     genomeF << std::fixed << std::setprecision(10);
 
     for(auto it = _genome.begin(); it != _genome.end(); ++it)
     {
-        genomeF << (*it) << "\n";
+        genomeF << (*it) << " ";
     }
 
-    genomeF << "[F\n" << _currentFitness << "\n";
-    //Structure (NN)
-    genomeF << "[I\n" << _nbInputs << "\n";//Inputs
-    if(OriginalSharedData::gWithBias)
-        genomeF << "[B\n" << 1 << "\n";//Bias
-    else
-        genomeF << "[B\n" << 0 << "\n";
-    genomeF << "[H\n" << _nbHiddenLayers << "\n"
-            << "[N\n" << OriginalSharedData::gNbNeuronsPerHiddenLayer << "\n";//Neur per hidden layer
-    genomeF << "[O\n" << _nbOutputs << "\n";
 
     genomeF.close();
 }
 
+void OriginalController::readGenome(std::string s)
+{
+    std::ifstream genomeF;
+    std::string line;
 
+    genomeF.open(s);
+    std::vector<std::vector<std::string>> allTokens;
+    while(getline(genomeF, line))
+    {
+        //Extract all separate tokens in the line
+        std::vector<std::string> tokens;
+        boost::split(tokens,line, boost::is_any_of("\t "));
+        allTokens.push_back(tokens);
+    }
+    genomeF.close();
+    double fitness = 0.0;
+    std::vector<double> weights;
+    int inN = 0,hLayers = 0,hN = 0,oN = 0;
+    int b = 0;
+
+    for(unsigned int i=0;i< allTokens.size();i++)
+    {
+        std::vector<std::string> tokens = allTokens[i];
+        if(tokens[0] == "[F")
+            fitness =  stod(tokens[1]);
+        else if(tokens[0] == "[I")
+            inN =  stoi(tokens[1]);
+        else if(tokens[0] == "[B")
+            b =  stoi(tokens[1]);
+        else if(tokens[0] == "[H")
+            hLayers =  stoi(tokens[1]);
+        else if(tokens[0] == "[N")
+            hN =  stoi(tokens[1]);
+        else if(tokens[0] == "[O")
+            oN =  stoi(tokens[1]);
+        else if(tokens[0] == "[W")
+        {
+            for(unsigned int j=1; j < tokens.size();j++)
+            {
+               boost::trim(tokens[j]);
+               if(tokens[j] != "")
+                weights.push_back(stod(tokens[j]));
+            }
+        }
+    }
+    //NN structure
+    _nbHiddenLayers = hLayers;
+    _nbNeuronsPerHiddenLayer = new std::vector<unsigned int>(_nbHiddenLayers);
+    for(unsigned int i = 0; i < _nbHiddenLayers; i++)
+        (*_nbNeuronsPerHiddenLayer)[i] = hN;
+
+    _nbInputs = inN; //bias already included
+    _nbOutputs = oN;
+
+    createNN();
+    _genome = weights;
+}

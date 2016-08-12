@@ -32,4 +32,5 @@ int OriginalSharedData::gTaskIdx = 0;
 
 std::string OriginalSharedData::gOutGenomeFile = "";
 bool OriginalSharedData::gSaveGenome = true;
+bool OriginalSharedData::gIsLoadGenome = true;
 std::string OriginalSharedData::gEvolutionLogFile = "";

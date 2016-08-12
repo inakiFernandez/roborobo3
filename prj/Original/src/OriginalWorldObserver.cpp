@@ -72,6 +72,8 @@ OriginalWorldObserver::OriginalWorldObserver( World* world ) : WorldObserver( wo
 
     gProperties.checkAndGetPropertyValue("gEvolutionLogFile",&OriginalSharedData::gEvolutionLogFile,true);
 
+    gProperties.checkAndGetPropertyValue("gIsLoadGenome",&OriginalSharedData::gIsLoadGenome,true);
+    gProperties.checkAndGetPropertyValue("gLogGenome",&OriginalSharedData::gSaveGenome,true);
 	// * iteration and generation counters
 
 	_lifeIterationCount = -1;
@@ -135,7 +137,14 @@ void OriginalWorldObserver::updateMonitoring()
         //<< (sumFitness  / gNumberOfRobots) / Collect2SharedData::gEvaluationTime
 
         // divided by two because each item gives 1 fitness point to both agents
-        std::cout << sumFitness / 2 << std::endl;
+        if(OriginalSharedData::gFitness == 2)
+        {
+            std::cout << sumFitness / 2 << std::endl;
+        }
+        else
+        {
+            std::cout << sumFitness << std::endl;
+        }
 	}
 
     if (gWorld->getIterations() == (gMaxIt - 1))
@@ -159,6 +168,7 @@ void OriginalWorldObserver::updateMonitoring()
                         -> logGenome(OriginalSharedData::gOutGenomeFile + std::to_string(i) + ".log");
             }
         }
+
     }
     switch (OriginalSharedData::gFitness)
     {

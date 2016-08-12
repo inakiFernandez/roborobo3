@@ -12,6 +12,8 @@ else
 		echo Exp. $cnt of $1
 		echo =-=-=-=-=-=
 		./roborobo -l $2 | tee "logs/run-$cnt.log"
+		cp "logs/evolution-0.log" logs/$cnt-evolution-0.log
+		cp "logs/evolution-1.log" logs/$cnt-evolution-1.log
 		echo -
 	done
 fi

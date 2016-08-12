@@ -17,7 +17,7 @@
 OriginalAgentObserver::OriginalAgentObserver( RobotWorldModel *wm )
 {
     _wm = (RobotWorldModel*)wm;
-    if(OriginalSharedData::gEvolutionLogFile.compare("") != 0)
+    /*if(OriginalSharedData::gEvolutionLogFile.compare("") != 0)
     {
         std::string sId = std::to_string(_wm->_id);
         _agentLog.open(OriginalSharedData::gEvolutionLogFile + std::string("-")
@@ -27,7 +27,7 @@ OriginalAgentObserver::OriginalAgentObserver( RobotWorldModel *wm )
     {
         std::cerr << "[ERROR] Empty evolution filename" << std::endl;
         exit(-1);
-    }
+    }*/
 }
 
 OriginalAgentObserver::~OriginalAgentObserver()
@@ -84,7 +84,7 @@ void OriginalAgentObserver::step()
     }
     //TODO measuring agent distance to item and fitness every step
     //out to log file
-    double distToItem = 0;
+    /*double distToItem = 0;
     double distToAgent= 0;
     double itX, itY;
     double agentX,agentY;
@@ -94,8 +94,10 @@ void OriginalAgentObserver::step()
     {
         itX = gPhysicalObjects[0]->getXCenter();//getPosition().x;//
         itY = gPhysicalObjects[0]->getYCenter(); //getPosition().y;//
+
         agentX = _wm->getXReal();
         agentY = _wm->getYReal();
+
         distToItem = sqrt(pow(itX - agentX, 2.0) + pow(itY - agentY, 2.0));
         int otherId;
         if(_wm->_id == 0)
@@ -108,16 +110,21 @@ void OriginalAgentObserver::step()
         }
         otherX = gWorld->getRobot(otherId)->getWorldModel()->getXReal();
         otherY = gWorld->getRobot(otherId)->getWorldModel()->getYReal();
+        //std::cout << agentX << " " << agentY << "; " << otherX << " " << otherY << std::endl;
+        distToAgent = sqrt(pow(otherX - agentX, 2.0) + pow(otherY - agentY,2.0));
 
-        distToAgent = sqrt(pow(otherX - agentY, 2.0) + pow(otherY - agentY,2.0));
-        //column format: fitness distToItem dist2OtherAgent
+        //column format: fitness distToItem dist2OtherAgent populationSize
         _agentLog
              << dynamic_cast<OriginalController*>(
-                    gWorld->getRobot(_wm->_id)->getController())
-                ->getFitness() << " " << distToItem << " " << distToAgent << "\n";
+                    gWorld->getRobot(_wm->_id)->getController())->getFitness()
+             << " " << distToItem << " "
+             << distToAgent << " "
+             //<< dynamic_cast<OriginalController*>(gWorld->getRobot(_wm->_id)->getController())
+             //   ->_genomesList.size()
+             << "\n";
     }
     if (gWorld->getIterations() == (gMaxIt - 1))
     {
-        _agentLog.close();
-    }
+        //_agentLog.close();
+    }*/
 }

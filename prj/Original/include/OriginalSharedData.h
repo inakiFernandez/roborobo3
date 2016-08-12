@@ -39,6 +39,7 @@ class OriginalSharedData {
     static std::string gOutGenomeFile; //filename for last genome (text format)
     static std::string gEvolutionLogFile; // base filename for evolution data (fitness, etc...)
     static bool gSaveGenome;
+    static bool gIsLoadGenome;
 };
 
 

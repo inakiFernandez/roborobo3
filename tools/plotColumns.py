@@ -52,7 +52,11 @@ if __name__ == "__main__":
     colors = bmap.mpl_colors
 
     nb_graphs = len(allData[0]) + 1
-    labels = ["Fitness", "D2Item", "D2Robot"] * 2 + ['SumFitness']
+    labels = ["Fitness",
+              "D2Item",
+              "D2Robot",
+              "PopSize"
+              ] * 2 + ['SumFitness']
 
     figure(1)
     axis = []
@@ -60,14 +64,14 @@ if __name__ == "__main__":
         axis.append(subplot2grid((nb_graphs, 1), (i, 0)))
     idx_graph = 0
     for c in zip(*allData):
-        plot_curve(c, colors[idx_graph + 1], axis[idx_graph],
+        plot_curve(c, colors[(idx_graph + 1) % len(colors)], axis[idx_graph],
                    labels[idx_graph], True)
         idx_graph += 1
 
     sumFitness = [x + y for x, y in zip(zip(*dat)[0], zip(*dat2)[0])]
 
-    plot_curve(sumFitness, colors[idx_graph + 1], axis[idx_graph],
-               labels[idx_graph], True)
+    plot_curve(sumFitness, colors[(idx_graph + 1) % len(colors)],
+               axis[idx_graph], labels[idx_graph], True)
     '''
     figure(2)
     axis2 = []
@@ -75,8 +79,8 @@ if __name__ == "__main__":
         axis2.append(subplot2grid((nb_graphs, 1), (i, 0)))
     idx_graph = 0
     for c in zip(*allData):
-        plot_curve(c[35000:40000], colors[idx_graph + 1], axis2[idx_graph],
-                   labels[idx_graph], True)
+        plot_curve(c[35000:40000], colors[(idx_graph + 1) % len(colors)],
+                   axis2[idx_graph], labels[idx_graph], True)
         idx_graph += 1
 
     plt.show()

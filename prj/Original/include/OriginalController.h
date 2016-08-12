@@ -15,8 +15,10 @@
 #include "WorldModels/RobotWorldModel.h"
 #include "Original/include/OriginalAgentObserver.h"
 #include <neuralnetworks/NeuralNetwork.h>
-
 #include <iomanip>
+
+#define RED 1
+#define BLUE 2
 
 using namespace Neural;
 struct GC
@@ -40,6 +42,7 @@ class OriginalController : public Controller
 private:
     int _iteration;
     int _birthdate; // iteration when this genome was initialized
+    int _typeOfAgent; //
 
     std::string _nnType;
     std::vector<int> _nbHiddenNeuronsPerLayer;
@@ -99,7 +102,12 @@ public:
     void updateFitness(double delta);
     int getBirthdate() { return _birthdate; }
     double getFitness(){ return _currentFitness;}
+    int getRobotType()
+    {
+        return _typeOfAgent;
+    }
 
+    void readGenome(std::string s);
     void logGenome(std::string s);
     std::map<GC, std::vector<double> > _genomesList;
     std::map<GC, double > _fitnessList;

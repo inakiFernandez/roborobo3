@@ -38,9 +38,7 @@ def perc(data_l):
 
 def plot_mean_curve(data, color, axis, label):
     mean = np.mean(data, 1)
-
     axis.plot(mean, lw=2, label=label, color=color)
-
     axis.grid(axis='y', color="0.9", linestyle='-', linewidth=1)
     axis.spines['top'].set_visible(False)
     axis.spines['right'].set_visible(False)
@@ -56,11 +54,11 @@ def plot_mean_curve(data, color, axis, label):
 
 def plot_one_curve(data, color, axis, label, quartiles=False):
     med, perc_25, perc_75 = perc(data)
+    print med
     if quartiles:
         axis.fill_between(np.arange(0, len(med)), perc_25, perc_75,
                           alpha=0.25, linewidth=0, color=color)
     axis.plot(med, lw=2, label=label, color=color)
-
     axis.grid(axis='y', color="0.9", linestyle='-', linewidth=1)
     axis.spines['top'].set_visible(False)
     axis.spines['right'].set_visible(False)
@@ -81,12 +79,10 @@ if __name__ == "__main__":
 
     dat = read_logfile(sys.argv[1])
 
-    # print dat
-    # percentiles = perc(dat)
-    # print percentiles
-
     bmap = brewer2mpl.get_map('Set2', 'qualitative', 7)
     colors = bmap.mpl_colors
     axis = subplot2grid((1, 1), (0, 0))
+
+    print len(dat[-1])
     plot_one_curve(dat, colors[1], axis, "Collecting", True)
-    # plot_mean_curve(dat, colors[1], axis, "Collecting")
+    show()
