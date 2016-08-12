@@ -260,7 +260,7 @@ void OriginalController::stepBehaviour()
             //sensing distance to energy item, 0.0 [not 1.0] if not energy item
             if ( PhysicalObject::isInstanceOf(objectId) )
             {
-                if ( type == gPhysicalObjects[objectId - gPhysicalObjectIndexStartOffset]->getType() )
+                if ( type == gPhysicalObjects[objectId - gPhysicalObjectIndexStartOffset]->getRobotType() )
                   (*inputs)[inputToUse] = 1.0 - _wm->getDistanceValueFromCameraSensor(i) /
                       _wm->getCameraSensorMaximumDistanceValue(i);
                 else
@@ -300,7 +300,7 @@ void OriginalController::stepBehaviour()
            if(_withRobotType)
            {
                OriginalController* c = dynamic_cast<OriginalController*>(
-                           (gWorld->getRobot(objId - gRobotIndexStartOffset))->getRobotController());
+                           (gWorld->getRobot(objId - gRobotIndexStartOffset))->getController());
                if(c->getType() == RED)
                   (*inputs)[inputToUse] = 1.0;
                else
