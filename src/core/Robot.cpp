@@ -189,6 +189,12 @@ void Robot::reset()
 					break; // terminate for statement.
 				}
 			}
+            //Check the complete robot fits in the environment at position x,y
+            if (((x - gRobotWidth/2) < 0) || ((x + gRobotWidth/2) >= gAreaWidth) ||
+                    ((y - gRobotHeight/2) < 0) || ((y + gRobotHeight/2) >= gAreaHeight))
+            {
+                success = false;
+            }
 
 			if ( success == false )
 			{
