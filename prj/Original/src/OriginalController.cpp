@@ -33,6 +33,25 @@ OriginalController::OriginalController( RobotWorldModel *wm )
     _genomeId.robot_id = _wm->_id;
     _genomeId.gene_id = 0;
 
+    _wm->setRobotLED_colorValues(255, 0, 0);
+
+    _withRobotType = false;
+    if(_withRobotType)
+    {
+        //Set the type of the robot RED (even) or BLUE (odd)
+        if((_wm->_id % 2) == 0)
+        {
+            _typeOfRobot = RED;
+            _wm->setRobotLED_colorValues(255, 0, 0);
+        }
+        else
+        {
+            _typeOfRobot = BLUE;
+            _wm->setRobotLED_colorValues(0, 0, 255);
+        }
+    }
+
+
     resetRobot();
     //braitenberg genome (8sensors)
     static const double arr[] = {0.5, -0.5, -1.0, 1.0, 0.75, -0.25, //W
@@ -55,23 +74,6 @@ OriginalController::OriginalController( RobotWorldModel *wm )
     _lifetime = -1; _iteration = 0; _birthdate = 0;
 
     _wm->updateLandmarkSensor();
-    //_wm->setRobotLED_colorValues(255, 0, 0);
-
-    _withRobotType = false;
-    if(_withRobotType)
-    {
-        //Set the type of the robot RED (even) or BLUE (odd)
-        if((_wm->_id % 2) == 0)
-        {
-            _typeOfRobot = RED;
-            _wm->setRobotLED_colorValues(255, 0, 0);
-        }
-        else
-        {
-            _typeOfRobot = BLUE;
-            _wm->setRobotLED_colorValues(0, 0, 255);
-        }
-    }
 
     if(_wm->_id == 0)
     {
@@ -304,8 +306,7 @@ void OriginalController::stepBehaviour()
                if(c->getRobotType() == RED)
                   (*inputs)[inputToUse] = 1.0;
                else
-                  (*inputs)[inputToUse] = -1.0;
-
+                  (*inputs)[inputToUse] = -1.0;               
                inputToUse++;
            }
        }
@@ -337,10 +338,14 @@ void OriginalController::stepBehaviour()
     inputToUse++;
     (*inputs)[inputToUse] = rW;
     inputToUse++;
-    /*if(_wm->_id == 0)
+    /*if(_wm->_id == 1)
     {
-        for(auto it = inputs->begin(); it < inputs->end(); it++)
-            std::cout << (*it) << " | ";
+        for(int i  = 0; i < _wm->_cameraSensorsNb; i++)
+        {
+            std::cout << (*inputs)[4*i+3] << " | ";
+        }
+        //for(auto it = inputs->begin(); it < inputs->end(); it++)
+        //    std::cout << (*it) << " | ";
         std::cout << std::endl;
     }*/
 
