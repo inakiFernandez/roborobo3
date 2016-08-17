@@ -351,7 +351,7 @@ void OriginalController::stepBehaviour()
 
     // ---- compute and read out ----
     nn->setWeigths(_genome); // set genome
-    bool doBraitenberg = true; //false; //
+    bool doBraitenberg = false; //true; //
     if (doBraitenberg)
         nn->setWeigths(_braitWeights);
     nn->setInputs(*inputs);

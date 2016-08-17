@@ -17,7 +17,6 @@ def read_logfile(fname):
         for o in data:
             l.append(float(o))
         d.append(l)
-
     fh.close()
     return d
 
