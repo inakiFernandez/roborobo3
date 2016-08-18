@@ -303,7 +303,7 @@ void OriginalController::stepBehaviour()
            {
                OriginalController* c = dynamic_cast<OriginalController*>(
                            (gWorld->getRobot(objId - gRobotIndexStartOffset))->getController());
-               if(c->getRobotType() == RED)
+               if(c->getRobotType() == this->getRobotType())
                   (*inputs)[inputToUse] = 1.0;
                else
                   (*inputs)[inputToUse] = -1.0;               
