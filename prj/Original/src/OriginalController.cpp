@@ -35,7 +35,7 @@ OriginalController::OriginalController( RobotWorldModel *wm )
 
     _wm->setRobotLED_colorValues(255, 0, 0);
 
-    _withRobotType = false;
+    _withRobotType = true; // false; //
     if(_withRobotType)
     {
         //Set the type of the robot RED (even) or BLUE (odd)
