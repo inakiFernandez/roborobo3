@@ -1,0 +1,256 @@
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# Main simulation parameters
+gVerbose = false
+gDisplayMode = 0
+gRandomSeed = -1  
+
+gBatchMode =  true #false #
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# general file information
+ConfigurationLoaderObjectName = OriginalConfigurationLoader
+
+#Environment 
+gForegroundImageFilename = data/littleEnvironment.bmp
+gEnvironmentImageFilename = data/littleEnvironment.bmp
+gBackgroundImageFilename = data/littleBackground.bmp
+gGroundSensorImageFilename= data/littleBackground.bmp
+gScreenWidth = 512
+gScreenHeight = 512
+
+gForegroundImageFilename = data/simple_environment_2.bmp
+gEnvironmentImageFilename = data/simple_environment_2.bmp
+gBackgroundImageFilename = data/simple_background_2.bmp
+gGroundSensorImageFilename= data/simple_background_2.bmp
+gScreenWidth = 1024
+gScreenHeight = 1024
+
+#gForegroundImageFilename = data/obs_circle1000_environment.bmp
+#gEnvironmentImageFilename = data/obs_circle1000_environment.bmp
+#gBackgroundImageFilename = data/env_circle1000_background.bmp
+#gGroundSensorImageFilename = data/env_circle1000_groundsensorvalues.bmp
+#gScreenWidth = 1000
+#gScreenHeight = 1000
+
+#gForegroundImageFilename = data/env_1000_environment.bmp
+#gEnvironmentImageFilename = data/env_1000_environment.bmp
+#gBackgroundImageFilename = data/env_1000_background.bmp
+#gGroundSensorImageFilename = data/env_1000_groundsensorvalues.bmp
+#gScreenWidth = 1000
+#gScreenHeight = 1000
+
+#gForegroundImageFilename = data/env_400_foreground.bmp
+#gEnvironmentImageFilename = data/env_400_environment.bmp
+#gBackgroundImageFilename = data/env_400_background.bmp
+#gGroundSensorImageFilename = data/env_400_groundsensorvalues.bmp
+#gScreenWidth = 400
+#gScreenHeight = 400
+
+#gForegroundImageFilename = data/env_200_foreground.bmp
+#gEnvironmentImageFilename = data/env_200_environment.bmp
+#gBackgroundImageFilename = data/env_200_background.bmp
+#gGroundSensorImageFilename = data/env_200_groundsensorvalues.bmp
+#gScreenWidth = 200
+#gScreenHeight = 200
+
+
+#gForegroundImageFilename = data/env_100_foreground.bmp
+#gEnvironmentImageFilename = data/env_100_environment.bmp
+#gBackgroundImageFilename = data/env_100_background.bmp
+#gGroundSensorImageFilename = data/env_100_groundsensorvalues.bmp
+#gScreenWidth = 100
+#gScreenHeight = 100
+
+#gForegroundImageFilename = data/env_50_foreground.bmp
+#gEnvironmentImageFilename = data/env_50_environment.bmp
+#gBackgroundImageFilename = data/env_50_background.bmp
+#gGroundSensorImageFilename = data/env_50_groundsensorvalues.bmp
+#gScreenWidth = 50
+#gScreenHeight = 50
+
+
+#Objects
+gNbOfLandmarks = 0
+gNbOfPhysicalObjects = 150
+# check TemplateMedeaWorldObserver
+#::updateEnvironment() to remove moving landmarks
+
+# Landmarks
+VisibleLandmarks = true
+gLandmarkRadius = 10.0
+
+# Physical objects
+gPhysicalObjectsVisible = true
+gPhysicalObjectsRedraw = false
+
+gPhysicalObjectDefaultType = 1
+gPhysicalObjectDefaultSolid_w = 16
+gPhysicalObjectDefaultSolid_h = 16
+gPhysicalObjectDefaultSoft_w = 22
+gPhysicalObjectDefaultSoft_h = 22
+gPhysicalObjectDefaultDisplayColorRed = 96
+gPhysicalObjectDefaultDisplayColorGreen = 0
+gPhysicalObjectDefaultDisplayColorBlue = 192
+gPhysicalObjectDefaultRelocate = true
+gPhysicalObjectDefaultOverwrite = false
+
+gPhysicalObjectDefaultRadius =  5 #10
+gPhysicalObjectDefaultFootprintRadius = 15 #20
+
+
+
+gPhysicalObjectDefaultRegrowTimeMax = 0
+
+gEnergyItemDefaultMode = 0
+gEnergyItemDefaultInit = 100
+
+gMaxIt = 500000
+
+#Tasks
+gFitness = 1 # 0:  navigation, 1: items, 2: cooperItems. Ignored if task seq defined
+
+#-1 to indicate dummy last task
+gTaskSeq = 1,-1 #1,2,1,2,1,2,1,2,-1 #
+gTimeChange = 0,-1 #0,100000,200000,250000,300000,350000,400000,450000,-1 
+
+# =-=-=-=-=-=
+#parameters EA
+gPopSize =  10000 #2 
+gEvaluationTime = 2000 #1000 #500 # 
+
+#medea is (clear=true and storeown=true)
+#gClearPopulation = false
+gClearPopulation = true
+gStoreOwn = true
+
+#Unused gSelectionMethod = 1					
+
+gSigmaRef = 0.5 # 0.2 # 0.1 #
+
+gEvolutionLogFile = logs/evolution
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+#Robots
+gInitialNumberOfRobots = 200
+
+#gRobotMaskImageFilename = data/minirobot-mask.bmp
+#gRobotDisplayImageFilename = data/minirobot-mask.bmp
+
+gRobotMaskImageFilename = data/medrob-mask.bmp
+gRobotDisplayImageFilename = data/medrob-mask.bmp
+
+#gRobotMaskImageFilename = data/maxirobot-mask.bmp
+#gRobotDisplayImageFilename = data/maxirobot-mask.bmp
+
+
+#gRobotSpecsImageFilename = data/minirobot-specs-8sensors.bmp 
+####
+#gRobotSpecsImageFilename = data/minirobot-specs-4sensors.bmp 
+#gRobotSpecsImageFilename = data/minirobot-specs-16sensors.bmp 
+#gRobotSpecsImageFilename = data/minirobot-specs-2sensors.bmp 
+#gRobotSpecsImageFilename = data/minirobot-specs-1sensor.bmp 
+
+gRobotSpecsImageFilename = data/medrob-specs-8s.bmp 
+
+#gRobotSpecsImageFilename = data/maxirobot-specs-4s.bmp 
+#gRobotSpecsImageFilename = data/maxirobot-specs-round.bmp 
+
+####
+gSensorRange = 40  #100 # 
+gCommunicationBySensors = true
+gMaxRadioDistance = 40 
+gWithCollectColorEffector = true
+
+gMaxTranslationalSpeed = 4   #  value btw 0+ and robot width in pixels
+gMaxTranslationalDeltaValue = 4  # value btw 0+ and gMaxRotationalSpeed
+gMaxRotationalSpeed = 30 
+
+# Neural networks
+gControllerType = 0 # MLP=0, Perceptron=1, Elman=2
+gNbHiddenLayers = 0
+gNbNeuronsPerHiddenLayer = 4
+gNeuronWeightRange = 10.0  # [-5,+5]
+gWithBias = true
+#gOutGenomeFile = logs/genomes/genome-
+gOutGenomeFile = logs/genomes/test
+gIsLoadGenome = false
+gLogGenome = false #true #
+
+# Robot energy
+gEnergyLevel = false # false: energy is not used
+gEnergyInit = 400
+gEnergyMax = 400
+gEnergyRequestOutput = true
+gEnergyRefill = true # robot energy refill
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# Other parameters
+# general purpose
+#gLogFilename = logs/log.txt # if commented, create a time-stamped file.
+gLogCommentText = (under-development)
+
+gSnapshots = false # take snapshots
+gSnapshotsFrequency = 0 # every N generations
+
+gPauseMode = false # true 
+gDisplaySensors = 3   # 0: no, 1: only-contact, 2: all + contacts are red, 3: all (same color)
+gDisplayTail = false
+gTailLength = 10
+gRobotDisplayFocus = false
+gDisplayGroundCaption = false
+gNiceRendering = true
+SlowMotionMode = false
+gUserCommandMode = false
+gRobotLEDdisplay = true
+
+gFastDisplayModeSpeed = 60
+gFramesPerSecond = 60
+
+gLocationFinderMaxNbOfTrials = 1000 # 100?
+
+gRobotIndexFocus = 0
+
+gNumberOfRobotGroups = 1 # unused
+
+gPhysicalObjectIndexStartOffset = 1
+gRobotIndexStartOffset = 1048576  # 0x100000
+
+# Monitoring
+
+gVideoRecording = false # significantly slow down simulation
+gTrajectoryMonitor = false  # significantly slow down simulation
+
+gInspectorMode = false
+gInspectorAgent = false
+gMonitorRobot = false
+
+# Inspector cursor (''god mode'')
+gInspectorCursorHorizontalSpeed = 1
+gInspectorCursorVerticalSpeed = 1
+gInspectorAgentXStart = 1
+gInspectorAgentYStart = 1
+
+gInspectorCursorMaxSpeedOnXaxis = 5
+gInspectorCursorMaxSpeedOnYaxis = 10
+
+gLocomotionMode = 0 #Rotate when collision? 0=free rotation, 1=rotate only if not collision
+
+# =-=-=-=-=-=
+
+# simulation parameters
+
+gRadioNetwork = true
+gMonitorPositions = false # slow down if true.
+
+# Agent positions 
+#robot[0].x =  5
+#robot[0].y =  5
+#robot[0].orientation = 90
+
+#robot[1].x = 90
+#robot[1].y = 90
+#robot[1].orientation = 90
+
+# Item positions
+#physicalObject[0].x = 50
+#physicalObject[0].y = 50
