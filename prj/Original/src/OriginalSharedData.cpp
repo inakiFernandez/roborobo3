@@ -34,3 +34,5 @@ std::string OriginalSharedData::gOutGenomeFile = "";
 bool OriginalSharedData::gSaveGenome = true;
 bool OriginalSharedData::gIsLoadGenome = true;
 std::string OriginalSharedData::gEvolutionLogFile = "";
+
+bool OriginalSharedData::gWithCollectColorEffector = false;

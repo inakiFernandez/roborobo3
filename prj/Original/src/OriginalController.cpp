@@ -33,23 +33,11 @@ OriginalController::OriginalController( RobotWorldModel *wm )
     _genomeId.robot_id = _wm->_id;
     _genomeId.gene_id = 0;
 
-    _wm->setRobotLED_colorValues(255, 0, 0);
+    //_wm->setRobotLED_colorValues(255, 0, 0);
+    //Set initial color sensor to 0.0
+    _wm->setRobotLED_colorValues(128, 128, 0);
 
-    _withRobotType = true; // false; //
-    if(_withRobotType)
-    {
-        //Set the type of the robot RED (even) or BLUE (odd)
-        if((_wm->_id % 2) == 0)
-        {
-            _typeOfRobot = RED;
-            _wm->setRobotLED_colorValues(255, 0, 0);
-        }
-        else
-        {
-            _typeOfRobot = BLUE;
-            _wm->setRobotLED_colorValues(0, 0, 255);
-        }
-    }
+    _withCollectColorEffector = OriginalSharedData::gWithCollectColorEffector;
 
 
     resetRobot();
@@ -100,6 +88,8 @@ void OriginalController::reset()
 
 void OriginalController::resetRobot()
 {
+    //Number of effectors
+    _nbOutputs = 2;
     //Number of sensors
     _nbInputs = 0;
     if (OriginalSharedData::gWithBias)
@@ -114,20 +104,19 @@ void OriginalController::resetRobot()
         _nbInputs +=  _wm->_cameraSensorsNb;
         // agents
         _nbInputs +=  _wm->_cameraSensorsNb;
-        //TEST agent: is gathering?
-        //_nbInputs +=  _wm->_cameraSensorsNb;
-        if(_withRobotType)
+
+        if(_withCollectColorEffector)
         {
-            //TAG SENSOR TYPE OF ROBOT
+            //COLOR DISPLAYED BY ROBOT
             _nbInputs += _wm->_cameraSensorsNb;
+            _nbOutputs += 1;
         }
     }
 
     //Current translational and rotational speeds
     _nbInputs += 2;
 
-    //Number of effectors
-    _nbOutputs = 2;
+
 
     //NN structure
     _nbHiddenLayers = OriginalSharedData::gNbHiddenLayers;
@@ -283,30 +272,11 @@ void OriginalController::stepBehaviour()
                _wm->getCameraSensorMaximumDistanceValue(i);
            inputToUse++;
 
-           /*if ( objId >= gRobotIndexStartOffset )
-           {
-                Robot* r = (gWorld->getRobot(objId - gRobotIndexStartOffset));
-                RobotWorldModel* wm = r -> getWorldModel();
-                int otherObjId = wm -> getGroundSensorValue();
-                if(PhysicalObject::isInstanceOf(otherObjId))
-                {
-                    (*inputs)[inputToUse] = 1.0;
-                    inputToUse++;
-                }
-               else
-               {
-                   (*inputs)[inputToUse] = 0.0;
-                   inputToUse++;
-               }
-           }*/
-           if(_withRobotType)
+           if(_withCollectColorEffector)
            {
                OriginalController* c = dynamic_cast<OriginalController*>(
                            (gWorld->getRobot(objId - gRobotIndexStartOffset))->getController());
-               if(c->getRobotType() == this->getRobotType())
-                  (*inputs)[inputToUse] = 1.0;
-               else
-                  (*inputs)[inputToUse] = -1.0;               
+               (*inputs)[inputToUse] = c->getColorEffector();
                inputToUse++;
            }
        }
@@ -314,9 +284,8 @@ void OriginalController::stepBehaviour()
        {
            (*inputs)[inputToUse] = 0.0;
            inputToUse++;
-          /* (*inputs)[inputToUse] = 0.0;
-           inputToUse++;*/
-          if(_withRobotType)
+
+          if(_withCollectColorEffector)
           {
               (*inputs)[inputToUse] = 0.0;
               inputToUse++;
@@ -364,6 +333,13 @@ void OriginalController::stepBehaviour()
     //Differential model
     lW = outputs[0];
     rW = outputs[1];
+
+    if(_withCollectColorEffector)
+    {
+        //Use a discrete set of color values
+        int redValue = roundDown((int)((outputs[2] + 1.0)/2.0 * 256.0),32);
+        _wm->setRobotLED_colorValues(redValue, 255 - redValue, 0);
+    }
 
     _wm->_desiredTranslationalValue = (rW + lW) / 2;
     _wm->_desiredRotationalVelocity = (lW - rW) / 2;
@@ -721,4 +697,27 @@ void OriginalController::readGenome(std::string s)
 
     createNN();
     _genome = weights;
+    std::cout << fitness << ", " << b<< std::endl;
+}
+int OriginalController::roundDown(int numToRound, int multiple)
+{
+    int result;
+
+    if (multiple == 0)
+        return numToRound;
+
+    int remainder = abs(numToRound) % multiple;
+    if (remainder == 0)
+    {
+        result = numToRound;
+    }
+    else
+    {
+        if (numToRound < 0)
+            result = -(abs(numToRound) - remainder + multiple);
+        else
+            result = numToRound - remainder ;
+    }
+    //std::cout << numToRound << " | " << multiple << " | "<< result << std::endl;
+    return result;
 }

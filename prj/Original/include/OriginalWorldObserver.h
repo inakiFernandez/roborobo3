@@ -33,7 +33,7 @@ class OriginalWorldObserver : public WorldObserver
 		OriginalWorldObserver(World *world);
 		~OriginalWorldObserver();
         //list for checking cooperative collecting
-        std::vector< std::vector< int > > listCollected;
+        std::vector< std::vector< std::pair<int,double > > > listCollected;
 
 		void reset();
 		void step();

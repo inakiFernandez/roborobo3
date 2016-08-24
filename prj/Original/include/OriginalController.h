@@ -17,9 +17,6 @@
 #include <neuralnetworks/NeuralNetwork.h>
 #include <iomanip>
 
-#define RED 1
-#define BLUE 2
-
 using namespace Neural;
 struct GC
 {
@@ -42,8 +39,8 @@ class OriginalController : public Controller
 private:
     int _iteration;
     int _birthdate; // iteration when this genome was initialized
-    int _typeOfRobot; //RED or BLUE
-    bool _withRobotType;
+
+    bool _withCollectColorEffector;
 
     std::string _nnType;
     std::vector<int> _nbHiddenNeuronsPerLayer;
@@ -92,6 +89,9 @@ private:
     void storeGenome(std::vector<double> genome, GC senderId, double fitness);
     void storeOwnGenome();
     void resetRobot();
+
+
+    int roundDown(int numToRound, int multiple);
     
 public:
 
@@ -103,9 +103,10 @@ public:
     void updateFitness(double delta);
     int getBirthdate() { return _birthdate; }
     double getFitness(){ return _currentFitness;}
-    int getRobotType()
+
+    double getColorEffector()
     {
-        return _typeOfRobot;
+        return 2.0 * ((double)_wm->getRobotLED_redValue()/256.0) - 1.0;
     }
 
     void readGenome(std::string s);

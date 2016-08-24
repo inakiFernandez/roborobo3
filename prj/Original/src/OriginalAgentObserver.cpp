@@ -69,14 +69,28 @@ void OriginalAgentObserver::step()
         case 1:
             //Counting items
             targetIndex = targetIndex - gPhysicalObjectIndexStartOffset;
-            gPhysicalObjects[targetIndex]->isWalked(_wm->getId());
-            dynamic_cast<OriginalController*>(gWorld->getRobot(_wm -> _id)->getController())->updateFitness(1.0);
+            if((OriginalSharedData::gWithCollectColorEffector &&
+                    isRightColorValue(dynamic_cast<OriginalController*>(gWorld->getRobot(_wm -> _id)->getController())->getColorEffector()))
+                || !OriginalSharedData::gWithCollectColorEffector)
+            {
+                    gPhysicalObjects[targetIndex]->isWalked(_wm->getId());
+                    dynamic_cast<OriginalController*>(gWorld->getRobot(_wm -> _id)->getController())->updateFitness(1.0);
+            }
+
             break;
         case 2:
             //Recording the id of the robot for the item stepped upon
             targetIndex = targetIndex - gPhysicalObjectIndexStartOffset;
-            dynamic_cast<OriginalWorldObserver*>(gWorld->getWorldObserver())
-                                ->listCollected[targetIndex].push_back(_wm->getId());
+            if((OriginalSharedData::gWithCollectColorEffector &&
+                    isRightColorValue(
+                    dynamic_cast<OriginalController*>(gWorld->getRobot(_wm -> _id)->getController())->getColorEffector()))
+                || !OriginalSharedData::gWithCollectColorEffector)
+            {
+                double color = dynamic_cast<OriginalController*>(gWorld->getRobot(_wm->_id)
+                                                         ->getController())->getColorEffector();
+                std::pair<int, double> idRobAndColor = std::make_pair(_wm->_id,color);
+                dynamic_cast<OriginalWorldObserver*>(gWorld->getWorldObserver())->listCollected[targetIndex].push_back(idRobAndColor);
+            }
             break;
         default:
             break;
@@ -127,4 +141,25 @@ void OriginalAgentObserver::step()
     {
         //_agentLog.close();
     }*/
+}
+bool OriginalAgentObserver::isRightColorValue(double v)
+{
+    bool result = false;
+    switch (OriginalSharedData::gFitness) {
+        case 1:
+            if((v >= 0.75) && (v <=1.0))
+            {
+                result = true;
+                //std::cout << v << std::endl;
+            }
+
+        break;
+        case 2:
+            if((v <= -0.75) && (v >= -1.0))
+                result = true;
+        break;
+        default:
+        break;
+    }
+    return result;
 }

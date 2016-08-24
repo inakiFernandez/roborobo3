@@ -74,6 +74,8 @@ OriginalWorldObserver::OriginalWorldObserver( World* world ) : WorldObserver( wo
 
     gProperties.checkAndGetPropertyValue("gIsLoadGenome",&OriginalSharedData::gIsLoadGenome,true);
     gProperties.checkAndGetPropertyValue("gLogGenome",&OriginalSharedData::gSaveGenome,true);
+
+    gProperties.checkAndGetPropertyValue("gWithCollectColorEffector",&OriginalSharedData::gWithCollectColorEffector,true);
 	// * iteration and generation counters
 
 	_lifeIterationCount = -1;
@@ -175,13 +177,35 @@ void OriginalWorldObserver::updateMonitoring()
         case 2:
             for(int i = 0; i < gNbOfPhysicalObjects;i++)
             {
+                double color = -2.0;
+                bool isSynchColor = false;
                 if(listCollected[i].size() >= 2)
                 {
-                    gPhysicalObjects[i]->isWalked(0); //Default agent for callback (unused callback)
+                    //test if all agents (maybe more than 2) same color
                     for(auto it = listCollected[i].begin(); it != listCollected[i].end();it++)
                     {
-                        dynamic_cast<OriginalController*>(gWorld->getRobot((*it))
-                            ->getController())->updateFitness(1.0);
+                        if(color == -2.0)
+                        {
+                            color = it->second;
+                            isSynchColor = true;
+                        }
+                        else
+                        {
+                            if(color != it->second)
+                            {
+                                isSynchColor = false;
+                                break;
+                            }
+                        }
+                    }
+                    if(isSynchColor)
+                    {
+                        gPhysicalObjects[i]->isWalked(0); //Default agent for callback (unused callback)
+                        for(auto it = listCollected[i].begin(); it != listCollected[i].end();it++)
+                        {
+                            dynamic_cast<OriginalController*>(gWorld->getRobot(it->first)
+                            ->getController())->updateFitness(1.0 / (double)listCollected[i].size());
+                        }
                     }
                 }
                 listCollected[i].clear();
@@ -204,6 +228,7 @@ void OriginalWorldObserver::updateMonitoring()
     if(gWorld->getIterations() ==
             OriginalSharedData::gTimeSeq[OriginalSharedData::gTaskIdx])
     {
+        //std::cout << "----------------------------" << std::endl;
         //std::cout << "Task changed!" << std::endl;
         OriginalSharedData::gFitness =
                 OriginalSharedData::gTaskSeq[OriginalSharedData::gTaskIdx];

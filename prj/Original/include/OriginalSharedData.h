@@ -40,6 +40,9 @@ class OriginalSharedData {
     static std::string gEvolutionLogFile; // base filename for evolution data (fitness, etc...)
     static bool gSaveGenome;
     static bool gIsLoadGenome;
+
+    static bool gWithCollectColorEffector;
+
 };
 
 
