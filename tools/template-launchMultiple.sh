@@ -32,7 +32,7 @@ suffix=`echo $line | cut -f1 -d" " | sed -e 's/,-1//' |sed -e 's/,/T/g'`
 
 cp $tmplate $outbasename-$suffix.properties
 mkdir $outlogbasename/$suffix
-echo $line
+#echo $line
 echo $line | perl -p -e  's/^.*? //' | sed -e 's/ /\n/g' >> $outbasename-$suffix.properties
 
     for (( j=1; j<=$nbRuns; j++))
