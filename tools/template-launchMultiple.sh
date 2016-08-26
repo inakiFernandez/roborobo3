@@ -22,15 +22,11 @@ nbRuns=$4
 
 nbRob='50 100 200 300 400'
 taskSeq='1,-1 2,-1'
+ctrlSetup='1 2'
 
-listProp=`parallel --header : echo R{1}.T{2} gInitialNumberOfRobots={f1} gTaskSeq={f2} ::: f1 $nbRob ::: f2 $taskSeq`
+listProp=`parallel --header : echo R{1}.T{2}.B{3} gInitialNumberOfRobots={f1} gTaskSeq={f2} gBrait=f{3} ::: f1 $nbRob ::: f2 $taskSeq ::: f3 $ctrlSetup`
 
 #echo "$listProp"
-
-commandFile=$tmplate.parallel
-
-rm $commandFile
-touch $commandFile
 
 program="./roborobo -l "
 
@@ -39,11 +35,16 @@ mkdir $outlogbasename
 #i=1
 while read -r line
 do
-suffix=`echo $line | cut -f1 -d" " | sed -e 's/,-1$//' |sed -e 's/,/T/g'`
-#echo $suffix
+suffix=`echo $line | cut -f1 -d" " | sed -e 's/,-1//' |sed -e 's/,/T/g'`
+#echo $suffix 
 
 cp $tmplate $outbasename-$suffix.properties
 mkdir $outlogbasename/$suffix
+
+commandFile=$tmplate.parallel
+
+rm $commandFile
+touch $commandFile
 
 echo $line | perl -p -e  's/^.*? //' | sed -e 's/ /\n/g' >> $outbasename-$suffix.properties
 
@@ -57,7 +58,7 @@ echo $line | perl -p -e  's/^.*? //' | sed -e 's/ /\n/g' >> $outbasename-$suffix
 done <<< "$listProp"
 
 
-parallel -j8 -a $commandFile
+parallel --dry-run -j8 -a $commandFile
 
 
 
