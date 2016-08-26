@@ -43,7 +43,7 @@ echo $line | perl -p -e  's/^.*? //' | sed -e 's/ /\n/g' >> $outbasename-$suffix
 done <<< "$listProp"
 
 
-parallel --dry-run -j8 -a $commandFile
+parallel -j8 -a $commandFile
 
 
 
