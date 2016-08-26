@@ -4,7 +4,7 @@ gVerbose = false
 gDisplayMode = 0
 gRandomSeed = -1  
 
-gBatchMode =  false #true #
+gBatchMode =  true #false #
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # general file information
