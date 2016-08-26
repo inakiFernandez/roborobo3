@@ -36,3 +36,5 @@ bool OriginalSharedData::gIsLoadGenome = true;
 std::string OriginalSharedData::gEvolutionLogFile = "";
 
 bool OriginalSharedData::gWithCollectColorEffector = false;
+
+int OriginalSharedData::gBrait = -1;

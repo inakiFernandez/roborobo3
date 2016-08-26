@@ -76,6 +76,8 @@ OriginalWorldObserver::OriginalWorldObserver( World* world ) : WorldObserver( wo
     gProperties.checkAndGetPropertyValue("gLogGenome",&OriginalSharedData::gSaveGenome,true);
 
     gProperties.checkAndGetPropertyValue("gWithCollectColorEffector",&OriginalSharedData::gWithCollectColorEffector,true);
+
+    gProperties.checkAndGetPropertyValue("gBrait",&OriginalSharedData::gBrait,true);
 	// * iteration and generation counters
 
 	_lifeIterationCount = -1;
@@ -138,15 +140,8 @@ void OriginalWorldObserver::updateMonitoring()
         //std::cout << gWorld->getIterations() << " ";
         //<< (sumFitness  / gNumberOfRobots) / Collect2SharedData::gEvaluationTime
 
-        // divided by two because each item gives 1 fitness point to both agents
-        if(OriginalSharedData::gFitness == 2)
-        {
-            std::cout << sumFitness / 2 << std::endl;
-        }
-        else
-        {
+
             std::cout << sumFitness << std::endl;
-        }
 	}
 
     if (gWorld->getIterations() == (gMaxIt - 1))

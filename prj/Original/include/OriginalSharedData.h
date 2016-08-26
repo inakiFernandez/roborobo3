@@ -42,6 +42,7 @@ class OriginalSharedData {
     static bool gIsLoadGenome;
 
     static bool gWithCollectColorEffector;
+    static int gBrait;
 
 };
 

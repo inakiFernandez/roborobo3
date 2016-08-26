@@ -4,7 +4,7 @@ gVerbose = false
 gDisplayMode = 0
 gRandomSeed = -1  
 
-gBatchMode =  true #false #
+gBatchMode =  false #true #
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # general file information
@@ -112,6 +112,9 @@ gFitness = 1 # 0:  navigation, 1: items, 2: cooperItems. Ignored if task seq def
 #-1 to indicate dummy last task
 gTaskSeq = 1,-1 #1,2,1,2,1,2,1,2,-1 #
 gTimeChange = 0,-1 #0,100000,200000,250000,300000,350000,400000,450000,-1 
+
+#0:no brait (learning) #1:brait1 red  # 2: brait2 green #3(TODO) brait both
+gBrait = 0 # 1 # 2 # 3 
 
 # =-=-=-=-=-=
 #parameters EA

@@ -155,7 +155,7 @@ bool OriginalAgentObserver::isRightColorValue(double v)
 
         break;
         case 2:
-            if((v <= -0.75) && (v >= -1.0))
+            if((v < -0.75) && (v >= -1.0))
                 result = true;
         break;
         default:

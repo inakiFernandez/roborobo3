@@ -41,22 +41,77 @@ OriginalController::OriginalController( RobotWorldModel *wm )
 
 
     resetRobot();
-    //braitenberg genome (8sensors)
-    static const double arr[] = {0.5, -0.5, -1.0, 1.0, 0.75, -0.25, //W
+    //braitenberg genome (8sensors no color)
+    /*static const double arr[] = {0.5, -0.5, -1.0, 1.0, 0.75, -0.25, //W
                                  0.5, -0.5, -1.0, 1.0, 0.75, -0.25, //NW
                                  -0.5, -0.5, 1.0, 1.0, -0.5, -0.5, //N
                                  -0.5, 0.5, 1.0,-1.0, -0.25, 0.75, //NE
                                  -0.5, 0.5, 1.0,-1.0, -0.25, 0.75, //E
                                  -0.5, 0.5, 1.0,-1.0, -0.25, 0.75, //SE
                                  0.5, 0.5, -1.0, -1.0, 0.5, 0.5, //S
-                                 0.5, -0.5, -1.0, 1.0, 0.75, 0.0, //SW
+                                 0.5, -0.5, -1.0, 1.0, 0.75, -0.25, //SW
                                  0.5, 0.5, //bias
                                  0.0, 0.0, //lW recurrent
                                  0.0, 0.0, //rW recurrent
+                                };*/
+
+    //braitenberg genome (8sensors x (obst,item,robot,colorrobot) color=T1, always red)
+    std::vector<double> arr1 = {0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //W
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //NW
+                                   -0.5, -0.5, 0.0, 1.0, 1.0, 0.0, -0.5, -0.5, 0.0, 0.0, 0.0, 0.0, //N
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //NE
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //E
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //SE
+                                   0.5, 0.5, 0.0, -1.0, -1.0, 0.0,  0.5, 0.5, 0.0, 0.0, 0.0, 0.0, //S
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //SW
+                                   0.5, 0.5, 5.0, //bias
+                                   0.0, 0.0, 0.0, //lW recurrent
+                                   0.0, 0.0, 0.0 //rW recurrent
                                 };
 
+    //braitenberg genome (8sensors x (obst,item,robot,colorrobot) color=T2, always green)
+    std::vector<double> arr2 = {0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //W
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //NW
+                                   -0.5, -0.5, 0.0, 1.0, 1.0, 0.0, -0.5, -0.5, 0.0, 0.0, 0.0, 0.0, //N
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //NE
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //E
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //SE
+                                   0.5, 0.5, 0.0, -1.0, -1.0, 0.0,  0.5, 0.5, 0.0, 0.0, 0.0, 0.0, //S
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //SW
+                                   0.5, 0.5, -5.0, //bias
+                                   0.0, 0.0, 0.0, //lW recurrent
+                                   0.0, 0.0, 0.0 //rW recurrent
+                                };
 
-    std::vector<double> vec (arr, arr + sizeof(arr) / sizeof(arr[0]) );
+    //braitenberg genome (8sensors x (obst,item,robot,colorrobot) color=T1, red if alone, green if item + robot)
+    std::vector<double>  arr3 = {0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //W
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //NW
+                                   -0.5, -0.5, 0.0, 1.0, 1.0, 0.0, -0.5, -0.5, 0.0, 0.0, 0.0, 0.0, //N
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //NE
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //E
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //SE
+                                   0.5, 0.5, 0.0, -1.0, -1.0, 0.0,  0.5, 0.5, 0.0, 0.0, 0.0, 0.0, //S
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //SW
+                                   0.5, 0.5, 5.0, //bias
+                                   0.0, 0.0, 0.0, //lW recurrent
+                                   0.0, 0.0, 0.0 //rW recurrent
+                                };
+
+    std::vector<double> vec ;
+
+    switch (OriginalSharedData::gBrait)
+    {
+        case 1:
+            vec = arr1;
+            break;
+        case 2:
+            vec = arr2;
+            break;
+        case 3:
+            vec = arr3;
+            break;
+    }
+
     _braitWeights = vec;
 
     _lifetime = -1; _iteration = 0; _birthdate = 0;
@@ -298,7 +353,6 @@ void OriginalController::stepBehaviour()
         inputToUse++;
 
     //Previous translational and rotational speeds (acts as recurrent connections from last step)
-    //TODO Should take wheel speed instead
     double lW = _wm->_desiredTranslationalValue / gMaxTranslationalSpeed
             + _wm->_desiredRotationalVelocity / gMaxRotationalSpeed;
     double rW = _wm->_desiredTranslationalValue / gMaxTranslationalSpeed
@@ -307,20 +361,24 @@ void OriginalController::stepBehaviour()
     inputToUse++;
     (*inputs)[inputToUse] = rW;
     inputToUse++;
-    /*if(_wm->_id == 1)
+    if(_wm->_id == 0) //1)
     {
-        for(int i  = 0; i < _wm->_cameraSensorsNb; i++)
+        /*for(int i  = 0; i < _wm->_cameraSensorsNb; i++)
         {
             std::cout << (*inputs)[4*i+3] << " | ";
-        }
+        }*/
+        /*for(unsigned int i  = 0; i < _nbInputs/_wm->_cameraSensorsNb; i++)
+        {
+            std::cout << (*inputs)[i] << " | ";
+        }*/
         //for(auto it = inputs->begin(); it < inputs->end(); it++)
         //    std::cout << (*it) << " | ";
-        std::cout << std::endl;
-    }*/
+        //std::cout << std::endl;
+    }
 
     // ---- compute and read out ----
     nn->setWeigths(_genome); // set genome
-    bool doBraitenberg = false; //true; //
+    bool doBraitenberg = (OriginalSharedData::gBrait != 0);
     if (doBraitenberg)
         nn->setWeigths(_braitWeights);
     nn->setInputs(*inputs);
