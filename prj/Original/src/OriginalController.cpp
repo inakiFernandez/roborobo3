@@ -85,9 +85,9 @@ OriginalController::OriginalController( RobotWorldModel *wm )
 
     //braitenberg genome (8sensors x (obst,item,robot,colorrobot) color=T1, red if alone, green if item + robot)
     std::vector<double>  arr3 = {0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //W
-                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //NW
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, -10.0, 0.0, 0.0, 0.0, //NW
                                    -0.5, -0.5, 0.0, 1.0, 1.0, 0.0, -0.5, -0.5, 0.0, 0.0, 0.0, 0.0, //N
-                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //NE
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, -10.0, 0.0, 0.0, 0.0, //NE
                                    -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //E
                                    -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //SE
                                    0.5, 0.5, 0.0, -1.0, -1.0, 0.0,  0.5, 0.5, 0.0, 0.0, 0.0, 0.0, //S
@@ -397,6 +397,7 @@ void OriginalController::stepBehaviour()
         //Use a discrete set of color values
         int redValue = roundDown((int)((outputs[2] + 1.0)/2.0 * 256.0),32);
         _wm->setRobotLED_colorValues(redValue, 255 - redValue, 0);
+        //std::cout << getColorEffector() <<std::endl;
     }
 
     _wm->_desiredTranslationalValue = (rW + lW) / 2;
