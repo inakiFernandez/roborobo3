@@ -10,8 +10,11 @@ outlogbasename=$3
 nbRuns=$4
 
 nbRob='50 100 200 300 400'
+
+nbRob='200'
+
 taskSeq='1,-1 2,-1'
-ctrlSetup='3'
+ctrlSetup='0' #'3'
 
 listProp=`parallel --header : echo R{1}.T{2}.B{3} gInitialNumberOfRobots={f1} gTaskSeq={f2} gBrait={f3} ::: f1 $nbRob ::: f2 $taskSeq ::: f3 $ctrlSetup`
 
@@ -43,7 +46,7 @@ echo $line | perl -p -e  's/^.*? //' | sed -e 's/ /\n/g' >> $outbasename-$suffix
 done <<< "$listProp"
 
 
-parallel -j8 -a $commandFile
+parallel --dry-run -j8 -a $commandFile
 
 
 
