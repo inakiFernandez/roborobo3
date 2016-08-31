@@ -50,3 +50,8 @@ parallel -j8 -a $commandFile
 #./tools/template-launchMultiple.sh config/tColl2/template-medea config/tColl2/medea-colors logs/expColors 30
 
 
+#for i in * ; do paste $i/*.log > $i.all.log; done
+
+#for i in *.log ; do tail -n +21 $i > tmp ; rm $i ; mv tmp $i ; done ;
+
+#for i in *.log ; do head -n -6 $i > tmp ; rm $i ; mv tmp $i ; done ;

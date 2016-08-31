@@ -147,15 +147,16 @@ bool OriginalAgentObserver::isRightColorValue(double v)
     bool result = false;
     switch (OriginalSharedData::gFitness) {
         case 1:
-            if((v >= 0.75) && (v <=1.0))
+            //if((v >= 0.75) && (v <1.0))
+            if((v >= 0.25) && (v <0.5))
             {
                 result = true;
-                //std::cout << v << std::endl;
             }
 
         break;
         case 2:
-            if((v < -0.75) && (v >= -1.0))
+            //if((v < -0.75) && (v >= -1.0))
+            if((v < -0.25) && (v >= -0.5))
                 result = true;
         break;
         default:
