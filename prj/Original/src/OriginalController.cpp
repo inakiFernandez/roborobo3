@@ -55,7 +55,49 @@ OriginalController::OriginalController( RobotWorldModel *wm )
                                  0.0, 0.0, //rW recurrent
                                 };*/
 
-    //braitenberg genome (8sensors x (obst,item,robot,colorrobot) color=T1, always red)
+    //braitenberg genome Colors intermediate (8sensors x (obst,item,robot,colorrobot) color=T1, always red)
+    std::vector<double> arr1 = {0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //W
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //NW
+                                   -0.5, -0.5, 0.0, 1.0, 1.0, 0.0, -0.5, -0.5, 0.0, 0.0, 0.0, 0.0, //N
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //NE
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //E
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //SE
+                                   0.5, 0.5, 0.0, -1.0, -1.0, 0.0,  0.5, 0.5, 0.0, 0.0, 0.0, 0.0, //S
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //SW
+                                   0.5, 0.5, 0.5, //bias
+                                   0.0, 0.0, 0.0, //lW recurrent
+                                   0.0, 0.0, 0.0 //rW recurrent
+                                };
+
+    //braitenberg genome Colors intermediate (8sensors x (obst,item,robot,colorrobot) color=T2, always green)
+    std::vector<double> arr2 = {0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //W
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //NW
+                                   -0.5, -0.5, 0.0, 1.0, 1.0, 0.0, -0.5, -0.5, 0.0, 0.0, 0.0, 0.0, //N
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //NE
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //E
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //SE
+                                   0.5, 0.5, 0.0, -1.0, -1.0, 0.0,  0.5, 0.5, 0.0, 0.0, 0.0, 0.0, //S
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //SW
+                                   0.5, 0.5, -0.5, //bias
+                                   0.0, 0.0, 0.0, //lW recurrent
+                                   0.0, 0.0, 0.0 //rW recurrent
+                                };
+
+    //braitenberg genome Colors intermediate (8sensors x (obst,item,robot,colorrobot) color=T1, red if alone, green if item + robot)
+    std::vector<double>  arr3 = {0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //W
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, -1.0, 0.0, 0.0, 0.0, //NW
+                                   -0.5, -0.5, 0.0, 1.0, 1.0, 0.0, -0.5, -0.5, 0.0, 0.0, 0.0, 0.0, //N
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, -1.0, 0.0, 0.0, 0.0, //NE
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //E
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //SE
+                                   0.5, 0.5, 0.0, -1.0, -1.0, 0.0,  0.5, 0.5, 0.0, 0.0, 0.0, 0.0, //S
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //SW
+                                   0.5, 0.5, 0.5, //bias
+                                   0.0, 0.0, 0.0, //lW recurrent
+                                   0.0, 0.0, 0.0 //rW recurrent
+                                };
+
+    /*//braitenberg genome (8sensors x (obst,item,robot,colorrobot) color=T1, always red)
     std::vector<double> arr1 = {0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //W
                                    0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //NW
                                    -0.5, -0.5, 0.0, 1.0, 1.0, 0.0, -0.5, -0.5, 0.0, 0.0, 0.0, 0.0, //N
@@ -95,8 +137,7 @@ OriginalController::OriginalController( RobotWorldModel *wm )
                                    0.5, 0.5, 5.0, //bias
                                    0.0, 0.0, 0.0, //lW recurrent
                                    0.0, 0.0, 0.0 //rW recurrent
-                                };
-
+                                };*/
     std::vector<double> vec ;
 
     switch (OriginalSharedData::gBrait)
@@ -398,10 +439,14 @@ void OriginalController::stepBehaviour()
         int redValue = roundDown((int)((outputs[2] + 1.0)/2.0 * 256.0),32);
         _wm->setRobotLED_colorValues(redValue, 255 - redValue, 0);
         //std::cout << getColorEffector() <<std::endl;
+        //std::cout << outputs[2] <<std::endl;
     }
 
     _wm->_desiredTranslationalValue = (rW + lW) / 2;
     _wm->_desiredRotationalVelocity = (lW - rW) / 2;
+
+    //_wm->_desiredTranslationalValue = 0;
+    //_wm->_desiredRotationalVelocity = 0;
 
     // normalize to motor interval values
     _wm->_desiredTranslationalValue =  _wm->_desiredTranslationalValue * gMaxTranslationalSpeed;

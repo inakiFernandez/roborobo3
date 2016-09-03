@@ -14,7 +14,7 @@ nbRob='50 100 200 300 400'
 nbRob='200'
 
 taskSeq='1,-1 2,-1'
-ctrlSetup='0' #'3'
+ctrlSetup='1 2 3' #'3'
 
 listProp=`parallel --header : echo R{1}.T{2}.B{3} gInitialNumberOfRobots={f1} gTaskSeq={f2} gBrait={f3} ::: f1 $nbRob ::: f2 $taskSeq ::: f3 $ctrlSetup`
 
