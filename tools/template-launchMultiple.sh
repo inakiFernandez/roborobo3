@@ -14,10 +14,10 @@ nbRob='50 100 200 300 400'
 nbRob='200'
 
 taskSeq='1,-1 2,-1'
-taskSeq='1,-1'
+taskSeq='2,-1'
 
 ctrlSetup='1 2 3' #'3'
-ctrlSetup='4' #'3'
+ctrlSetup='5 6' 
 
 sigma='0.5'
 sigma='0.5 0.05 0.1'

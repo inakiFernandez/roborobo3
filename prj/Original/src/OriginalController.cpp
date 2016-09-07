@@ -155,6 +155,15 @@ OriginalController::OriginalController( RobotWorldModel *wm )
             //Initialize population to mutation of B1
             _genome = arr1;
             mutate(_currentSigma);
+        case 5:
+            //Initialize population to mutation of B2
+            _genome = arr2;
+            mutate(_currentSigma);
+            break;
+        case 6:
+            //Initialize population to mutation of B3
+            _genome = arr3;
+            mutate(_currentSigma);
             break;
     }
 
@@ -424,7 +433,8 @@ void OriginalController::stepBehaviour()
 
     // ---- compute and read out ----
     nn->setWeigths(_genome); // set genome
-    bool doBraitenberg = (OriginalSharedData::gBrait != 0) && (OriginalSharedData::gBrait != 4);
+    bool doBraitenberg = (OriginalSharedData::gBrait != 0) && (OriginalSharedData::gBrait != 4)
+            && (OriginalSharedData::gBrait != 5)&& (OriginalSharedData::gBrait != 6);
     if (doBraitenberg)
         nn->setWeigths(_braitWeights);
     nn->setInputs(*inputs);
