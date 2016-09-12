@@ -10,11 +10,13 @@ outlogbasename=$3
 nbRuns=$4
 
 nbRob='50 100 200 300 400'
-
 nbRob='200'
 
 taskSeq='1,-1 2,-1'
 taskSeq='2,-1'
+taskSeq='1,2,-1'
+taskTimeChange='0,-1'
+taskTimeChange='0,150000,-1'
 
 ctrlSetup='1 2 3' #'3'
 ctrlSetup='5 6' 
@@ -22,7 +24,6 @@ ctrlSetup='0'
 
 sigma='0.5'
 sigma='0.5 0.05 0.1'
-sigma='0.05 0.1'
 
 listProp=`parallel --header : echo R{1}.T{2}.B{3}.S{4} gInitialNumberOfRobots={f1} gTaskSeq={f2} gBrait={f3} gSigmaRef={f4} ::: f1 $nbRob ::: f2 $taskSeq ::: f3 $ctrlSetup ::: f4 $sigma`
 
@@ -45,6 +46,10 @@ cp $tmplate $outbasename-$suffix.properties
 mkdir $outlogbasename/$suffix
 #echo $line
 echo $line | perl -p -e  's/^.*? //' | sed -e 's/ /\n/g' >> $outbasename-$suffix.properties
+
+#FOR SEQUENCE ONLY
+echo "gTimeChange=$taskTimeChange" >> $outbasename-$suffix.properties
+
 
     for (( j=1; j<=$nbRuns; j++))
     do
