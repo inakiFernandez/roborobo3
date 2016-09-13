@@ -14,9 +14,10 @@ nbRob='200'
 
 taskSeq='1,-1 2,-1'
 taskSeq='2,-1'
-taskSeq='1,2,-1'
+taskSeq='1,2,1,2,-1'
+
 taskTimeChange='0,-1'
-taskTimeChange='0,150000,-1'
+taskTimeChange='0,150000,400000,450000,-1'
 
 ctrlSetup='1 2 3' #'3'
 ctrlSetup='5 6' 
@@ -24,6 +25,8 @@ ctrlSetup='0'
 
 sigma='0.5'
 sigma='0.5 0.05 0.1'
+
+#listProp=`parallel --header : echo R{1}.T{2}.B{3}.S{4}.Time{5} gInitialNumberOfRobots={f1} gTaskSeq={f2} gBrait={f3} gSigmaRef={f4} gTimeChange={f5} ::: f1 $nbRob ::: f2 $taskSeq ::: f3 $ctrlSetup ::: f4 $sigma ::: f5 $taskTimeChange`
 
 listProp=`parallel --header : echo R{1}.T{2}.B{3}.S{4} gInitialNumberOfRobots={f1} gTaskSeq={f2} gBrait={f3} gSigmaRef={f4} ::: f1 $nbRob ::: f2 $taskSeq ::: f3 $ctrlSetup ::: f4 $sigma`
 
@@ -48,7 +51,7 @@ mkdir $outlogbasename/$suffix
 echo $line | perl -p -e  's/^.*? //' | sed -e 's/ /\n/g' >> $outbasename-$suffix.properties
 
 #FOR SEQUENCE ONLY
-echo "gTimeChange=$taskTimeChange" >> $outbasename-$suffix.properties
+#echo "gTimeChange=$taskTimeChange" >> $outbasename-$suffix.properties
 
 
     for (( j=1; j<=$nbRuns; j++))
