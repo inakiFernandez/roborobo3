@@ -26,9 +26,9 @@ ctrlSetup='0'
 sigma='0.5'
 sigma='0.5 0.05 0.1'
 
-#listProp=`parallel --header : echo R{1}.T{2}.B{3}.S{4}.Time{5} gInitialNumberOfRobots={f1} gTaskSeq={f2} gBrait={f3} gSigmaRef={f4} gTimeChange={f5} ::: f1 $nbRob ::: f2 $taskSeq ::: f3 $ctrlSetup ::: f4 $sigma ::: f5 $taskTimeChange`
+listProp=`parallel --header : echo R{1}.T{2}.B{3}.S{4}.Time{5} gInitialNumberOfRobots={f1} gTaskSeq={f2} gBrait={f3} gSigmaRef={f4} gTimeChange={f5} ::: f1 $nbRob ::: f2 $taskSeq ::: f3 $ctrlSetup ::: f4 $sigma ::: f5 $taskTimeChange`
 
-listProp=`parallel --header : echo R{1}.T{2}.B{3}.S{4} gInitialNumberOfRobots={f1} gTaskSeq={f2} gBrait={f3} gSigmaRef={f4} ::: f1 $nbRob ::: f2 $taskSeq ::: f3 $ctrlSetup ::: f4 $sigma`
+#listProp=`parallel --header : echo R{1}.T{2}.B{3}.S{4} gInitialNumberOfRobots={f1} gTaskSeq={f2} gBrait={f3} gSigmaRef={f4} ::: f1 $nbRob ::: f2 $taskSeq ::: f3 $ctrlSetup ::: f4 $sigma`
 
 #echo "$listProp"
 
