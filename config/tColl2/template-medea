@@ -257,3 +257,6 @@ gMonitorPositions = false # slow down if true.
 # Item positions
 #physicalObject[0].x = 50
 #physicalObject[0].y = 50
+
+
+gForgetMethod = 1

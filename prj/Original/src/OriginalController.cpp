@@ -28,6 +28,7 @@ OriginalController::OriginalController( RobotWorldModel *wm )
     _maxValue = OriginalSharedData::gNeuronWeightRange/2;
 	_currentSigma = OriginalSharedData::gSigmaRef;
 
+
     //Evo variables
     _currentFitness = 0.0;
     _genomeId.robot_id = _wm->_id;
@@ -56,42 +57,42 @@ OriginalController::OriginalController( RobotWorldModel *wm )
                                 };*/
 
     //braitenberg genome Colors intermediate (8sensors x (obst,item,robot,colorrobot) color=T1, always red)
-    std::vector<double> arr1 = {0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //W
-                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //NW
-                                   -0.5, -0.5, 0.0, 1.0, 1.0, 0.0, -0.5, -0.5, 0.0, 0.0, 0.0, 0.0, //N
-                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //NE
-                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //E
-                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //SE
-                                   0.5, 0.5, 0.0, -1.0, -1.0, 0.0,  0.5, 0.5, 0.0, 0.0, 0.0, 0.0, //S
-                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //SW
+    std::vector<double> arr1 = {0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, //0.0, 0.0, 0.0, //W
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, //0.0, 0.0, 0.0, //NW
+                                   -0.5, -0.5, 0.0, 1.0, 1.0, 0.0, -0.5, -0.5, 0.0, //0.0, 0.0, 0.0, //N
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, //0.0, 0.0, 0.0, //NE
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, //0.0, 0.0, 0.0, //E
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, //0.0, 0.0, 0.0, //SE
+                                   0.5, 0.5, 0.0, -1.0, -1.0, 0.0,  0.5, 0.5, 0.0, //0.0, 0.0, 0.0, //S
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, //0.0, 0.0, 0.0, //SW
                                    0.5, 0.5, 0.5, //bias
                                    0.0, 0.0, 0.0, //lW recurrent
                                    0.0, 0.0, 0.0 //rW recurrent
                                 };
 
     //braitenberg genome Colors intermediate (8sensors x (obst,item,robot,colorrobot) color=T2, always green)
-    std::vector<double> arr2 = {0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //W
-                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //NW
-                                   -0.5, -0.5, 0.0, 1.0, 1.0, 0.0, -0.5, -0.5, 0.0, 0.0, 0.0, 0.0, //N
-                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //NE
-                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //E
-                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //SE
-                                   0.5, 0.5, 0.0, -1.0, -1.0, 0.0,  0.5, 0.5, 0.0, 0.0, 0.0, 0.0, //S
-                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //SW
+    std::vector<double> arr2 = {0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, //0.0, 0.0, 0.0, //W
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, //0.0, 0.0, 0.0, //NW
+                                   -0.5, -0.5, 0.0, 1.0, 1.0, 0.0, -0.5, -0.5, 0.0, //0.0, 0.0, 0.0, //N
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, //0.0, 0.0, 0.0, //NE
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, //0.0, 0.0, 0.0, //E
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, //0.0, 0.0, 0.0, //SE
+                                   0.5, 0.5, 0.0, -1.0, -1.0, 0.0,  0.5, 0.5, 0.0, //0.0, 0.0, 0.0, //S
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, //0.0, 0.0, 0.0, //SW
                                    0.5, 0.5, -0.5, //bias
                                    0.0, 0.0, 0.0, //lW recurrent
                                    0.0, 0.0, 0.0 //rW recurrent
                                 };
 
     //braitenberg genome Colors intermediate (8sensors x (obst,item,robot,colorrobot) color=T1, red if alone, green if item + robot)
-    std::vector<double>  arr3 = {0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //W
-                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, -1.0, 0.0, 0.0, 0.0, //NW
-                                   -0.5, -0.5, 0.0, 1.0, 1.0, 0.0, -0.5, -0.5, 0.0, 0.0, 0.0, 0.0, //N
-                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, -1.0, 0.0, 0.0, 0.0, //NE
-                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //E
-                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //SE
-                                   0.5, 0.5, 0.0, -1.0, -1.0, 0.0,  0.5, 0.5, 0.0, 0.0, 0.0, 0.0, //S
-                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //SW
+    std::vector<double>  arr3 = {0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, //0.0, 0.0, 0.0, //W
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, -1.0, //0.0, 0.0, 0.0, //NW
+                                   -0.5, -0.5, 0.0, 1.0, 1.0, 0.0, -0.5, -0.5, 0.0, //0.0, 0.0, 0.0, //N
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, -1.0, //0.0, 0.0, 0.0, //NE
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, //0.0, 0.0, 0.0, //E
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, //0.0, 0.0, 0.0, //SE
+                                   0.5, 0.5, 0.0, -1.0, -1.0, 0.0,  0.5, 0.5, 0.0, //0.0, 0.0, 0.0, //S
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, //0.0, 0.0, 0.0, //SW
                                    0.5, 0.5, 0.5, //bias
                                    0.0, 0.0, 0.0, //lW recurrent
                                    0.0, 0.0, 0.0 //rW recurrent
@@ -173,6 +174,10 @@ OriginalController::OriginalController( RobotWorldModel *wm )
 
     _wm->updateLandmarkSensor();
 
+    //Stored previous controller. Initialized to NO PREVIOUS
+    _stored = std::vector<double>();
+
+
     if(_wm->_id == 0)
     {
         std::cout << "W:" << computeRequiredNumberOfWeights() << std::endl;
@@ -218,7 +223,7 @@ void OriginalController::resetRobot()
         if(_withCollectColorEffector)
         {
             //COLOR DISPLAYED BY ROBOT
-            _nbInputs += _wm->_cameraSensorsNb;
+            //_nbInputs += _wm->_cameraSensorsNb;
             _nbOutputs += 1;
         }
     }
@@ -382,24 +387,24 @@ void OriginalController::stepBehaviour()
                _wm->getCameraSensorMaximumDistanceValue(i);
            inputToUse++;
 
-           if(_withCollectColorEffector)
+           /*if(_withCollectColorEffector)
            {
                OriginalController* c = dynamic_cast<OriginalController*>(
                            (gWorld->getRobot(objId - gRobotIndexStartOffset))->getController());
                (*inputs)[inputToUse] = c->getColorEffector();
                inputToUse++;
-           }
+           }*/
        }
        else
        {
            (*inputs)[inputToUse] = 0.0;
            inputToUse++;
 
-          if(_withCollectColorEffector)
+          /*if(_withCollectColorEffector)
           {
               (*inputs)[inputToUse] = 0.0;
               inputToUse++;
-          }
+          }*/
        }
     }
 
@@ -839,4 +844,33 @@ int OriginalController::roundDown(int numToRound, int multiple)
     }
     //std::cout << numToRound << " | " << multiple << " | "<< result << std::endl;
     return result;
+}
+
+//Measures a distance between previous stored neural controller and current one
+double OriginalController::forget()
+{
+    double result = 0.0;
+    switch(OriginalSharedData::gForgetMethod)
+    {
+        //Structural difference
+        case 1:
+            result = forgetStructural();
+            break;
+        //Behavioral distance (?)
+        case 2:
+            //TODO
+            break;
+    }
+    return result;
+}
+
+double OriginalController::forgetStructural()
+{
+    //euclidean distance of weight vector (fixed-topology)//TODO evo topo
+    double result = 0.0;
+    for(unsigned int i = 0; i <_genome.size(); i++)
+    {
+        result += (_genome[i] - _stored[i]) * (_genome[i] - _stored[i]);
+    }
+    return sqrt(result);
 }

@@ -43,7 +43,7 @@ class OriginalSharedData {
 
     static bool gWithCollectColorEffector;
     static int gBrait;
-
+    static int gForgetMethod;
 };
 
 

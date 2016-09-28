@@ -78,6 +78,7 @@ private:
     int _lifetime;
     
 
+
     // ANN
     double _minValue;
     double _maxValue;
@@ -92,7 +93,8 @@ private:
 
 
     int roundDown(int numToRound, int multiple);
-    
+
+
 public:
 
     OriginalController(RobotWorldModel *wm);
@@ -108,6 +110,15 @@ public:
     {
         return 2.0 * ((double)_wm->getRobotLED_redValue()/256.0) - 1.0;
     }
+
+    //Forgetting measures
+    std::vector<double> _stored;
+    void storeRepresentative()
+    {
+        _stored = _genome;
+    }
+    double forget();
+    double forgetStructural();
 
     void readGenome(std::string s);
     void logGenome(std::string s);

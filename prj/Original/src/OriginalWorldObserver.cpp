@@ -78,6 +78,9 @@ OriginalWorldObserver::OriginalWorldObserver( World* world ) : WorldObserver( wo
     gProperties.checkAndGetPropertyValue("gWithCollectColorEffector",&OriginalSharedData::gWithCollectColorEffector,true);
 
     gProperties.checkAndGetPropertyValue("gBrait",&OriginalSharedData::gBrait,true);
+
+    gProperties.checkAndGetPropertyValue("gForgetMethod",&OriginalSharedData::gForgetMethod,true);
+
 	// * iteration and generation counters
 
 	_lifeIterationCount = -1;
@@ -128,20 +131,32 @@ void OriginalWorldObserver::updateMonitoring()
         // Logging here
         double sumFitness = 0.0;
         int gatheredGenomes = 0;
+        double forgetMeasure = 0.0;
         for ( int i = 0 ; i != gNumberOfRobots ; i++ )
         {
 
              sumFitness += (dynamic_cast<OriginalController*>(gWorld->getRobot(i)->getController()))
                      -> getFitness();
+             OriginalController* ctrl = (dynamic_cast<OriginalController*>
+                                         (gWorld->getRobot(i)->getController()));
+             gatheredGenomes += ctrl ->_genomesList.size();
 
-             gatheredGenomes += (dynamic_cast<OriginalController*>
-                                 (gWorld->getRobot(i)->getController())) ->_genomesList.size();
+             if(ctrl -> _stored.empty())
+            {
+                 forgetMeasure += -1.0;
+            }
+            else
+            {
+                forgetMeasure += ctrl -> forget();
+            }
+            //Forget measure for each robot ? what to do
+
         }
         //std::cout << gWorld->getIterations() << " ";
         //<< (sumFitness  / gNumberOfRobots) / Collect2SharedData::gEvaluationTime
+        //average forget measure. TODO other estimator/or all the data?
 
-
-            std::cout << sumFitness << std::endl;
+            std::cout << sumFitness << " " << (forgetMeasure/ gNumberOfRobots) <<  std::endl;
 	}
 
     if (gWorld->getIterations() == (gMaxIt - 1))
@@ -228,6 +243,12 @@ void OriginalWorldObserver::updateMonitoring()
         OriginalSharedData::gFitness =
                 OriginalSharedData::gTaskSeq[OriginalSharedData::gTaskIdx];
         OriginalSharedData::gTaskIdx++;
+
+        //Store representative for forget measure? For each robot? (previous task)
+        for (int i = 0 ; i != gNumberOfRobots ; i++)
+        {
+            (dynamic_cast<OriginalController*>(gWorld->getRobot(i)->getController()))->storeRepresentative();
+        }
     }
 }
 

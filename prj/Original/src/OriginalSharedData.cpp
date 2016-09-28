@@ -38,3 +38,5 @@ std::string OriginalSharedData::gEvolutionLogFile = "";
 bool OriginalSharedData::gWithCollectColorEffector = false;
 
 int OriginalSharedData::gBrait = -1;
+
+int OriginalSharedData::gForgetMethod = -1;
