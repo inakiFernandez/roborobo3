@@ -43,3 +43,5 @@ int OriginalSharedData::gForgetMethod = -1;
 
 
 int OriginalSharedData::gUpdateGC = true;
+
+double OriginalSharedData::gSelPressure= 1.0;

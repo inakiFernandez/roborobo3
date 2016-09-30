@@ -46,6 +46,8 @@ class OriginalSharedData {
     static int gForgetMethod;
 
     static int gUpdateGC;
+
+    static double gSelPressure;
 };
 
 

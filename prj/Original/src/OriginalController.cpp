@@ -439,7 +439,7 @@ void OriginalController::loadNewGenome()
        }
        //selectBestGenome();
        //selectRankBasedGenome();
-       selectTournament(1.0); // argument selection pressure (1.0 = elitist)
+       selectTournament(OriginalSharedData::gSelPressure); // argument selection pressure (1.0 = elitist)
    }
    else
    {

@@ -78,7 +78,7 @@ OriginalWorldObserver::OriginalWorldObserver( World* world ) : WorldObserver( wo
     gProperties.checkAndGetPropertyValue("gWithCollectColorEffector",&OriginalSharedData::gWithCollectColorEffector,true);
 
     gProperties.checkAndGetPropertyValue("gBrait",&OriginalSharedData::gBrait,true);
-
+    gProperties.checkAndGetPropertyValue("gSelPressure",&OriginalSharedData::gSelPressure, true);
     gProperties.checkAndGetPropertyValue("gForgetMethod",&OriginalSharedData::gForgetMethod,true);
 
     //OdNeat----------------------------------
