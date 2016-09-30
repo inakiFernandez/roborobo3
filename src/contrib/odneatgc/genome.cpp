@@ -3,6 +3,8 @@
 #include "odneatgc/gene.h"
 #include "odneatgc/helper.h"
 
+#include "Utilities/Misc.h"
+
 #include <iostream>
 #include <cmath>
 #include <sstream>
@@ -330,8 +332,22 @@ void Genome::mutate_link_weights(double power)
     {
         if((*curgene) -> enable)
         {
-            ((*curgene)-> lnk) -> weight += power * Helper::gaussRand();
+            ((*curgene)-> lnk) -> weight += getGaussianRand(0, power );
             ((*curgene)-> lnk) -> weight = capWeights(((*curgene)-> lnk) -> weight);
+        }
+    } //end for loop
+}
+
+void Genome::initialize_link_weights()
+{
+    std::vector<Gene*>::iterator curgene;
+    //Loop on all genes
+    for(curgene=genes.begin();curgene!=genes.end();curgene++)
+    {
+        if((*curgene) -> enable)
+        {
+            // weights: random init between -1 and +1
+            ((*curgene)-> lnk) -> weight = (double)(rand() % 10000)/5000.0 - 1.0;
         }
     } //end for loop
 }
@@ -339,10 +355,32 @@ void Genome::mutate_link_weights(double power)
 double Genome::capWeights(double w)
 {
     double result = w;
+    double range = 2 * Helper::rangeW;
+    // bouncing upper/lower bounds
+    if ( result < -Helper::rangeW )
+    {
+        double overflow = - (result - -Helper::rangeW );
+        overflow = overflow - 2*range * (int)( overflow / (2*range) );
+        if ( overflow < range )
+            result = -Helper::rangeW + overflow;
+        else // overflow btw range and range*2
+            result = -Helper::rangeW + range - (overflow-range);
+    }
+    else if ( result > Helper::rangeW )
+    {
+        double overflow = result - Helper::rangeW;
+        overflow = overflow - 2 * range * (int)(overflow / (2*range));
+        if ( overflow < range )
+            result = Helper::rangeW - overflow;
+        else // overflow btw range and range*2
+            result = Helper::rangeW - range + (overflow-range);
+    }
+    /*double result = w;
     if(result < -Helper::rangeW)
         result = -Helper::rangeW;
     if(result > +Helper::rangeW)
-        result = +Helper::rangeW;
+        result = +Helper::rangeW;*/
+
     return result;
 }
 

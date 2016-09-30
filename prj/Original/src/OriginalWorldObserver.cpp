@@ -81,6 +81,18 @@ OriginalWorldObserver::OriginalWorldObserver( World* world ) : WorldObserver( wo
 
     gProperties.checkAndGetPropertyValue("gForgetMethod",&OriginalSharedData::gForgetMethod,true);
 
+    //OdNeat----------------------------------
+    //Mutations
+    gProperties.checkAndGetPropertyValue("mutate_only_prob",&Helper::mutateProb,true);
+    gProperties.checkAndGetPropertyValue("mutate_link_weights_prob",&Helper::mutateLinkWeightsProb,true);
+    gProperties.checkAndGetPropertyValue("mutate_add_node_prob",&Helper::mutateAddNodeProb,true);
+    gProperties.checkAndGetPropertyValue("mutate_add_link_prob",&Helper::mutateAddLinkProb,true);
+    gProperties.checkAndGetPropertyValue("mate_only_prob",&Helper::mateOnlyProb,true);
+    gProperties.checkAndGetPropertyValue("recur_only_prob",&Helper::recurOnlyProb,true);
+    gProperties.checkAndGetPropertyValue("newstructure_tries",&Helper::newStructureTries,true);
+
+    Helper::rangeW = OriginalSharedData::gNeuronWeightRange / 2;
+
 	// * iteration and generation counters
 
 	_lifeIterationCount = -1;
@@ -139,9 +151,9 @@ void OriginalWorldObserver::updateMonitoring()
                      -> getFitness();
              OriginalController* ctrl = (dynamic_cast<OriginalController*>
                                          (gWorld->getRobot(i)->getController()));
-             gatheredGenomes += ctrl ->_genomesList.size();
+             gatheredGenomes += (ctrl->_doEvoTopo? ctrl ->_genomesList.size():ctrl ->_genomesFList.size());
 
-             if(ctrl -> _stored.empty())
+             if(ctrl -> _storedF.empty())
             {
                  forgetMeasure += -1.0;
             }
@@ -156,7 +168,9 @@ void OriginalWorldObserver::updateMonitoring()
         //<< (sumFitness  / gNumberOfRobots) / Collect2SharedData::gEvaluationTime
         //average forget measure. TODO other estimator/or all the data?
 
-            std::cout << sumFitness << " " << (forgetMeasure/ gNumberOfRobots) <<  std::endl;
+            std::cout << sumFitness
+                      //<< " " << (forgetMeasure/ gNumberOfRobots)
+                      <<  std::endl;
 	}
 
     if (gWorld->getIterations() == (gMaxIt - 1))
@@ -176,8 +190,12 @@ void OriginalWorldObserver::updateMonitoring()
         {
             for (int i = 0 ; i != gNumberOfRobots ; i++ )
             {
-                (dynamic_cast<OriginalController*>(gWorld->getRobot(i)->getController()))
-                        -> logGenome(OriginalSharedData::gOutGenomeFile + std::to_string(i) + ".log");
+                OriginalController* ctrl = (dynamic_cast<OriginalController*>(gWorld->getRobot(i)->getController()));
+                if(!ctrl->_doEvoTopo)
+                        ctrl -> logGenomeF(OriginalSharedData::gOutGenomeFile + std::to_string(i) + ".log");
+                else
+                {//TODO
+                }
             }
         }
 
@@ -213,6 +231,7 @@ void OriginalWorldObserver::updateMonitoring()
                         gPhysicalObjects[i]->isWalked(0); //Default agent for callback (unused callback)
                         for(auto it = listCollected[i].begin(); it != listCollected[i].end();it++)
                         {
+                            //Share reward of one item between the agents involved
                             dynamic_cast<OriginalController*>(gWorld->getRobot(it->first)
                             ->getController())->updateFitness(1.0 / (double)listCollected[i].size());
                         }

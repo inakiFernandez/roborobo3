@@ -113,9 +113,7 @@ bool Network::activate()
                 if ((*curnode)->active_flag)
                 {
                     //Now run the net activation through an activation function
-                    //Sigmoidal activation- see comments under fSigmoid
-                    if ((*curnode)->ftype==SIGMOID)
-                        //(*curnode)->activation=Helper::fSigmoid((*curnode)->activesum,4.924273);
+                    if ((*curnode)->ftype==SIGMOID)                        
                         (*curnode)->activation=tanh((*curnode)->activesum);
                     else
                     {

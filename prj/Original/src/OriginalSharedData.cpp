@@ -40,3 +40,6 @@ bool OriginalSharedData::gWithCollectColorEffector = false;
 int OriginalSharedData::gBrait = -1;
 
 int OriginalSharedData::gForgetMethod = -1;
+
+
+int OriginalSharedData::gUpdateGC = true;

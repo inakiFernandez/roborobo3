@@ -14,11 +14,20 @@
 #include "Controllers/Controller.h"
 #include "WorldModels/RobotWorldModel.h"
 #include "Original/include/OriginalAgentObserver.h"
-#include <neuralnetworks/NeuralNetwork.h>
+
 #include <iomanip>
+#include <set>
+#include <tuple>
+#include <map>
+
+#include <neuralnetworks/NeuralNetwork.h>
+#include <odneatgc/network.h>
+#include <odneatgc/genome.h>
 
 using namespace Neural;
-struct GC
+using namespace ODNEATGC;
+
+/*struct GC
 {
     int robot_id;
     int gene_id;
@@ -32,7 +41,7 @@ struct GC
         return gene_id == o.gene_id && robot_id == o.robot_id;
     }
     friend std::ostream& operator<<(std::ostream& os, const GC& gene_clock);
-};
+};*/
 
 class OriginalController : public Controller
 {
@@ -42,22 +51,13 @@ private:
 
     bool _withCollectColorEffector;
 
-    std::string _nnType;
-    std::vector<int> _nbHiddenNeuronsPerLayer;
-    std::vector<int> _nbBiaisNeuronsPerLayer;
-    NeuralNetwork* nn;
 
-    //previous neural net todo
-    //NeuralNetwork* previousNN;
-    //forgetting measure todo
-    //double forget();
-
-    void createNN();
-    
     void selectRandomGenome();
     void selectBestGenome();
     void selectRankBasedGenome();
     void selectTournament(double sp);
+    void mutateFixed(float sigma);
+    void mutateEvoTopo(float sigma);
     void mutate(float sigma);
 
     void stepBehaviour();
@@ -70,30 +70,52 @@ private:
 
     std::vector<double> _braitWeights;
     // evolutionary engine
-    std::vector<double> _genome; // current genome in evaluation
+    std::vector<double> _genomeF; // current genome in evaluation (fixed topo)
+    Genome *_genome; // current genome in evaluation (evo topo)
+
     GC _genomeId;
 
     double _currentFitness;
     float _currentSigma;
     int _lifetime;
     
-
-
     // ANN
     double _minValue;
     double _maxValue;
+
     unsigned int _nbInputs;
     unsigned int _nbOutputs;
     unsigned int _nbHiddenLayers;
     std::vector<unsigned int>* _nbNeuronsPerHiddenLayer;
     
-    void storeGenome(std::vector<double> genome, GC senderId, double fitness);
+    std::string _nnType;
+    std::vector<int> _nbHiddenNeuronsPerLayer;
+    std::vector<int> _nbBiaisNeuronsPerLayer;
+
+    NeuralNetwork* nnF;
+    Network *nn;
+
+    //previous neural net todo
+    //NeuralNetwork* previousNN;
+    //forgetting measure todo
+    //double forget();
+
+    void createNN();
+
+    //gene (link) and neuron local counters
+    int _g_count; int _n_count;
+
+    void storeGenome(Genome* genome, GC senderId, double fitness, int nCount, int gCount);
+    void storeGenomeF(std::vector<double> genome, GC senderId, double fitness);
+
     void storeOwnGenome();
+    void storeOwnGenomeF();
+
     void resetRobot();
 
 
     int roundDown(int numToRound, int multiple);
-
+    std::vector<double> getBraitenberg();
 
 public:
 
@@ -112,17 +134,25 @@ public:
     }
 
     //Forgetting measures
-    std::vector<double> _stored;
+    std::vector<double> _storedF;
     void storeRepresentative()
     {
-        _stored = _genome;
+        _storedF = _genomeF;
     }
     double forget();
     double forgetStructural();
 
-    void readGenome(std::string s);
-    void logGenome(std::string s);
-    std::map<GC, std::vector<double> > _genomesList;
+    void readGenomeF(std::string s);
+    //TODO read evo topo
+    //void readGenome(std::string s)
+    void logGenomeF(std::string s);
+    //TODO log evo topo
+    //void logGenome(std::string s)
+
+    bool _doEvoTopo;
+    std::map<GC, std::vector<double> > _genomesFList;
+    std::map<GC, Genome* > _genomesList;
+
     std::map<GC, double > _fitnessList;
 
 };
