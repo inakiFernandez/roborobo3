@@ -32,8 +32,7 @@ sigma='0.5 0.05 0.1'
 sigma='0.5'
 
 selpres='1.0'
-selpres='0.0 0.25 0.5 0.75 1.0
-'selpres='0.25 0.5 0.75 1.0'
+selpres='0.0 0.25 0.5 0.75 1.0'
 
 
 listProp=`parallel --header : echo R{1}.T{2}.Top{6}.B{3}.S{4}.SP{7}.Time{5} gInitialNumberOfRobots={f1} gTaskSeq={f2} gBrait={f3} gSigmaRef={f4} gTimeChange={f5} gControllerType={f6} gSelPressure={f7} ::: f1 $nbRob ::: f2 $taskSeq ::: f3 $ctrlSetup ::: f4 $sigma ::: f5 $taskTimeChange ::: f6 $evotop ::: f7 $selpres `
