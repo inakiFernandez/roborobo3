@@ -40,6 +40,7 @@ namespace ODNEATGC
 
             static double     rangeW;
 
+            static bool allowMultisynapses;
 
             static double randFloat();
             static int randPosNeg();

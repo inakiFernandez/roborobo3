@@ -271,3 +271,5 @@ mutate_add_node_prob= 0.0 # 0.05 # 0.057
 mutate_add_link_prob= 0.0 # 0.15 #0.184
 recur_only_prob= 0.0 #0.30 #0.376
 mutate_link_weights_prob= 1.0 # 0.575
+
+allowMultisynapses = false

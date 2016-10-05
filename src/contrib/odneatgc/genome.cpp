@@ -419,8 +419,8 @@ bool Genome::mutate_add_node(int tries,int idR,int &nodeId, int &gc)
             ++thegene;
 
         //If either the gene is disabled, or it has a bias input, try again
-        if (!(((*thegene)->enable==false)||
-              (((((*thegene)->lnk)->in_node)->gen_node_label)==BIAS)))
+        if (!(  ((*thegene)->enable==false)||
+              (((((*thegene)->lnk)->in_node)->gen_node_label)==BIAS) ))
             found=true;
 
         ++trycount;
@@ -448,17 +448,21 @@ bool Genome::mutate_add_node(int tries,int idR,int &nodeId, int &gc)
     {
         innovClock.idR = idR; innovClock.gc = gc;
         newgene1=new Gene(1.0,in_node,newnode,true,innovClock);
-
+        //TODO test coeffs to keep mutation seamless
         innovClock.idR = idR; innovClock.gc = gc + 1;
         newgene2=new Gene(oldweight,newnode,out_node,false,innovClock);
         gc = gc + 2;
     }
-    else {
+    else
+    {
         innovClock.idR = idR; innovClock.gc = gc;
-        newgene1=new Gene(1.0,in_node,newnode,false,innovClock);
-
+        double preCoeff =  0.20311035;//res_250It_lim5 optimized with CMA-ES//1.0 otherwise
+        double postCoeff = 5.0; // res_250It_lim5 //1.0 otherwise
+        //Attention: possible problem with postCoeff*oldweight not in boundaries
+        newgene1=new Gene(preCoeff,in_node,newnode,false,innovClock);
+        //TODO test coeffs to keep mutation seamless [0.203,5.0] SEAMLESS SPLIT NODE MUTATION
         innovClock.idR = idR; innovClock.gc = gc + 1;
-        newgene2=new Gene(oldweight,newnode,out_node,false,innovClock);
+        newgene2=new Gene(postCoeff*oldweight,newnode,out_node,false,innovClock);
         gc = gc + 2;
     }
 
@@ -476,34 +480,35 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
     std::vector<NNode*>::iterator thenode1,thenode2;
 
     int nodecount;  //Counter for finding nodes
-    int trycount; //Iterates over attempts to find an unconnected pair of nodes
-    NNode* nodep1; //Pointers to the nodes
-    NNode* nodep2; //Pointers to the nodes
+    int trycount; //attempts to find an unconnected pair of nodes
+    NNode* nodep1; NNode* nodep2; //Pointers to the nodes
     std::vector<Gene*>::iterator thegene; //Searches for existing link
-    bool found=false;  //Tells whether an open pair was found
+    bool found=false;  //was an open pair was found?
 
-    int recurflag; //Indicates whether proposed link is recurrent
-    Gene *newgene;  //The new Gene
+    int recurflag; //is proposed link recurrent?
+    Gene *newgene;  //new Gene
 
-    double newweight;  //The new weight for the new link
+    double newweight;  //new weight for the new link
 
-    bool do_recur; bool loop_recur; int first_nonsensor;
+    //bool do_recur; bool loop_recur;
+    int first_nonsensor;
 
-    //These are used to avoid getting stuck in an infinite loop checking
+    //used to avoid getting stuck in an infinite loop checking
     //for recursion
     //Note that we check for recursion to control the frequency of
     //adding recurrent links rather than to prevent any particular
     //kind of error
-    int thresh=(nodes.size())*(nodes.size());
+    int thresh=nodes.size()*nodes.size();
     int count=0;
 
     //Make attempts to find an unconnected pair
     trycount=0;
 
     //Decide whether to make this recurrent
-    if (Helper::randFloat() < Helper::recurOnlyProb)
+    //TOCHECK is this really useful/necessary?
+    /*if (Helper::randFloat() < Helper::recurOnlyProb)
         do_recur=true;
-    else do_recur=false;
+    else do_recur=false;*/
 
     //Find the first non-sensor so that the to-node won't look at sensors as
     //possible destinations
@@ -516,11 +521,12 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
     }
 
     //Here is the recurrent finder loop- it is done separately
-    if (do_recur)
+   /* if (do_recur)
     {
         while(trycount<tries)
         {
             //Some of the time try to make an auto recur loop
+            //TOCHECK is this really useful/necessary?
             if (Helper::randFloat()<0.5)
             {
                 loop_recur=true;
@@ -556,13 +562,15 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
             //See if an active link already exists  ALSO STOP AT END OF GENES!!
             //Don't allow SENSORS to get input
             thegene=genes.begin();
-            while ( (thegene!=genes.end()) && ((nodep2->type)!=SENSOR) &&
-                   (!(
+            while ( (thegene!=genes.end())
+                    && ((nodep2->type)!=SENSOR)
+                    &&
+                    !(
                         (((*thegene)->lnk)->in_node==nodep1)&&
                         (((*thegene)->lnk)->out_node==nodep2) &&
                         (*thegene)->enable
-                      )))
-                      //&& ((*thegene)->lnk)->is_recurrent)))
+                      )
+                  )
                 ++thegene;
 
 
@@ -572,8 +580,8 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
             {
                 count=0;
                 recurflag=phenotype->is_recur(nodep1, nodep2, count, thresh);
-                /*recurflag=phenotype->is_recur(nodep1->analogue,nodep2->analogue,
-                                              count,thresh);*/
+                //recurflag=phenotype->is_recur(nodep1->analogue,nodep2->analogue,
+                 //                             count,thresh);
 
                 //ADDED: CONSIDER connections out of outputs recurrent
                 if ((nodep1->gen_node_label)==OUTPUT)
@@ -584,7 +592,7 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
                     trycount++;
                 else
                 {
-                    trycount=tries;
+                    trycount=tries; //to exit loop
                     found=true;
                 }
             }
@@ -592,8 +600,8 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
         }
     }
     else
-    {
-        //Loop to find a nonrecurrent link
+    {*/
+        //Loop to find a /*nonrecurrent*/ link
         while(trycount<tries)
         {
             //Choose random nodenums
@@ -614,16 +622,22 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
 
             //See if a link already exists  ALSO STOP AT END OF GENES!!!!
             //Don't allow SENSORS to get input
+
             thegene=genes.begin();
-            while ((thegene!=genes.end()) &&
-                   ((nodep2->type)!=SENSOR) &&
-                   (!(
-                        (((*thegene)->lnk)->in_node==nodep1)&&
-                        (((*thegene)->lnk)->out_node==nodep2)&&
-                        (*thegene)->enable
-                      )))
-                      //&& (!(((*thegene)->lnk)->is_recurrent)))))
+            bool isExistingConnection = ((*thegene)->lnk->in_node==nodep1)
+                                          && ((*thegene)->lnk->out_node==nodep2)
+                                          && (*thegene)->enable;
+            while ( (thegene!=genes.end())
+                   && (nodep2->type!=SENSOR)
+                   && (!isExistingConnection || Helper::allowMultisynapses)
+                  )
+            {
                 ++thegene;
+                if(thegene!=genes.end())
+                    isExistingConnection = ((*thegene)->lnk->in_node==nodep1)
+                                              && ((*thegene)->lnk->out_node==nodep2)
+                                              && (*thegene)->enable;
+            }
 
 
             if (thegene!=genes.end())
@@ -632,37 +646,33 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
             {
                 count=0;
                 recurflag=phenotype->is_recur(nodep1,nodep2, count,thresh);
-                /*recurflag=phenotype->is_recur(nodep1->analogue,nodep2->analogue,
-                                              count,thresh);*/
+                //recurflag=phenotype->is_recur(nodep1->analogue,nodep2->analogue,
+                                              //count,thresh);
 
                 //ADDED: CONSIDER connections out of outputs recurrent
                 if ((nodep1->gen_node_label)==OUTPUT)
                     recurflag=true;
 
-                //Make sure it finds the right kind of link (recur or not)
-                if (recurflag)
+                //DEPRECATED? Make sure it finds the right kind of link (recur or not)
+                /*if (recurflag)
                     trycount++;
                 else
-                {
-                    trycount=tries;
+                {*/
+                    trycount=tries; //to exit loop
                     found=true;
-                }
+                //}
             }
 
         } //End of normal link finding loop
-    }
+    //}
     //Continue only if an open link was found
     if (found)
     {
         //If it was supposed to be recurrent, make sure it gets labeled that way
-        if (do_recur) recurflag=1;
-
-        //If the phenotype does not exist, exit on false,print error
-        //Note: This should never happen- if it does there is a bug
-        /*if (phenotype==0)
-            return false;*/
+        //?TOCHECK is this necessary? if (do_recur) recurflag=1;
 
         //Choose the new weight (uniform between -1.0 and 1.0)
+        //TOCHECK: seamless mutation with 0 weight
         newweight=Helper::randPosNeg()*Helper::randFloat()*1.0;
 
         innov innovClock; innovClock.idR = idR; innovClock.gc = gc;

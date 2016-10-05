@@ -91,6 +91,8 @@ OriginalWorldObserver::OriginalWorldObserver( World* world ) : WorldObserver( wo
     gProperties.checkAndGetPropertyValue("recur_only_prob",&Helper::recurOnlyProb,true);
     gProperties.checkAndGetPropertyValue("newstructure_tries",&Helper::newStructureTries,true);
 
+    gProperties.checkAndGetPropertyValue("allowMultisynapses",&Helper::allowMultisynapses,true);
+
     Helper::rangeW = OriginalSharedData::gNeuronWeightRange / 2;
 
 	// * iteration and generation counters

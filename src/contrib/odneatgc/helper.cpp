@@ -24,6 +24,8 @@ using namespace ODNEATGC;
 
     double     Helper::rangeW=10.0;
 
+    bool Helper::allowMultisynapses = false;
+
     double Helper::randFloat()
     {
         return rand() / (double) RAND_MAX;
