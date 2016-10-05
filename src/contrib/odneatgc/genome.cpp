@@ -601,7 +601,7 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
     }
     else
     {*/
-        //Loop to find a /*nonrecurrent*/ link
+        //Loop to find a link /*nonrecurrent*/
         while(trycount<tries)
         {
             //Choose random nodenums
