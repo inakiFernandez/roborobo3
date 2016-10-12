@@ -54,7 +54,7 @@ namespace ODNEATGC
     // Dump this genome to specified file
     void print_to_file(std::ostream &outFile);    
     // Wrapper for print_to_file above
-    void print_to_filename(char *filename);
+    void print_to_filename(const char *filename);
     
     // Duplicate this Genome to create a new one 
     Genome *duplicate();

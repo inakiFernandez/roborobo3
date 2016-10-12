@@ -59,55 +59,118 @@ bool Network::outputsoff()
     return false;
 }
 
+bool Network::hiddenoff()
+{
+    for(auto curnode=all_nodes.begin();curnode!=all_nodes.end();curnode++)
+    {
+        //Ignore SENSORS
+        if ((*curnode)->type!=SENSOR)
+        {
+            if (!(*curnode)->active_flag)
+                return true;
+        }
+    }
+    return false;
+}
 // Activates the net such that all outputs are active. Returns true on success
 bool Network::activate() 
 {
     std::vector<NNode*>::iterator curnode;
     std::vector<Link*>::iterator curlink;
-    double add_amount;  //For adding to the activesum
-    bool onetime; //Make sure we at least activate once
-    int abortcount=0;  //Used in case the output is somehow truncated from the network
+    double add_amount;
+    bool onetime; //ensure at least activate once
+    int abortcount=0;  //in case the output is truncated from the network
 
     //Keep activating until all the outputs have become active
-    //(This only happens on the first activation, because after that they
+    //(This only happens on the first activation, because after that, they
     // are always active)
     onetime=false;
-
-    while(outputsoff()||!onetime)
+    for(curnode=all_nodes.begin();curnode!=all_nodes.end();curnode++)
     {
+        if ((*curnode)->type!=SENSOR)
+             (*curnode)->active_flag=false;
+    }
+    while(outputsoff()||hiddenoff()||!onetime)
+    {
+        //std::cout << "ABORTCOUNT " << abortcount << std::endl;
         ++abortcount;
-        if (abortcount==20)
+        if (abortcount==200)
             return false;
-
+        //TOCHECK recurrent connections??
         // For each node, compute the sum of its incoming activation
         for(curnode=all_nodes.begin();curnode!=all_nodes.end();curnode++)
         {
             //Ignore SENSORS
-            if (((*curnode)->type)!=SENSOR)
+            if ((*curnode)->type!=SENSOR)
             {
-                (*curnode)->activesum=0;
-                //This will tell us if it has any active inputs
-                (*curnode)->active_flag=false;
+                //std::cout << "Cur."<<(*curnode)->gen_node_label << ", nodeId: " << (*curnode)->node_id.gc << std::endl;
+                (*curnode)->activesum=0.0;
+                //does it have any active inputs?
+
+                (*curnode)->active_flag=true; //false; //
 
                 //For each incoming connection, add its activity to the activesum
                 for(curlink=((*curnode)->incoming).begin();
                     curlink!=((*curnode)->incoming).end();
                     ++curlink)
                 {
-                    add_amount=((*curlink)->weight)*(((*curlink)->in_node)->get_active_out());
-                    if ((((*curlink)->in_node)->active_flag)||
-                            (((*curlink)->in_node)->type==SENSOR))
-                        (*curnode)->active_flag=true;
-                    (*curnode)->activesum+=add_amount;
-                } //End for over incoming links                
-            } //End if (((*curnode)->type)!=SENSOR)
+                    if(!(*curlink)->is_recurrent)
+                    {
+                        if ((*curlink)->in_node->active_flag||(*curlink)->in_node->type==SENSOR)
+                        {
+                            //std::cout << "In."<<(*curlink)->in_node->gen_node_label <<
+                              //           ", nodeId: " << (*curlink)->in_node->node_id.gc << std::endl;
+                            double w = (*curlink)->weight;
+                            double preActivation = (*curlink)->in_node->get_active_out();
 
-        } //End for over all nodes
+                            add_amount=w * preActivation;
 
-        // Now activate all the non-sensor nodes off their incoming activation
-        for(curnode=all_nodes.begin();curnode!=all_nodes.end();++curnode)
+                            //std::cout <<"activation: " << preActivation << std::endl;
+
+                            (*curnode)->activesum+=add_amount;
+                        }
+                        else
+                        {
+                            (*curnode)->active_flag=false;
+                            //std::cout << "Bad. Missing activation: " << (*curlink)->in_node->node_id.gc << std::endl;
+                        }
+                    }
+                    else
+                    {
+                        double w = (*curlink)->weight;
+                        double preActivation = (*curlink)->in_node->get_active_out();
+
+                        add_amount=w * preActivation;
+
+                        (*curnode)->activesum+=add_amount;
+                    }
+
+                } //End for incoming links
+                //Only activate if some active input came in
+                if ((*curnode)->active_flag)
+                {
+                    //Now run the net activation through an activation function
+                    if ((*curnode)->ftype==SIGMOID)
+                        (*curnode)->activation=tanh((*curnode)->activesum);
+                    else
+                    {
+                        std::cerr << "[ERROR] No valid activation function defined"
+                                  << std::endl; exit(-1);
+                    }
+                    //Increment the activation_count, First activation cannot be from nothing!
+                    (*curnode)->activation_count++;
+                    //std::cout << "final: " << (*curnode)->activation << std::endl;
+
+                }
+            } //End if !=SENSOR
+
+        } //End for all nodes
+
+
+        // Activation function for all the non-sensor nodes
+        /*for(curnode=all_nodes.begin();curnode!=all_nodes.end();++curnode)
         {
-            if (((*curnode)->type)!=SENSOR)
+            if ((*curnode)->type!=SENSOR)
             {
                 //Only activate if some active input came in
                 if ((*curnode)->active_flag)
@@ -122,10 +185,12 @@ bool Network::activate()
                     }
                     //Increment the activation_count, First activation cannot be from nothing!
                     (*curnode)->activation_count++;
+
                 }
             }
-        }
+        }*/
         onetime=true;
+        //std::cout <<"\n\n\n\n\n\n" <<std::endl;
     }
     return true;
 }

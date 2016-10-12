@@ -9,11 +9,11 @@ Link::Link(double w,NNode *inode,NNode *onode,bool recur) {
 	is_recurrent=recur;
 }
 
-Link::Link(double w) {
+/*Link::Link(double w) {
 	weight=w;
 	in_node=out_node=0;  
 	is_recurrent=false;
-}
+}*/
 
 Link::Link(const Link& link)
 {

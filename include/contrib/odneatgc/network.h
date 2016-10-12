@@ -90,7 +90,7 @@ namespace ODNEATGC {
     
     // If all output are not active then return true
     bool outputsoff();
-    
+    bool hiddenoff();
     int max_depth();
   };
   

@@ -256,6 +256,13 @@ void OriginalWorldObserver::updateMonitoring()
         default:
             break;
     }
+    //TOERASE test seamless node mutation
+    if(gWorld->getIterations() == 10000)
+    {
+        Helper::mutateLinkWeightsProb = 0.0;
+        Helper::mutateAddNodeProb = 1.0;
+        std::cout << "Now only node mutation" << std::endl;
+    }
     if(gWorld->getIterations() ==
             OriginalSharedData::gTimeSeq[OriginalSharedData::gTaskIdx])
     {

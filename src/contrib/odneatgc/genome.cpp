@@ -238,7 +238,7 @@ Network *Genome::genesis()
     //Create the nodes
     for(curnode=nodes.begin();curnode!=nodes.end();++curnode)
     {
-        newnode=new NNode((*curnode)->type,(*curnode)->node_id);
+        newnode=new NNode((*curnode)->type,(*curnode)->node_id,(*curnode)->gen_node_label);
 
         //Check for input or output designation of node
         if ((((*curnode)->gen_node_label)==INPUT) || (((*curnode)->gen_node_label)==BIAS))
@@ -443,21 +443,23 @@ bool Genome::mutate_add_node(int tries,int idR,int &nodeId, int &gc)
     //Create the new NNode (Hidden neuron)
     newnode=new NNode(NEURON,innovClock,HIDDEN);
     nodeId++;
+    double preCoeff = 0.20311035;//res_250It_lim5 optimized with CMA-ES//1.0 otherwise
+    double postCoeff = 5.0; // res_250It_lim5 //1.0 otherwise
     //Create the new Genes
     if (thelink->is_recurrent)
     {
         innovClock.idR = idR; innovClock.gc = gc;
-        newgene1=new Gene(1.0,in_node,newnode,true,innovClock);
+        newgene1=new Gene(preCoeff,in_node,newnode,true,innovClock);
         //TODO test coeffs to keep mutation seamless
         innovClock.idR = idR; innovClock.gc = gc + 1;
-        newgene2=new Gene(oldweight,newnode,out_node,false,innovClock);
+        newgene2=new Gene(postCoeff*oldweight,newnode,out_node,false,innovClock);
         gc = gc + 2;
     }
     else
     {
         innovClock.idR = idR; innovClock.gc = gc;
-        double preCoeff =  0.20311035;//res_250It_lim5 optimized with CMA-ES//1.0 otherwise
-        double postCoeff = 5.0; // res_250It_lim5 //1.0 otherwise
+
+        //? maybe oldweight to pre-connection!! Unlike NEAT. Needs to be applied before non-linearity
         //Attention: possible problem with postCoeff*oldweight not in boundaries
         newgene1=new Gene(preCoeff,in_node,newnode,false,innovClock);
         //TODO test coeffs to keep mutation seamless [0.203,5.0] SEAMLESS SPLIT NODE MUTATION
@@ -645,9 +647,9 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
             else
             {
                 count=0;
-                recurflag=phenotype->is_recur(nodep1,nodep2, count,thresh);
-                //recurflag=phenotype->is_recur(nodep1->analogue,nodep2->analogue,
-                                              //count,thresh);
+                //recurflag=phenotype->is_recur(nodep1,nodep2, count,thresh);
+                recurflag=phenotype->is_recur(nodep1->analogue,nodep2->analogue,
+                                              count,thresh);
 
                 //ADDED: CONSIDER connections out of outputs recurrent
                 if ((nodep1->gen_node_label)==OUTPUT)
@@ -671,9 +673,7 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
         //If it was supposed to be recurrent, make sure it gets labeled that way
         //?TOCHECK is this necessary? if (do_recur) recurflag=1;
 
-        //Choose the new weight (uniform between -1.0 and 1.0)
-        //TOCHECK: seamless mutation with 0 weight
-        newweight=Helper::randPosNeg()*Helper::randFloat()*1.0;
+        newweight= 0.0; //Helper::randPosNeg()*Helper::randFloat()*1.0;
 
         innov innovClock; innovClock.idR = idR; innovClock.gc = gc;
 
@@ -1050,7 +1050,7 @@ void Genome::print_to_file(std::ostream &outFile)
     outFile << "genomeend " << "R" <<genome_id.robot_id << ", G" << genome_id.gene_id << std::endl;
 }
 
-void Genome::print_to_filename(char *filename)
+void Genome::print_to_filename(const char *filename)
 {
     std::ofstream oFile(filename);
     print_to_file(oFile);
