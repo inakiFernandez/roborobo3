@@ -163,12 +163,15 @@ int main(int argc, char* argv[])
     for(unsigned int i = 0; i< numberPerturbations; i++)
       {
 	id.gene_id++;
-	g->mutate(sigmaPerturbations,idR,id, nodeId,geneId);
+	g = g->mutate(sigmaPerturbations,idR,id, nodeId,geneId);
 	
 	n = g->genesis();
-	//std::cout 
-	oFile
+	std::cout 
+	//oFile
 	  << functionError(n, inputSet, outputReference) << std::endl;
+	  std::stringstream os;
+	  os << "logsTest/" << i << ".nn";
+	  g -> print_to_filename(os.str().c_str());
       }
     oFile.close();
   }
