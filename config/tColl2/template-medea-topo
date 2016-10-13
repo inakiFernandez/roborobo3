@@ -274,3 +274,4 @@ recur_only_prob= 0.0 #0.30 #0.376
 mutate_link_weights_prob= 1.0 # 0.575
 
 allowMultisynapses = false
+
