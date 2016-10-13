@@ -166,8 +166,8 @@ int main(int argc, char* argv[])
 	g = g->mutate(sigmaPerturbations,idR,id, nodeId,geneId);
 	
 	n = g->genesis();
-	std::cout 
-	//oFile
+	//std::cout 
+	oFile
 	  << functionError(n, inputSet, outputReference) << std::endl;
 	  std::stringstream os;
 	  os << "logsTest/" << i << ".nn";
