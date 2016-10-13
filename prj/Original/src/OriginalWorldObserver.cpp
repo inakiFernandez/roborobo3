@@ -90,7 +90,7 @@ OriginalWorldObserver::OriginalWorldObserver( World* world ) : WorldObserver( wo
     gProperties.checkAndGetPropertyValue("mate_only_prob",&Helper::mateOnlyProb,true);
     gProperties.checkAndGetPropertyValue("recur_only_prob",&Helper::recurOnlyProb,true);
     gProperties.checkAndGetPropertyValue("newstructure_tries",&Helper::newStructureTries,true);
-
+    gProperties.checkAndGetPropertyValue("mutate_toggle_enable_prob",&Helper::mutateToggleEnableProb,true);
     gProperties.checkAndGetPropertyValue("allowMultisynapses",&Helper::allowMultisynapses,true);
 
     Helper::rangeW = OriginalSharedData::gNeuronWeightRange / 2;

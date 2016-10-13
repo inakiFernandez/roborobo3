@@ -11,6 +11,7 @@ using namespace ODNEATGC;
     double     Helper::mutateLinkWeightsProb=0;
     double     Helper::mutateAddNodeProb=0;
     double     Helper::mutateAddLinkProb=0;
+    double     Helper::mutateToggleEnableProb = 0;
     // Prob. of mating
     double     Helper::mateOnlyProb=0;
     // Probability of forcing choice of ONLY links that are naturally recurrent

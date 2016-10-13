@@ -81,8 +81,9 @@ namespace ODNEATGC
     
     // Mutate the genome by adding a new link between 2 random NNodes 
     bool mutate_add_link(int tries,int idR, int &genecounter);
-    
-    
+    //Toggle the activation of "times" random links (enable to disabled or viceversa)
+    void mutate_toggle_enable(unsigned int times);
+
     // ****** MATING METHODS ***** 
     
     // This method mates this Genome with another Genome g.  

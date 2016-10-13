@@ -27,6 +27,7 @@ namespace ODNEATGC
 
             static double     mutateAddNodeProb;
             static double     mutateAddLinkProb;
+            static double     mutateToggleEnableProb;
             // Prob. of mating
             static double     mateOnlyProb;
             // Probability of forcing choice of ONLY links that are naturally recurrent

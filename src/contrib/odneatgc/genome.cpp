@@ -311,14 +311,22 @@ Genome *Genome::mutate(float sigma, int idR,GC idNewGenome,int &nodeId,int &gc)
         {
             if (!(new_genome->mutate_add_link(Helper::newStructureTries,idR,gc)))
             {
-                //No link was added. Maybe all links all already present
+                //No link was added. Maybe all links already present
             }
         }
         else
         {
-            //If we didn't do a structural mutation, mutate weights
-            if (Helper::randFloat() < Helper::mutateLinkWeightsProb)
+            //If no structural mutation, mutate weights
+            if (Helper::randFloat() < Helper::mutateLinkWeightsProb){
                 new_genome->mutate_link_weights(sigma);
+            }
+            if (Helper::randFloat() < Helper::mutateToggleEnableProb) {
+                new_genome->mutate_toggle_enable(1);
+
+            }
+            /*if (Helper::randfloat()<Helper::mutate_gene_reenable_prob) {
+                new_genome->mutate_gene_reenable();
+            }*/
         }
     }
     return new_genome;
@@ -383,7 +391,48 @@ double Genome::capWeights(double w)
 
     return result;
 }
+void Genome::mutate_toggle_enable(unsigned int times)
+{   //TOTEST
+    int genenum;
+    std::vector<Gene*>::iterator thegene;  //Gene to toggle
+    std::vector<Gene*>::iterator checkgene;  //Gene to check
+    int genecount;
 
+    for (unsigned int i=0; i < times; i++)
+    {
+        //Choose a random gene
+        genenum=Helper::randInt(0,genes.size()-1);
+        thegene=genes.begin();
+        for(genecount=0;genecount<genenum;genecount++)
+            ++thegene;
+
+        //Toggle enable on this gene
+        if (((*thegene)->enable)==true)
+        {
+            //make sure that another gene connects out of the in-node and out-node
+            //if not: a section of network will become isolated
+            checkgene=genes.begin();
+            while( checkgene!=genes.end()
+                   &&
+                !(
+                  ( ((*checkgene)->lnk)->in_node == ((*thegene)->lnk)->in_node )
+                 && (((*checkgene)->enable))
+                 && !((*checkgene)->innovation_num == (*thegene)->innovation_num))
+                  &&
+                   !(
+                     ( ((*checkgene)->lnk)->out_node == ((*thegene)->lnk)->out_node )
+                    && (((*checkgene)->enable))
+                    && !((*checkgene)->innovation_num == (*thegene)->innovation_num)))
+                ++checkgene;
+
+            //Disable the gene if it's safe to do so
+            if (checkgene!=genes.end())
+                (*thegene)->enable=false;
+        }
+        else
+            (*thegene)->enable=true;
+    }
+}
 bool Genome::mutate_add_node(int tries,int idR,int &nodeId, int &gc)
 {
     std::vector<Gene*>::iterator thegene;  //random gene containing the original link
