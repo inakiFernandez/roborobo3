@@ -1,0 +1,5 @@
+for i in logs/*.nn ; do python ../tools/puregenome_draw.py -f $i -d $i.dot ; dot -Tps $i.dot -o $i.ps ; done ;
+
+g++ -I../include/contrib/ test.cpp -o test -std=c++0x ../src/contrib/odneatgc/*.o ../roborobo3/src/core/Misc.o
+
+
