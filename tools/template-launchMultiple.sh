@@ -27,7 +27,7 @@ ctrlSetup='0'
 
 evotop='3 0' #3=evotopo, 0,1,2= fixed topo (MLP, Elman, Perceptron)
 evotop='3'
-evotop='0 3'
+#evotop='0 3'
 
 
 sigma='0.5'
