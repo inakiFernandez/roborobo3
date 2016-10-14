@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
   unsigned int nbRunsSameSamples = 30;
   for(unsigned int j=0; j < nbRunsSameSamples; j++)
   {
-    std::ofstream oFile("logsRobustnessMut/logMultIndivWOnly0.5/sameSample-"+strAllow+"-I"+std::to_string(nIn) +"-O"+std::to_string(nO)+"-Run"+ std::to_string(j)+".log");
+    std::ofstream oFile("logsRobustnessMut/logMultIndivWOnly1.0/sameSample-"+strAllow+"-I"+std::to_string(nIn) +"-O"+std::to_string(nO)+"-Run"+ std::to_string(j)+".log");
         
     id.robot_id = -1;
     id.gene_id = 1;
