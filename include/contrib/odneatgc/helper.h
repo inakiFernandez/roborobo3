@@ -24,7 +24,7 @@ namespace ODNEATGC
             //Global variables: definition
             static double     mutateProb; // Prob. of a mutation
             static double     mutateLinkWeightsProb;
-
+            static double     mutateIndividualWeightProb;
             static double     mutateAddNodeProb;
             static double     mutateAddLinkProb;
             static double     mutateToggleEnableProb;

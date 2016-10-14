@@ -85,6 +85,7 @@ OriginalWorldObserver::OriginalWorldObserver( World* world ) : WorldObserver( wo
     //Mutations
     gProperties.checkAndGetPropertyValue("mutate_only_prob",&Helper::mutateProb,true);
     gProperties.checkAndGetPropertyValue("mutate_link_weights_prob",&Helper::mutateLinkWeightsProb,true);
+    gProperties.checkAndGetPropertyValue("mutate_individual_weight_prob",&Helper::mutateIndividualWeightProb,true);
     gProperties.checkAndGetPropertyValue("mutate_add_node_prob",&Helper::mutateAddNodeProb,true);
     gProperties.checkAndGetPropertyValue("mutate_add_link_prob",&Helper::mutateAddLinkProb,true);
     gProperties.checkAndGetPropertyValue("mate_only_prob",&Helper::mateOnlyProb,true);

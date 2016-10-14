@@ -9,6 +9,7 @@ using namespace ODNEATGC;
     // Prob. of mutating the selected genome or the result of x-over
     double     Helper::mutateProb=0;
     double     Helper::mutateLinkWeightsProb=0;
+    double     Helper::mutateIndividualWeightProb = 0;
     double     Helper::mutateAddNodeProb=0;
     double     Helper::mutateAddLinkProb=0;
     double     Helper::mutateToggleEnableProb = 0;

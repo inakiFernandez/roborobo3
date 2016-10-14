@@ -79,6 +79,7 @@ int main(int argc, char* argv[])
   Helper::allowMultisynapses = allowMulti==1; 
   Helper::mutateToggleEnableProb=0.5;//0.1
   Helper::mutateLinkWeightsProb=1.0;
+  Helper::mutateIndividualWeightProb = 0;
   Helper::mutateAddNodeProb=0.1;//0.05;
   Helper::mutateAddLinkProb=0.2;
   std::string strAllow = (Helper::allowMultisynapses?"-Multi":"-NoMulti");
@@ -156,7 +157,8 @@ int main(int argc, char* argv[])
       {
 	outputReference.push_back(activateNN(n, inputSet[i]));
       }
-    //Perform random perturbations (weights ?and/or structure?)
+
+    //Perform random perturbations (whole "mutations")
     //Then measure the distance w.r.t the original function
     unsigned int numberPerturbations = 500;
     double sigmaPerturbations = 0.1;
