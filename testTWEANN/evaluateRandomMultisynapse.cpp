@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
   Helper::allowMultisynapses = allowMulti==1; 
   Helper::mutateToggleEnableProb=0.5;//0.1
   Helper::mutateLinkWeightsProb=1.0;
-  Helper::mutateIndividualWeightProb = 0;
+  Helper::mutateIndividualWeightProb = 0.5;//1.0;
   Helper::mutateAddNodeProb=0.1;//0.05;
   Helper::mutateAddLinkProb=0.2;
   std::string strAllow = (Helper::allowMultisynapses?"-Multi":"-NoMulti");
