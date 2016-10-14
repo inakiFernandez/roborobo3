@@ -77,9 +77,9 @@ int main(int argc, char* argv[])
   }
   int allowMulti = atoi(argv[1]);
   Helper::allowMultisynapses = allowMulti==1; 
-  Helper::mutateToggleEnableProb=0.10;
+  Helper::mutateToggleEnableProb=1.0;//0.1
   Helper::mutateLinkWeightsProb=1.0;
-  Helper::mutateAddNodeProb=0.05;
+  Helper::mutateAddNodeProb=0.0;//0.05;
   Helper::mutateAddLinkProb=0.15;
   std::string strAllow = (Helper::allowMultisynapses?"-Multi":"-NoMulti");
   int nIn = 20;
@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
     g->initialize_link_weights();
     Network* n = g->genesis();
     //Add structure at random and mutate its weights
-    unsigned int numberNodes = 50;
+    unsigned int numberNodes = 0;//50;
     double probNode = 0.8;
     int tries = 100;
     int idR = -1;
@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
 	    n = g->genesis();
 	  }
       }
-    unsigned int numberLinks = 100;
+    unsigned int numberLinks = 400;
     double probLink = 0.9;
     //Do some random link mutations
     for(unsigned int i = 0; i< numberLinks; i++)
@@ -169,9 +169,9 @@ int main(int argc, char* argv[])
 	//std::cout 
 	oFile
 	  << functionError(n, inputSet, outputReference) << std::endl;
-	  std::stringstream os;
+	/*  std::stringstream os;
 	  os << "logsTest/" << i << ".nn";
-	  g -> print_to_filename(os.str().c_str());
+	  g -> print_to_filename(os.str().c_str());*/
       }
     oFile.close();
   }
