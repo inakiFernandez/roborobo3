@@ -492,8 +492,8 @@ bool Genome::mutate_add_node(int tries,int idR,int &nodeId, int &gc)
     //Create the new NNode (Hidden neuron)
     newnode=new NNode(NEURON,innovClock,HIDDEN);
     nodeId++;
-    double preCoeff = 0.20311035;//res_250It_lim5 optimized with CMA-ES//1.0 otherwise
-    double postCoeff = 5.0; // res_250It_lim5 //1.0 otherwise
+    double preCoeff = 1.0;//0.20311035;//res_250It_lim5 optimized with CMA-ES//1.0 otherwise
+    double postCoeff = 1.0;//5.0; // res_250It_lim5 //1.0 otherwise
     //Create the new Genes
     if (thelink->is_recurrent)
     {
