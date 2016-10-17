@@ -335,18 +335,54 @@ Genome *Genome::mutate(float sigma, int idR,GC idNewGenome,int &nodeId,int &gc)
 void Genome::mutate_link_weights(double power)
 {
     std::vector<Gene*>::iterator curgene;
-    //Loop on all genes
+    bool multisynapseAdaptedSigma = false; //true;
+    if(!Helper::allowMultisynapses || !multisynapseAdaptedSigma)
+    {
+        for(curgene=genes.begin();curgene!=genes.end();curgene++)
+        {
+            if((*curgene) -> enable)
+            {
+                if (Helper::randFloat() < Helper::mutateIndividualWeightProb)
+                {
+                    ((*curgene)-> lnk) -> weight += getGaussianRand(0, power);
+                    ((*curgene)-> lnk) -> weight = capWeights(((*curgene)-> lnk) -> weight);
+                }
+            }
+        } //for
+    }
+    else //multisynapses (divide sigma std deviation by sqrt(number of synapses btw the same nodes)
+    {
+        for(curgene=genes.begin();curgene!=genes.end();curgene++)
+        {
+            if((*curgene) -> enable)
+            {
+                if (Helper::randFloat() < Helper::mutateIndividualWeightProb)
+                {
+                    int nb = getNumberSynapses(*curgene);
+                    ((*curgene)-> lnk) -> weight += getGaussianRand(0, power / sqrt((double)nb) );
+                    ((*curgene)-> lnk) -> weight = capWeights(((*curgene)-> lnk) -> weight);
+                }
+            }
+        } //for
+    }
+}
+int Genome::getNumberSynapses(Gene* gene)
+{//TOTEST
+    int result = 0;
+    std::vector<Gene*>::iterator curgene;
     for(curgene=genes.begin();curgene!=genes.end();curgene++)
     {
         if((*curgene) -> enable)
         {
-            if (Helper::randFloat() < Helper::mutateIndividualWeightProb)
+            if(gene->lnk->in_node == (*curgene)->lnk->in_node
+                    && gene->lnk->out_node == (*curgene)->lnk->out_node)
             {
-                ((*curgene)-> lnk) -> weight += getGaussianRand(0, power );
-                ((*curgene)-> lnk) -> weight = capWeights(((*curgene)-> lnk) -> weight);
+                result++;
             }
+
         }
-    } //end for loop
+    }
+    return result;
 }
 
 void Genome::initialize_link_weights()
@@ -513,10 +549,10 @@ bool Genome::mutate_add_node(int tries,int idR,int &nodeId, int &gc)
 
         //? maybe oldweight to pre-connection!! Unlike NEAT. Needs to be applied before non-linearity
         //Attention: possible problem with postCoeff*oldweight not in boundaries
-        newgene1=new Gene(preCoeff,in_node,newnode,false,innovClock);
+        newgene1=new Gene(preCoeff*oldweight,in_node,newnode,false,innovClock);
         //TODO test coeffs to keep mutation seamless [0.203,5.0] SEAMLESS SPLIT NODE MUTATION
         innovClock.idR = idR; innovClock.gc = gc + 1;
-        newgene2=new Gene(postCoeff*oldweight,newnode,out_node,false,innovClock);
+        newgene2=new Gene(postCoeff,newnode,out_node,false,innovClock);
         gc = gc + 2;
     }
 

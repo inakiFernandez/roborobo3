@@ -71,7 +71,7 @@ double functionError(Network* nTest, std::vector<std::vector<double>> inputBase,
 int main()
 {
   srand (time(NULL));
-  int nIn = 10;
+  int nIn = 5;
   int nO = 3;
   GC id;
 
@@ -95,7 +95,7 @@ int main()
     inputSet.push_back(inputSample);
     // outputReference.push_back(activateNN(n, inputSample));
   }
-  unsigned int nbRunsSameSamples = 30;
+  /*unsigned int nbRunsSameSamples = 30;
   for(unsigned int j=0; j < nbRunsSameSamples; j++)
   {
     std::ofstream oFile("logsSame/sameSampleNodes-Post-I"+std::to_string(nIn) +"-O"+std::to_string(nO)+"-Run"+ std::to_string(j)+".log");
@@ -140,9 +140,52 @@ int main()
 	/*std::stringstream os;
 	os << "logsNode/" << i << ".nn";
 	g -> print_to_filename(os.str().c_str());*/
-      }
+  /*  }
    oFile.close();								    
-  }
+  }*/
+
+
+    id.robot_id = -1;
+    id.gene_id = 1;    
+    Genome* g = new Genome(id,nIn,nO);
+    int tries = 100;
+    Network* n = g->genesis();
+    int idR = -1;
+    int nodeId = nIn + nO + 1;
+    int geneId = nIn * nO + 1;
+    
+
+    int numberLinks = 10;
+    std::vector<std::vector<double>> outputReference;
+    
+    for(unsigned int i = 0; i < numberSamples;i++)
+      {
+	outputReference.push_back(activateNN(n, inputSet[i]));
+      }	 
+    Helper::allowMultisynapses = true; //false; //
+    for(unsigned int i = 0; i < numberLinks; i++)
+      {
+	if(!g -> mutate_add_link(tries,idR,geneId))
+	  {  std::cout << "Not link added" << std::endl;
+	  }
+	    n = g->genesis();
+	    std::stringstream os;
+	    os << "logsTestCountLinks/link" << i << ".nn";
+	    g -> print_to_filename(os.str().c_str());
+
+
+	    std::cout 
+	      << functionError(n, inputSet, outputReference)  
+	      << " (";
+	       std::vector<Gene*>::iterator curgene;
+	      for(curgene=g->genes.begin();curgene!=g->genes.end();curgene++)
+	      {
+		std::cout << g->getNumberSynapses((*curgene)) << ", ";
+	      }
+	      std::cout << std::endl;
+       }
+
+
     // std::cout << "Error with itself: " 
     //<< functionError(n, inputSet, outputReference) << std::endl;
     /* unsigned int numberToggle = 2;

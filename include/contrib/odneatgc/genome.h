@@ -66,7 +66,7 @@ namespace ODNEATGC
     
     // Add Gaussian noise to all linkweights with variance power ^ 2
     void mutate_link_weights(double power);
-
+    int getNumberSynapses(Gene* gene);
     void initialize_link_weights();
     
     double capWeights(double w);

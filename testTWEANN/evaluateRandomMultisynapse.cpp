@@ -77,11 +77,11 @@ int main(int argc, char* argv[])
   }
   int allowMulti = atoi(argv[1]);
   Helper::allowMultisynapses = allowMulti==1; 
-  Helper::mutateToggleEnableProb=0.0;//0.5;//0.1
+  Helper::mutateToggleEnableProb=0.5;//0.1//0.0;//
   Helper::mutateLinkWeightsProb=1.0;
   Helper::mutateIndividualWeightProb = 1.0;//0.5;//
-  Helper::mutateAddNodeProb=0.0;//0.1;//0.05;
-  Helper::mutateAddLinkProb=0.0;//0.2;
+  Helper::mutateAddNodeProb=0.1;//0.05;//0.0;//
+  Helper::mutateAddLinkProb=0.2;//0.0;//
   std::string strAllow = (Helper::allowMultisynapses?"-Multi":"-NoMulti");
   int nIn = 20;
   int nO = 5; 
@@ -100,7 +100,9 @@ int main(int argc, char* argv[])
   unsigned int nbRunsSameSamples = 30;
   for(unsigned int j=0; j < nbRunsSameSamples; j++)
   {
-    std::ofstream oFile("logsRobustnessMut/logMultIndivWOnly1.0/sameSample-"+strAllow+"-I"+std::to_string(nIn) +"-O"+std::to_string(nO)+"-Run"+ std::to_string(j)+".log");
+    std::cout << j;
+      std::cout.flush();
+    std::ofstream oFile("logsRobustnessMut/logMultiAdapSigma/sameSample-"+strAllow+"-I"+std::to_string(nIn) +"-O"+std::to_string(nO)+"-Run"+ std::to_string(j)+".log");
         
     id.robot_id = -1;
     id.gene_id = 1;
@@ -109,7 +111,7 @@ int main(int argc, char* argv[])
     g->initialize_link_weights();
     Network* n = g->genesis();
     //Add structure at random and mutate its weights
-    unsigned int numberNodes = 0;//50;
+    unsigned int numberNodes = 50;
     double probNode = 0.8;
     int tries = 100;
     int idR = -1;
@@ -124,7 +126,7 @@ int main(int argc, char* argv[])
 	    n = g->genesis();
 	  }
       }
-    unsigned int numberLinks = 400;
+    unsigned int numberLinks = 200;
     double probLink = 0.9;
     //Do some random link mutations
     for(unsigned int i = 0; i< numberLinks; i++)
@@ -164,6 +166,7 @@ int main(int argc, char* argv[])
     double sigmaPerturbations = 0.1;
     for(unsigned int i = 0; i< numberPerturbations; i++)
       {
+	std::cout << i << " ";// << std::cout.flush();
 	id.gene_id++;
 	g = g->mutate(sigmaPerturbations,idR,id, nodeId,geneId);
 	
@@ -175,6 +178,7 @@ int main(int argc, char* argv[])
 	  os << "logsTest/" << i << ".nn";
 	  g -> print_to_filename(os.str().c_str());*/
       }
+    std::cout << std::endl;
     oFile.close();
   }
 }
