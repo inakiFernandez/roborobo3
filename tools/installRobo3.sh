@@ -16,7 +16,12 @@ git clone git@github.com:inakiFernandez/roborobo3.git .
 
 #install SDL2
 #install boost
+
+#FIXED SDL_Init
 #install export
+#xset -display ${DISPLAY} dpms force on
+#export DISPLAY=:1.0
+#sudo xinit -- $DISPLAY
 
 make clean
 

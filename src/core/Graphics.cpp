@@ -119,9 +119,9 @@ bool initSDL(Uint32 flags) // parameter is optional (default: SDL_HWSURFACE | SD
       gDisplayMode = 0;
       //Initialize all SDL subsystems
       if( SDL_Init(SDL_INIT_TIMER ) < 0 )
-	{
-	  return false;
-	}
+      {
+         return false;
+      }
     }
 	
     
