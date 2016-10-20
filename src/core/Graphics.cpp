@@ -249,7 +249,6 @@ void toggle_fullscreen()
 	*/
 }
 
-
 SDL_Surface *load_image( std::string filename ) 
 {
     SDL_Surface* loadedImage = NULL;
