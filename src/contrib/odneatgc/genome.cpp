@@ -349,7 +349,7 @@ void Genome::mutate_link_weights(double power)
                 if (Helper::randFloat() < Helper::mutateIndividualWeightProb)
                 {
                     curgene->lnk->weight += getGaussianRand(0, power);
-                    curgene->lnk->weight = capWeights(curgene->lnk->weight);
+                    //curgene->lnk->weight = capWeights(curgene->lnk->weight);
                 }
             }
         } //for
@@ -389,7 +389,7 @@ void Genome::mutate_link_weights(double power)
                 {
 
                     curgene->lnk-> weight += getGaussianRand(0, power );// sqrt((double)nb) );
-                    curgene->lnk-> weight = capWeights(curgene->lnk-> weight);
+                    //curgene->lnk-> weight = capWeights(curgene->lnk-> weight);
                 }
             }
         } //for
