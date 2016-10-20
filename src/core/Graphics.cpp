@@ -257,7 +257,7 @@ SDL_Surface *load_image( std::string filename )
     
     //loadedImage = IMG_Load( filename.c_str() );
     
-    loadedImage = SDL_LoadBMP( filename.c_str() );
+    loadedImage = SDL_LoadBMP( filename.c_str() );    
     
     if( loadedImage != NULL )
     {
@@ -278,7 +278,9 @@ SDL_Surface *load_image( std::string filename )
     }
     else
     {
-        std::cerr << "[CRITICAL] cannot load image from file \"" << filename << "\". EXITING.";
+
+        std::cerr << "[CRITICAL] cannot load image from file \"" << filename << "\". EXITING." <<std::endl;
+        std::cerr << SDL_GetError() << std::endl;
         exit(-1);
     }
 
