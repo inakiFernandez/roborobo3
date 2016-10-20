@@ -13,7 +13,7 @@
 #include <map>
 #include <set>
 #include <limits>
-
+#include <boost/range/adaptor/reversed.hpp>
 
 using namespace ODNEATGC;
 
@@ -359,7 +359,7 @@ void Genome::mutate_link_weights(double power)
          //TOTEST If multysynapses, then mutate only one of them (?TODO the newest?).With whole sigma
         /*std::set<std::pair<innov,innov>> alreadyMut;
 
-        for(auto &curgene : genes)
+        for(auto &curgene :  boost::adaptors::reverse(genes))
         {
             if(curgene -> enable)
             {
