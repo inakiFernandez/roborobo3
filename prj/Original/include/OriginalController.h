@@ -135,9 +135,17 @@ public:
 
     //Forgetting measures
     std::vector<double> _storedF;
+    Genome* _storedG;
     void storeRepresentative()
     {
-        _storedF = _genomeF;
+        if(!_doEvoTopo)
+        {
+            _storedF = _genomeF;
+        }
+        else
+        {
+            _storedG = _genome->duplicate();
+        }
     }
     double forget();
     double forgetStructural();

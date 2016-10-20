@@ -101,25 +101,31 @@ void saveRobotTrackerIndex( std::string __comment) // parameter is optional
 bool initSDL(Uint32 flags) // parameter is optional (default: SDL_HWSURFACE | SDL_DOUBLEBUF)
 {
     
-    if ( gBatchMode )
-    {
-            gDisplayMode = 0;
-    }
-	
-    //Initialize all SDL subsystems
-    if( SDL_Init( SDL_INIT_EVERYTHING ) < 0 )
-    {
-        return false;
-    }
-
     if ( !gBatchMode )
     {
+      //Initialize all SDL subsystems
+      if( SDL_Init( SDL_INIT_EVERYTHING ) < 0 )
+	{
+	  return false;
+	}
         gScreenWindow = SDL_CreateWindow("Roborobo^3",
                                      //SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,
                                      SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                                      gScreenWidth, gScreenHeight,
                                      flags);
     }
+    else
+    {
+      gDisplayMode = 0;
+      //Initialize all SDL subsystems
+      if( SDL_Init(SDL_INIT_TIMER ) < 0 )
+	{
+	  return false;
+	}
+    }
+	
+    
+
 
     gScreen = SDL_CreateRGBSurface (
                                     0, // flags (unused)

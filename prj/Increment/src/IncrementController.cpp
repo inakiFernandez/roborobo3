@@ -38,6 +38,7 @@ IncrementController::IncrementController( RobotWorldModel *wm )
     _iteration = 0; _birthdate = 0;
     _wm->updateLandmarkSensor();
     _wm->setRobotLED_colorValues(255, 0, 0);
+
     if(_wm->_id == 0)
     {
         std::cout << "W:" << computeRequiredNumberOfWeights() << std::endl;

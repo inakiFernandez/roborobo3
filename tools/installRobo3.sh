@@ -15,6 +15,8 @@ git clone git@github.com:inakiFernandez/roborobo3.git .
 ./makefile-manager -a Original
 
 #install SDL2
+#install boost
+#install export
 
 make clean
 

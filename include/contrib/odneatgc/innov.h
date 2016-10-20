@@ -14,11 +14,11 @@ struct innov
 {
   int idR;
   int gc;
-  bool operator ==(const innov& innov2)
+  bool operator ==(const innov& innov2) const
     {
         return ((idR == innov2.idR) && (gc == innov2.gc));
     }
-  bool operator <(const innov& innov2)
+  bool operator <(const innov& innov2) const
     {
       if(gc < innov2.gc)
           return true;
@@ -27,7 +27,7 @@ struct innov
 
       return (idR < innov2.idR);
     }
-  bool operator >(const innov& innov2)
+  bool operator >(const innov& innov2) const
     {
       if(gc > innov2.gc)
           return true;
