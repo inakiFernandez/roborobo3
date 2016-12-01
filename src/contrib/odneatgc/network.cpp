@@ -92,22 +92,20 @@ bool Network::activate()
     }
     while(outputsoff()||hiddenoff()||!onetime)
     {
-        //std::cout << "ABORTCOUNT " << abortcount << std::endl;
         ++abortcount;
         if (abortcount==200)
             return false;
-        //TOCHECK recurrent connections??
+
         // For each node, compute the sum of its incoming activation
         for(curnode=all_nodes.begin();curnode!=all_nodes.end();curnode++)
         {
             //Ignore SENSORS
             if ((*curnode)->type!=SENSOR)
             {
-                //std::cout << "Cur."<<(*curnode)->gen_node_label << ", nodeId: " << (*curnode)->node_id.gc << std::endl;
                 (*curnode)->activesum=0.0;
                 //does it have any active inputs?
 
-                (*curnode)->active_flag=true; //false; //
+                (*curnode)->active_flag=true;
 
                 //For each incoming connection, add its activity to the activesum
                 for(curlink=((*curnode)->incoming).begin();
@@ -118,22 +116,15 @@ bool Network::activate()
                     {
                         if ((*curlink)->in_node->active_flag||(*curlink)->in_node->type==SENSOR)
                         {
-                            //std::cout << "In."<<(*curlink)->in_node->gen_node_label <<
-                              //           ", nodeId: " << (*curlink)->in_node->node_id.gc << std::endl;
                             double w = (*curlink)->weight;
                             double preActivation = (*curlink)->in_node->get_active_out();
 
                             add_amount=w * preActivation;
 
-                            //std::cout <<"activation: " << preActivation << std::endl;
-
                             (*curnode)->activesum+=add_amount;
                         }
                         else
-                        {
-                            (*curnode)->active_flag=false;
-                            //std::cout << "Bad. Missing activation: " << (*curlink)->in_node->node_id.gc << std::endl;
-                        }
+                            (*curnode)->active_flag=false;                        
                     }
                     else
                     {
@@ -159,7 +150,6 @@ bool Network::activate()
                     }
                     //Increment the activation_count, First activation cannot be from nothing!
                     (*curnode)->activation_count++;
-                    //std::cout << "final: " << (*curnode)->activation << std::endl;
 
                 }
             } //End if !=SENSOR
@@ -190,7 +180,6 @@ bool Network::activate()
             }
         }*/
         onetime=true;
-        //std::cout <<"\n\n\n\n\n\n" <<std::endl;
     }
     return true;
 }
@@ -365,7 +354,7 @@ int Network::max_depth()
     int max=0; //The max depth
 
     for(curoutput=outputs.begin();curoutput!=outputs.end();curoutput++)
-    {
+    {        
         cur_depth=(*curoutput)->depth(0,this);
         if (cur_depth>max)
             max=cur_depth;

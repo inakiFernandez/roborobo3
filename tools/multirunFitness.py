@@ -63,12 +63,27 @@ def plot_one_curve(data, color, axis, label, quartiles=False):
     axis.spines['right'].set_visible(False)
     axis.spines['left'].set_visible(False)
     axis.get_xaxis().tick_bottom()
-    axis.get_yaxis().tick_left()
+    #axis.get_yaxis().tick_left()
     axis.tick_params(axis='x', direction='out')
     axis.tick_params(axis='y', length=0)
     for spine in axis.spines.values():
         spine.set_position(('outward', 5))
     axis.set_axisbelow(True)
+
+def taskIntervals(horSize,interv=25):
+    #vertical coordinates for taskswitch
+    isT1 = True
+    xcoords =  np.arange(0,horSize,interv)
+    plt.locator_params(axis='y',nbins=20)
+    for xc in xcoords:
+        plt.axvline(x=xc,color='gray')
+        if(isT1):
+            plt.axvspan(xc, xc+interv, facecolor='grey', alpha=0.07)
+        else:
+            plt.axvspan(xc, xc+interv, facecolor='yellow', alpha=0.07)
+        isT1 = not isT1
+
+
 
 if __name__ == "__main__":
     # args: file name

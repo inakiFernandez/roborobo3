@@ -209,10 +209,10 @@ int NNode::depth(int d, Network *mynet)
 {
   std::vector<Link*> innodes=this->incoming;
   std::vector<Link*>::iterator curlink;
-  int cur_depth; int max=d; //The depth of the current node //The max depth
+  int cur_depth; int max=d; //The max depth
 
   if (d>100)
-        return 10;
+    return 10;
   //Base Case
   if ((this->type)==SENSOR)
     return d;
@@ -221,9 +221,9 @@ int NNode::depth(int d, Network *mynet)
   {
     for(curlink=innodes.begin();curlink!=innodes.end();++curlink)
     {
-            cur_depth=((*curlink)->in_node)->depth(d+1,mynet);
-            if (cur_depth>max)
-                 max=cur_depth;
+        cur_depth=((*curlink)->in_node)->depth(d+1,mynet);
+        if (cur_depth>max)
+             max=cur_depth;
     }
   
     return max;

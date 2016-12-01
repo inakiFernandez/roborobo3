@@ -41,6 +41,8 @@ namespace ODNEATGC
 
             static double     rangeW;
 
+            static bool withBias;
+
             static bool allowMultisynapses;
 
             static double randFloat();

@@ -337,9 +337,9 @@ Genome *Genome::mutate(float sigma, int idR,GC idNewGenome,int &nodeId,int &gc)
 }
 
 void Genome::mutate_link_weights(double power)
-{
-    //std::vector<Gene*>::iterator curgene;
+{    
     bool multisynapseAdaptedSigma = true;//false; //
+
     if(!Helper::allowMultisynapses || !multisynapseAdaptedSigma)
     {
         for(auto &curgene : genes)
@@ -356,7 +356,7 @@ void Genome::mutate_link_weights(double power)
     }
     else //multisynapses (divide sigma std deviation by sqrt(number of synapses btw the same nodes)         
     {
-         //TOTEST If multysynapses, then mutate only one of them (?TODO the newest?).With whole sigma
+         //TOTEST If multysynapses, then mutate only one of them (? the newest?).With full sigma
         /*std::set<std::pair<innov,innov>> alreadyMut;
 
         for(auto &curgene :  boost::adaptors::reverse(genes))
@@ -373,7 +373,7 @@ void Genome::mutate_link_weights(double power)
                     if(alreadyMut.find(pair) == alreadyMut.end())
                     {
                         curgene->lnk-> weight += getGaussianRand(0, power);
-                        curgene->lnk->weight = capWeights(curgene->lnk->weight);
+                                    //curgene->lnk->weight = capWeights(curgene->lnk->weight);
                         alreadyMut.insert(pair);
                     }
                 }
@@ -389,7 +389,7 @@ void Genome::mutate_link_weights(double power)
                 {
 
                     curgene->lnk-> weight += getGaussianRand(0, power );// sqrt((double)nb) );
-                    //curgene->lnk-> weight = capWeights(curgene->lnk-> weight);
+                              //curgene->lnk-> weight = capWeights(curgene->lnk-> weight);
                 }
             }
         } //for
@@ -535,9 +535,11 @@ bool Genome::mutate_add_node(int tries,int idR,int &nodeId, int &gc)
         for(int genecount=0;genecount<genenum;genecount++)
             ++thegene;
 
-        //If either the gene is disabled, or it has a bias input, try again
-        if (!(  ((*thegene)->enable==false)||
-              (((((*thegene)->lnk)->in_node)->gen_node_label)==BIAS) ))
+        //If either the gene is disabled,
+        //REMOVED FOR TEST or it has a bias input, try again***************************************************************************************************
+        if (!(  ( (*thegene)->enable==false )
+                //|| ((*thegene)->lnk->in_node->gen_node_label==BIAS)
+                ))
             found=true;
 
         ++trycount;
@@ -578,10 +580,10 @@ bool Genome::mutate_add_node(int tries,int idR,int &nodeId, int &gc)
 
         //? maybe oldweight to pre-connection!! Unlike NEAT. Needs to be applied before non-linearity
         //Attention: possible problem with postCoeff*oldweight not in boundaries
-        newgene1=new Gene(preCoeff*oldweight,in_node,newnode,false,innovClock);
+        newgene1=new Gene(preCoeff,in_node,newnode,false,innovClock);
         //coeffs to keep mutation seamless [0.203,5.0] SEAMLESS SPLIT NODE MUTATION
         innovClock.idR = idR; innovClock.gc = gc + 1;
-        newgene2=new Gene(postCoeff,newnode,out_node,false,innovClock);
+        newgene2=new Gene(postCoeff*oldweight,newnode,out_node,false,innovClock);
         gc = gc + 2;
     }
 
@@ -720,7 +722,7 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
     }
     else
     {*/
-        //Loop to find a link /*nonrecurrent*/
+        //Loop to find a link
         while(trycount<tries)
         {
             //Choose random nodenums
@@ -772,14 +774,14 @@ bool Genome::mutate_add_link(int tries,int idR,int &gc)
                 if ((nodep1->gen_node_label)==OUTPUT)
                     recurflag=true;
 
-                //DEPRECATED? Make sure it finds the right kind of link (recur or not)
-                /*if (recurflag)
+                //TOERASE NO RECURRENT LINKS
+                if (recurflag)
                     trycount++;
                 else
-                {*/
+                {
                     trycount=tries; //to exit loop
                     found=true;
-                //}
+                }
             }
 
         } //End of normal link finding loop
