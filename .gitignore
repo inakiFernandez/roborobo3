@@ -33,3 +33,11 @@ logs/*.txt
 logs/*.bmp
 logs/genomes
 sandbox/
+
+#build and learn abstract function NEAT
+learnFunction/build/
+learnFunction/datasets/
+learnFunction/NEATbase/
+learnFunction/NEAT/multi*
+*.dat
+*.nn
