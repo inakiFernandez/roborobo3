@@ -1,0 +1,41 @@
+
+#gnuplot -e "filename1='datasets/in-o1.sorted.dat'; filename2='datasets/in-o2.sorted.dat'" plot_2_functions.plg
+
+reset
+set terminal png
+
+
+print filename1 
+print filename2
+
+col_count=1
+good_data=1
+while (good_data){
+   stats filename1 u (valid(col_count))
+   if ( STATS_max ){
+      col_count = col_count+1
+   } else {
+      col_count = col_count-1
+      good_data = 0
+   }
+}
+
+print col_count 
+
+if(col_count == 2) {
+	plot filename1, filename2
+
+}
+else {
+     if(col_count == 3) {
+     		  splot filename1, filename2
+     }
+     else {
+	print "Not possible to plot. Too many dimensions: "
+	print col_count
+    }
+}
+
+
+
+#pause -1

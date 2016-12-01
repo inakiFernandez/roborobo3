@@ -1,0 +1,920 @@
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0105905.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0105905.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0106651.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0106651.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0106956.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0106956.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0107473.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0107473.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0108759.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0108759.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0110871.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0110871.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0111628.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0111628.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0112218.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0112218.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0114301.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0114301.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0117904.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0117904.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.01187.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.01187.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0121424.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0121424.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0125496.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0125496.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0130794.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0130794.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.01312.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.01312.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0159058.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0159058.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0160711.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0160711.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0164934.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0164934.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0165754.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0165754.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g10-0-f0.0173738.dat.sorted.dats' 
+'NEAT/sandbox/g10-0-f0.0173738.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.0172777.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.0172777.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.0180226.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.0180226.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.018221.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.018221.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.0195858.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.0195858.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.0224544.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.0224544.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.0250089.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.0250089.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.0274515.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.0274515.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.0349936.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.0349936.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.0420179.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.0420179.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.0420412.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.0420412.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.0435161.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.0435161.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.0438827.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.0438827.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.0523079.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.0523079.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.0682872.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.0682872.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.104714.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.104714.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.106035.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.106035.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.171215.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.171215.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.186888.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.186888.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.215428.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.215428.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g100-0-f0.63134.dat.sorted.dats' 
+'NEAT/sandbox/g100-0-f0.63134.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.0165116.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.0165116.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.0169201.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.0169201.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.0173069.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.0173069.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.0181486.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.0181486.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.0183859.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.0183859.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.0184174.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.0184174.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.0195858.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.0195858.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.0197781.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.0197781.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.0202364.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.0202364.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.0404724.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.0404724.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.0463004.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.0463004.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.0523223.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.0523223.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.0621783.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.0621783.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.06248.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.06248.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.0806272.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.0806272.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.101966.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.101966.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.13873.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.13873.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.147805.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.147805.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.167901.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.167901.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g105-0-f0.214733.dat.sorted.dats' 
+'NEAT/sandbox/g105-0-f0.214733.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.0169201.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.0169201.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.0173069.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.0173069.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.0181486.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.0181486.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.0184174.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.0184174.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.0197781.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.0197781.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.0228075.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.0228075.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.0254499.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.0254499.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.0286141.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.0286141.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.0355255.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.0355255.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.0391081.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.0391081.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.0408793.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.0408793.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.0415363.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.0415363.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.0485276.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.0485276.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.0636544.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.0636544.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.0875902.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.0875902.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.0893665.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.0893665.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.15172.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.15172.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.16744.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.16744.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.187366.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.187366.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g110-0-f0.270516.dat.sorted.dats' 
+'NEAT/sandbox/g110-0-f0.270516.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.0210426.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.0210426.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.0283931.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.0283931.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.0376074.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.0376074.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.0395764.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.0395764.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.0411004.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.0411004.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.0424191.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.0424191.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.0435864.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.0435864.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.0481423.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.0481423.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.0620645.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.0620645.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.080915.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.080915.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.0957021.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.0957021.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.112075.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.112075.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.120129.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.120129.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.12231.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.12231.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.129695.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.129695.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.135105.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.135105.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.149173.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.149173.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.159049.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.159049.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.160606.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.160606.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g115-0-f0.181568.dat.sorted.dats' 
+'NEAT/sandbox/g115-0-f0.181568.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0102064.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0102064.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0104047.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0104047.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0105667.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0105667.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0105905.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0105905.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0106354.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0106354.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0106651.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0106651.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0106956.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0106956.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0107473.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0107473.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0110871.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0110871.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0111628.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0111628.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0112218.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0112218.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.011243.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.011243.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0114301.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0114301.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0114498.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0114498.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0114601.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0114601.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0119424.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0119424.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0129654.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0129654.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.01312.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.01312.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0137591.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0137591.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g15-0-f0.0293929.dat.sorted.dats' 
+'NEAT/sandbox/g15-0-f0.0293929.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0102064.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0102064.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0103276.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0103276.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0104047.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0104047.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.010439.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.010439.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0105667.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0105667.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0106179.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0106179.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0106354.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0106354.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0106651.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0106651.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0106956.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0106956.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0107473.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0107473.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0110213.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0110213.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0110793.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0110793.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0111628.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0111628.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0112218.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0112218.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0114301.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0114301.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0114498.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0114498.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0117485.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0117485.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0118215.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0118215.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.034052.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.034052.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g20-0-f0.0643817.dat.sorted.dats' 
+'NEAT/sandbox/g20-0-f0.0643817.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.0102854.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.0102854.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.0103276.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.0103276.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.0104047.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.0104047.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.010439.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.010439.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.0105667.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.0105667.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.0106179.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.0106179.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.0106354.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.0106354.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.0108553.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.0108553.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.0110793.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.0110793.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.0112218.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.0112218.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.0112989.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.0112989.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.011798.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.011798.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.0118215.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.0118215.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.0126563.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.0126563.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.0142638.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.0142638.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.018245.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.018245.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.0229537.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.0229537.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.232832.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.232832.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.389086.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.389086.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g25-0-f0.462167.dat.sorted.dats' 
+'NEAT/sandbox/g25-0-f0.462167.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.451427.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.451427.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.512902.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.512902.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.668818.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.668818.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.669889.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.669889.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.673529.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.673529.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.674428.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.674428.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.674781.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.674781.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.675352.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.675352.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.675814.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.675814.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.676159.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.676159.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.676994.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.676994.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.677158.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.677158.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.682308.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.682308.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.683348.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.683348.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.683428.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.683428.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.688902.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.688902.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.701855.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.701855.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.707692.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.707692.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.738674.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.738674.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g30-0-f0.777154.dat.sorted.dats' 
+'NEAT/sandbox/g30-0-f0.777154.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.0255208.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.0255208.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.0376705.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.0376705.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.0419154.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.0419154.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.0610313.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.0610313.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.0620813.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.0620813.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.0624072.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.0624072.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.0652261.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.0652261.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.0677925.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.0677925.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.0775149.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.0775149.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.0935393.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.0935393.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.125535.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.125535.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.14271.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.14271.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.157468.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.157468.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.157591.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.157591.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.169824.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.169824.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.208013.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.208013.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.254973.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.254973.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.289497.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.289497.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.344443.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.344443.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g35-0-f0.425851.dat.sorted.dats' 
+'NEAT/sandbox/g35-0-f0.425851.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.0172675.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.0172675.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.0173932.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.0173932.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.0185437.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.0185437.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.0185598.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.0185598.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.0193234.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.0193234.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.0225801.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.0225801.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.0254615.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.0254615.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.0277236.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.0277236.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.0340947.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.0340947.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.0388173.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.0388173.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.0462246.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.0462246.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.0512792.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.0512792.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.0801015.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.0801015.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.0830551.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.0830551.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.0852978.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.0852978.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.0960345.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.0960345.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.101828.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.101828.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.128771.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.128771.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.23685.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.23685.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g40-0-f0.323699.dat.sorted.dats' 
+'NEAT/sandbox/g40-0-f0.323699.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.0171477.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.0171477.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.0171913.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.0171913.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.0172675.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.0172675.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.01766.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.01766.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.0181606.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.0181606.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.0192758.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.0192758.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.0196425.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.0196425.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.0197041.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.0197041.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.0215841.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.0215841.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.0225801.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.0225801.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.0340947.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.0340947.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.034944.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.034944.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.0415933.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.0415933.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.0443325.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.0443325.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.045302.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.045302.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.0462688.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.0462688.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.0854581.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.0854581.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.08953.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.08953.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.218583.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.218583.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g45-0-f0.353487.dat.sorted.dats' 
+'NEAT/sandbox/g45-0-f0.353487.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.0124979.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.0124979.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.0127785.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.0127785.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.0128813.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.0128813.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.0143516.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.0143516.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.0156577.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.0156577.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.0159114.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.0159114.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.0160754.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.0160754.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.0177966.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.0177966.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.0227954.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.0227954.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.0233631.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.0233631.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.0299368.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.0299368.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.0425181.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.0425181.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.0446956.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.0446956.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.0580249.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.0580249.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.0592792.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.0592792.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.0631585.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.0631585.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.08171.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.08171.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.0967147.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.0967147.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.108008.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.108008.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g5-0-f0.111367.dat.sorted.dats' 
+'NEAT/sandbox/g5-0-f0.111367.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.0169077.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.0169077.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.0171469.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.0171469.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.01766.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.01766.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.0182903.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.0182903.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.0197041.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.0197041.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.0201664.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.0201664.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.0225801.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.0225801.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.0258921.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.0258921.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.0340947.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.0340947.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.0421745.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.0421745.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.054076.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.054076.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.055657.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.055657.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.0635812.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.0635812.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.0752565.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.0752565.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.0878091.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.0878091.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.142219.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.142219.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.181109.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.181109.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.297561.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.297561.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.369922.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.369922.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g50-0-f0.452965.dat.sorted.dats' 
+'NEAT/sandbox/g50-0-f0.452965.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.0171469.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.0171469.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.0176117.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.0176117.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.0176579.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.0176579.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.0182903.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.0182903.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.0183728.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.0183728.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.0188394.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.0188394.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.020005.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.020005.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.021462.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.021462.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.0225801.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.0225801.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.0258921.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.0258921.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.0601484.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.0601484.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.0750859.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.0750859.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.0751644.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.0751644.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.105786.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.105786.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.114343.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.114343.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.127676.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.127676.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.132366.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.132366.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.139335.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.139335.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.245451.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.245451.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g55-0-f0.267752.dat.sorted.dats' 
+'NEAT/sandbox/g55-0-f0.267752.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.510795.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.510795.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.582393.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.582393.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.610613.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.610613.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.642482.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.642482.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.651241.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.651241.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.653615.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.653615.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.663834.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.663834.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.674795.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.674795.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.676601.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.676601.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.678791.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.678791.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.678909.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.678909.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.681779.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.681779.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.684414.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.684414.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.684535.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.684535.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.697867.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.697867.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.700824.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.700824.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.701747.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.701747.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.704006.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.704006.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.756581.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.756581.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g60-0-f0.82348.dat.sorted.dats' 
+'NEAT/sandbox/g60-0-f0.82348.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.0217229.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.0217229.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.0362441.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.0362441.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.104647.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.104647.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.144294.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.144294.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.156909.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.156909.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.161025.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.161025.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.192402.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.192402.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.212731.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.212731.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.245077.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.245077.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.251503.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.251503.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.253051.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.253051.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.261004.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.261004.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.263359.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.263359.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.269341.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.269341.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.291698.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.291698.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.29476.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.29476.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.372726.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.372726.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.381204.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.381204.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.437391.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.437391.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g65-0-f0.48597.dat.sorted.dats' 
+'NEAT/sandbox/g65-0-f0.48597.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.0154933.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.0154933.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.0163141.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.0163141.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.0217229.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.0217229.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.0335741.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.0335741.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.0362441.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.0362441.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.0460517.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.0460517.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.0545172.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.0545172.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.0581476.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.0581476.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.0663771.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.0663771.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.0769532.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.0769532.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.0938629.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.0938629.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.0942382.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.0942382.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.0971894.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.0971894.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.143465.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.143465.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.178908.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.178908.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.179758.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.179758.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.19962.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.19962.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.219695.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.219695.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.310802.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.310802.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g70-0-f0.421533.dat.sorted.dats' 
+'NEAT/sandbox/g70-0-f0.421533.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.0104807.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.0104807.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.0120531.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.0120531.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.0127761.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.0127761.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.013264.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.013264.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.0155809.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.0155809.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.0163141.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.0163141.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.0180934.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.0180934.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.018798.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.018798.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.0354902.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.0354902.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.0375419.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.0375419.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.0410104.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.0410104.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.0435148.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.0435148.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.0506782.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.0506782.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.0711416.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.0711416.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.083413.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.083413.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.0985769.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.0985769.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.0991002.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.0991002.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.107544.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.107544.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.123343.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.123343.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g75-0-f0.241404.dat.sorted.dats' 
+'NEAT/sandbox/g75-0-f0.241404.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.00690788.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.00690788.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.0104807.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.0104807.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.0113589.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.0113589.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.0116894.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.0116894.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.0120531.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.0120531.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.0127761.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.0127761.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.013264.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.013264.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.0133881.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.0133881.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.0145007.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.0145007.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.0163141.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.0163141.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.0178044.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.0178044.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.0215496.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.0215496.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.0242855.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.0242855.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.0250033.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.0250033.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.0354902.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.0354902.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.0402635.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.0402635.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.0703967.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.0703967.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.147031.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.147031.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.19062.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.19062.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g80-0-f0.310175.dat.sorted.dats' 
+'NEAT/sandbox/g80-0-f0.310175.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.00672723.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.00672723.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.0104807.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.0104807.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.0116894.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.0116894.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.011801.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.011801.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.0127761.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.0127761.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.0131227.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.0131227.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.0178044.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.0178044.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.0248187.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.0248187.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.0349223.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.0349223.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.0354902.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.0354902.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.0586712.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.0586712.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.0826004.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.0826004.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.085124.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.085124.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.108106.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.108106.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.138844.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.138844.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.187864.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.187864.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.191326.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.191326.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.211239.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.211239.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.389574.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.389574.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g85-0-f0.564981.dat.sorted.dats' 
+'NEAT/sandbox/g85-0-f0.564981.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.584454.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.584454.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.592304.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.592304.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.602205.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.602205.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.60523.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.60523.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.614311.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.614311.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.618244.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.618244.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.624044.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.624044.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.629091.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.629091.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.651678.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.651678.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.656785.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.656785.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.668037.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.668037.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.673981.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.673981.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.678465.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.678465.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.68105.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.68105.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.682454.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.682454.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.682537.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.682537.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.685065.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.685065.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.686008.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.686008.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.689506.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.689506.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g90-0-f0.730111.dat.sorted.dats' 
+'NEAT/sandbox/g90-0-f0.730111.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.0218403.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.0218403.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.0349936.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.0349936.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.0352292.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.0352292.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.0430911.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.0430911.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.0539904.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.0539904.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.0747924.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.0747924.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.0757978.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.0757978.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.0837814.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.0837814.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.104215.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.104215.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.104939.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.104939.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.105945.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.105945.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.117629.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.117629.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.155384.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.155384.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.162062.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.162062.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.170486.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.170486.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.171799.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.171799.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.196111.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.196111.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.264576.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.264576.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.294595.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.294595.dat.sorted.dats', 
+splot 'datasets/in-o1.sorted.dat', 'NEAT/sandbox/g95-0-f0.318279.dat.sorted.dats' 
+'NEAT/sandbox/g95-0-f0.318279.dat.sorted.dats', 

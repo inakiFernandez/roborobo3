@@ -1,0 +1,44 @@
+
+#gnuplot -e "filename='\"datasets/in-o1.sorted.dat\"'" plot_function.plg
+#gnuplot --call plot_function.plg "'datasets/in-o1.sorted.dat'"
+
+reset
+set terminal png
+
+if (!exists("filename")) filename='default.dat'
+
+print filename
+
+col_count=1
+good_data=1
+while (good_data){
+   stats filename u (valid(col_count))
+   if ( STATS_max ){
+      col_count = col_count+1
+   } else {
+      col_count = col_count-1
+      good_data = 0
+   }
+}
+
+#call "col_counter.gp" filename #  'datasets/in-o1.sorted.dat' #
+
+print col_count 
+
+if(col_count == 2) {
+	plot filename
+
+}
+else {
+     if(col_count == 3) {
+     		  splot filename
+     }
+     else {
+	print "Not possible to plot. Too many dimensions: "
+	print col_count
+    }
+}
+
+
+
+#pause -1

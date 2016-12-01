@@ -41,3 +41,5 @@ learnFunction/NEATbase/
 learnFunction/NEAT/multi*
 *.dat
 *.nn
+learnFunction/NEAT/oldExp/
+learnFunction/NEAT/noEvoTopo/
