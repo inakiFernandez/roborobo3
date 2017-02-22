@@ -48,7 +48,9 @@ learnFunction/NEAT/showAmine
 learnFunction/NEAT/heatmapData/*
 learnFunction/Makefile
 !learnFunction/NEAT/heatmapData/progressbar
-learnFunction/NEAT/heatmapData/progressbar/*
+learnFunction/NEAT/heatmapData/progressbar/*.png
+learnFunction/NEAT/heatmapData/progressbar/*.mp4
+
 
 *.dat
 *.nn
