@@ -23,7 +23,7 @@ fnames += [
 ]
 """
 import sys
-sys.path.insert(0, '/home/fernandi/git/roborobo3/tools/')
+sys.path.insert(0, '../tools/')
 import multirunFitness
 import tmpDataFilesExp as filenames
 import argparse
