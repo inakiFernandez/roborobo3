@@ -4,7 +4,7 @@ PROJECT( auxlearnfunction )
 
 file ( GLOB_RECURSE all_include auxlearnfunction.h )
 file ( GLOB all_sources auxlearnfunction.cpp )
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++11 -Wno-switch") 
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++11 -Wno-switch -DODNEAT_FUNCTIONS") 
 include_directories(. ../include/contrib/ ../include/core/Utilities/)
 
 add_library(auxlearnfunction STATIC ${all_sources})
