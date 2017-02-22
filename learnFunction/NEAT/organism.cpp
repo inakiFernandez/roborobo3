@@ -14,6 +14,7 @@
    limitations under the License.
 */
 #include "organism.h"
+#include <iostream>
 
 using namespace NEAT;
 
@@ -80,7 +81,8 @@ Organism::Organism(const Organism& org)
 }
 
 Organism::~Organism() {
-	delete net;
+
+    delete net;
 	delete gnome;
 }
 

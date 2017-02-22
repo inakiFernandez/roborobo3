@@ -43,6 +43,8 @@ bool rdmNNFunction_evaluate(Organism *org);
 int rdmNNFunction_epoch(Population *pop,int generation,char *filename, int &winnernum, int &winnergenes,int &winnernodes);
 vector<vector<double> > readDoubleFile(string filename);
 bool addNode(Genome* g, int inId, int outId, int &curnode_id,double &curinnov);
+double instanceError(vector<double> ref, vector<double> nnOut);
+double computeError(vector<vector<double> > reference, vector<vector<double> > nnOuts);
 
 //The XOR evolution routines *****************************************
 Population *xor_test(int gens);

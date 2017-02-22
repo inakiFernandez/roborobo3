@@ -1,0 +1,24 @@
+General reasoning experiments:
+
+2 tasks (1D functions): T1, T2
+
+Sequence of alternating tasks: [T1,T2] x R (repetitions)
+
+How to learn topology and weights to approximate the functions? 
+	Fuck!
+	Maybe I need more population?
+	Maybe stop topology evolution at some point then do only weights?
+
+How to keep good solutions previously found (on a single task)?
+	Explicit elitism (save the best one(s) for the following generation)
+	Kind of elitism : e.g. probability of not mutating at all
+
+How to keep good solution for previous tasks? 
+
+	Diversity and selection pressure focused on solutions that were good in the past
+	Ex. Select more solutions that "were" good in the past (whose ancestors were good?)
+		Mutate less solutions that "were" good in the past (whose ancestors were good)
+
+
+How about in distributed evo. algorithms for robots ? (think about it) 
+	Maybe the same techniques? Like have a higher probability to select genomes that were "kind of" good in the past (choose coefficients for current performance w.r.t. previous performance [i.e. how important is optimizing current function w.r.t. keeping previous one]) [cumulate "fitness savings"]

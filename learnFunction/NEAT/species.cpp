@@ -70,8 +70,8 @@ bool Species::add_Organism(Organism *o){
 }
 
 Organism *Species::get_champ() {
-	double champ_fitness=-1.0;
-	Organism *thechamp;
+    double champ_fitness=-100.0;
+    Organism *thechamp;
 	std::vector<Organism*>::iterator curorg;
 
 	for(curorg=organisms.begin();curorg!=organisms.end();++curorg) {
@@ -290,7 +290,8 @@ void Species::adjust_fitness() {
 			//((*curorg)->fitness)=((*curorg)->fitness)*(-atan(age_debt));
 
 			//Extreme penalty for a long period of stagnation (divide fitness by 100)
-			((*curorg)->fitness)=((*curorg)->fitness)*0.01;
+            if(NEAT::pop_size!=1)
+                ((*curorg)->fitness)=((*curorg)->fitness)*0.01;
 			//std::cout<<"OBLITERATE Species "<<id<<" of age "<<age<<std::endl;
 			//std::cout<<"dropped fitness to "<<((*curorg)->fitness)<<std::endl;
 		}
@@ -302,6 +303,7 @@ void Species::adjust_fitness() {
 
 		//Do not allow negative fitness
 		if (((*curorg)->fitness)<0.0) (*curorg)->fitness=0.0001; 
+
 
 		//Share fitness with the species
 		(*curorg)->fitness=((*curorg)->fitness)/(organisms.size());
@@ -343,18 +345,10 @@ double Species::compute_average_fitness() {
 
 	double total=0.0;
 
-	//int pause; //DEBUG: Remove
-
-	for(curorg=organisms.begin();curorg!=organisms.end();++curorg) {
-		total+=(*curorg)->fitness;
-		//std::cout<<"new total "<<total<<std::endl; //DEBUG: Remove
-	}
+    for(curorg=organisms.begin();curorg!=organisms.end();++curorg)
+		total+=(*curorg)->fitness;	
 
 	ave_fitness=total/(organisms.size());
-
-	//DEBUG: Remove
-	//std::cout<<"average of "<<(organisms.size())<<" organisms: "<<ave_fitness<<std::endl;
-	//cin>>pause;
 
 	return ave_fitness;
 
@@ -429,7 +423,6 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
 	std::vector<Species*>::iterator cursp;
 
 	Network *net_analogue;  //For adding link to test for recurrency
-	int pause;
 
 	bool outside;
 
@@ -448,9 +441,9 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
 	double mut_power=NEAT::weight_mut_power;
 
 	//Roulette wheel variables
-	double total_fitness=0.0;
-	double marble;  //The marble will have a number between 0 and total_fitness
-	double spin;  //0Fitness total while the wheel is spinning
+    //double total_fitness=0.0;
+    //double marble;  //The marble will have a number between 0 and total_fitness
+    //double spin;  //0Fitness total while the wheel is spinning
 
 	//Compute total fitness of species for a roulette wheel
 	//Note: You don't get much advantage from a roulette here
@@ -470,7 +463,7 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
 
 		poolsize=organisms.size()-1;
 
-		thechamp=(*(organisms.begin()));
+        thechamp=(*(organisms.begin()));
 
 		//Create the designated number of offspring for the Species
 		//one at a time
@@ -486,6 +479,7 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
 				//      std::cout<<"ALERT: EXPECTED OFFSPRING = "<<expected_offspring<<std::endl;
 				//      cin>>pause;
 			}
+
 
 			//If we have a super_champ (Population champion), finish off some special clones
 			if ((thechamp->super_champ_offspring) > 0) {
@@ -581,15 +575,19 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
 						mut_struct_baby=true;
 					}
 					else if (randfloat()<NEAT::mutate_add_link_prob) {
+
 						//std::cout<<"mutate add link"<<std::endl;
 						net_analogue=new_genome->genesis(generation);
+
 						new_genome->mutate_add_link(pop->innovations,pop->cur_innov_num,NEAT::newlink_tries);
+
 						delete net_analogue;
 						mut_struct_baby=true;
 					}
 					//NOTE:  A link CANNOT be added directly after a node was added because the phenotype
 					//       will not be appropriately altered to reflect the change
 					else {
+
 						//If we didn't do a structural mutation, we do the other kinds
 
 						if (randfloat()<NEAT::mutate_random_trait_prob) {
@@ -618,6 +616,7 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
 							new_genome->mutate_gene_reenable();
 						}
 					}
+
 
 					baby=new Organism(0.0,new_genome,generation);
 

@@ -1,5 +1,5 @@
 
-CC = g++ -O3 -I.. -I../../include/core/Utilities/ -I../../include/contrib/ -g #-std=c++0x
+CC = g++ -O3 -I.. -I../../include/core/Utilities/ -I../../include/contrib/ -g #-std=c++11
 
 #LIBS = -L/usr/lib /usr/lib/libqthreads.so.0 -lguile -ldl -lreadline -ltermcap -lm
 

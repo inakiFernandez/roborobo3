@@ -6,7 +6,7 @@ weigh_mut_power 0.1
 recur_prob 0.05
 disjoint_coeff 1.0
 excess_coeff 1.0
-mutdiff_coeff 0.4
+mutdiff_coeff 1.0
 compat_thresh 3.0
 age_significance 1.0
 survival_thresh 0.20
@@ -14,29 +14,26 @@ mutate_only_prob 1.0
 mutate_random_trait_prob 0.0
 mutate_link_trait_prob 0.0
 mutate_node_trait_prob 0.0
-mutate_link_weights_prob 1.0
-mutate_toggle_enable_prob 0.2
+mutate_link_weights_prob 0.6
+mutate_toggle_enable_prob 0.1
 mutate_gene_reenable_prob 0.0
 mutate_add_node_prob 0.05
-mutate_add_link_prob 0.2
+mutate_add_link_prob 0.1
 interspecies_mate_rate 0.0
 mate_multipoint_prob 0.0
 mate_multipoint_avg_prob 0.0
 mate_singlepoint_prob 0.0
 mate_only_prob 0.0
 recur_only_prob 0.0
-pop_size 300
-dropoff_age 15
+pop_size 60
+dropoff_age 15000
 newlink_tries 50
 print_every 10000
 babies_stolen 0
 num_runs 1
 
 
-#node 0.01
-#link 0.2
-#sigma 0.1
-##ATTENTION to nIn 2 or 1
+
 nIn = 1
 nO = 1
 
@@ -54,9 +51,16 @@ sigma = 0.1
 
 bias = true
 numberSamples = 50
-#200
+
 #exp: 0 first T1 then T2, 1 first T2 then T1, 2 T1 and T2 together
-exp = 0
+exp = 1
+isWithErrorInput = false
+isWithNumberTask = false
+doLogAllPoints = false
 
 allowMultisynapses = false
+loadGenome = false
+injectGenome = true
+injectIter = 25
+genomeInjectFile = ../datasets/o2-template-params.nn
 allowMultisynapses=true

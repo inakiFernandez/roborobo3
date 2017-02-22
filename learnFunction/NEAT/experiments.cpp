@@ -16,12 +16,13 @@
 #include "experiments.h"
 #include <cstring>
 #include "../auxlearnfunction.h"
-
+#include <string>
+#include <iostream>
 
 #define NO_SCREEN_OUT
 vector<vector<double> > inputSet1 = readDoubleFile("../datasets/in-template-params.dat");
 vector<vector<double> > inputSet2 = readDoubleFile("../datasets/in2-template-params.dat");
-//Reverse learning 2 then 1 (TO ERASE. Research Q: is order important?)[inconclusive, see Invert]
+//Reverse learning 2 then 1 (Research Q: is order important?)[inconclusive, see Invert]
 vector<vector<double> > outputSet1 = readDoubleFile("../datasets/o1-template-params.dat");
 vector<vector<double> > outputSet2 = readDoubleFile("../datasets/o2-template-params.dat");
 
@@ -47,6 +48,60 @@ bool loadProperties(std::string filename)
     in.close();
     return true;
 }
+void writeMatrix(std::string filename,std::vector<std::vector<double> > data)
+{
+    std::ofstream out(filename.c_str());
+
+    for(unsigned int i = 0; i< data.size(); i++)
+    {
+        for(unsigned int j = 0; j< data[i].size(); j++)
+        {
+            if(j != (data[i].size() - 1))
+            {
+                out << data[i][j] << ',';
+            }
+            else
+                out << data[i][j];
+        }
+        if(i != (data.size() - 1))
+            out << "\n";
+    }
+    out.close();
+}
+
+std::vector<std::vector<double> > computeGenotypicDistances(Population* pop)
+{
+    std::vector<std::vector<double> > result;
+    for(std::vector<Organism*>::iterator it = pop->organisms.begin();
+        it != pop->organisms.end(); it++)
+    {
+        std::vector<double> row;
+        for(std::vector<Organism*>::iterator it2 = pop->organisms.begin();
+            it2 != pop->organisms.end(); it2++)
+        {
+            row.push_back((*it)->gnome->compatibility((*it2)->gnome));
+        }
+        result.push_back(row);
+    }
+    return result;
+}
+std::vector<std::vector<double> > computeBehavioralDistances(Population* pop)
+{
+    std::vector<std::vector<double> > result;
+    for(std::vector<Organism*>::iterator it = pop->organisms.begin();
+        it != pop->organisms.end(); it++)
+    {
+        std::vector<double> row;
+        for(std::vector<Organism*>::iterator it2 = pop->organisms.begin();
+            it2 != pop->organisms.end(); it2++)
+        {
+            row.push_back(computeError((*it)->approximatedDatapoints,(*it2)->approximatedDatapoints));
+        }
+        result.push_back(row);
+    }
+    return result;
+}
+
 bool addNode(Genome* g, int inId, int outId, int &curnode_id,double &curinnov)
 {
     bool found = false;
@@ -179,19 +234,13 @@ Population *rdmNNFunction_test(int gens, std::string paramfile)
     int winnernum;
     int winnergenes;
     int winnernodes;
-//    //For averaging
-//    int totalevals=0;
-//    int totalgenes=0;
-//    int totalnodes=0;
-//    int samples;  //For averaging
-    int expcount;
 
+    int expcount;
 
     memset (evals, 0, NEAT::num_runs * sizeof(int));
     memset (genes, 0, NEAT::num_runs * sizeof(int));
     memset (nodes, 0, NEAT::num_runs * sizeof(int));
 
-    //std::string paramfile = "../config/template-params";
     if(!loadProperties(paramfile))
     {
         std::cerr << "[ERROR] Wrong parameter filename" << std::endl;
@@ -199,65 +248,24 @@ Population *rdmNNFunction_test(int gens, std::string paramfile)
     }
     int nI;
     int nO;
+    gProperties.checkAndGetPropertyValue("isWithErrorInput",&NEAT::isWithErrorInput,true);
+    gProperties.checkAndGetPropertyValue("isWithNumberTask",&NEAT::isWithNumberTask,true);
     gProperties.checkAndGetPropertyValue("nIn",&nI,true);
+    if(NEAT::isWithErrorInput || NEAT::isWithNumberTask)
+    {
+        nI++;
+    }
+
     gProperties.checkAndGetPropertyValue("nO",&nO,true);
     gProperties.checkAndGetPropertyValue("allowMultisynapses",&NEAT::allowMultisynapses,true);
     gProperties.checkAndGetPropertyValue("bias",&NEAT::withBias,true);
-
-
-    /*
-    static const double arr[] = {1.0,1.0};
-
-    std::vector<double> in (arr, arr + sizeof(arr) / sizeof(arr[0]) );
-
-    Genome* g = Genome::makeGenome(id,nI,nO);
-
-    double innovas = 4;
-    g->mutate_link_weights(1.0,1.0,GAUSSIAN);
-    addLink(g,1,3,innovas);
-    g->mutate_link_weights(1.0,1.0,GAUSSIAN);
-    g->mutate_link_weights(1.0,1.0,GAUSSIAN);
-    g->mutate_link_weights(1.0,1.0,GAUSSIAN);
-    g->mutate_link_weights(1.0,1.0,GAUSSIAN);
-    Network* n = g->genesis(id);
-    g->print_to_filename("test.nn");
-    n->load_sensors(&(in[0]));
-
-    int net_depth = 20;
-    //Relax net and get output
-    bool success=n->activate();
-
-    //use depth to ensure relaxation
-    for (int relax=0;relax<=net_depth;relax++)
-    {
-      success=n->activate();
-      if(!success)
-      {
-          std::cerr << "[ERROR] Wrong activation " << std::endl;
-          exit(-1);
-      }
-    }
-
-    for(vector<NNode*>::iterator itONN = n->outputs.begin();
-        itONN != n->outputs.end();itONN++)
-    {
-        std::cout << (*(n->outputs.begin()))->activation << std::endl;
-    }
-
-    exit(-1);*/
-
-
-    /*Bias already generated at dataset creation
-    //Add bias to input vectors
-    if(NEAT::withBias)
-    {
-        for(int i = 0; i < inputSet1.size(); i++)
-        {
-            inputSet1[i].push_back(1.0);
-            inputSet2[i].push_back(1.0);
-        }
-    }*/
+    gProperties.checkAndGetPropertyValue("doLogAllPoints",&NEAT::doLogAllPoints,true);
     gProperties.checkAndGetPropertyValue("exp",&NEAT::experiment,true);
+    gProperties.checkAndGetPropertyValue("loadGenome",&NEAT::loadGenome,true);
+    gProperties.checkAndGetPropertyValue("injectGenome",&NEAT::injectGenome,true);
+    gProperties.checkAndGetPropertyValue("injectIter",&NEAT::injectIter,true);
+    gProperties.checkAndGetPropertyValue("genomeInjectFile",&NEAT::genomeInjectFile,true);
+
     switch(NEAT::experiment)
     {
         case 0:
@@ -283,16 +291,25 @@ Population *rdmNNFunction_test(int gens, std::string paramfile)
             exit(-1);
     }
 
-
     for(expcount=0;expcount<NEAT::num_runs;expcount++)
     {
         //test by hand comes here
         if(NEAT::withBias)
             nI++;
-          start_genome = Genome::makeGenome(id,nI,nO);
-          //Spawn the Population
-          //cout<<"Spawning Population of Genome"<<endl;
 
+          if(NEAT::loadGenome)
+          {
+            std::ifstream loadInitGenomeFile (NEAT::genomeInjectFile.c_str());
+
+            start_genome = new Genome(id, loadInitGenomeFile);
+
+            for(int nb=0; nb < 40; nb++)
+                start_genome->mutate_link_weights(NEAT::weight_mut_power,1.0,GAUSSIAN);
+          }
+          else
+              start_genome = Genome::makeGenome(id,nI,nO);
+
+          //Spawn the Population
           pop=new Population(start_genome,NEAT::pop_size);
 
           //Verifying Spawned Pop
@@ -301,6 +318,23 @@ Population *rdmNNFunction_test(int gens, std::string paramfile)
           for (gen=1;gen<=gens;gen++)
           {
 
+            //Replace "last" genome in pop by "model" genome
+            //to test if it survives
+            if(NEAT::injectGenome && (NEAT::injectIter == (gen - 1)))
+            {
+                Genome* last = pop->organisms.back()->gnome;
+                std::ifstream loadInitGenomeFile (NEAT::genomeInjectFile.c_str());
+                Genome* injected_genome = new Genome(last->genome_id, loadInitGenomeFile);
+                //Dummy trait
+                Trait* newtrait=new Trait(1,0,0,0,0,0,0,0,0,0);
+                injected_genome->traits.push_back(newtrait);
+                pop->organisms[NEAT::pop_size-1]->gnome = injected_genome;
+                pop->organisms[NEAT::pop_size-1]->net = injected_genome->genesis(injected_genome->genome_id);
+
+                pop->species.clear();
+                pop->speciate();
+
+            }
             //This is how to make a custom filename
             fnamebuf=new ostringstream();
             (*fnamebuf)<<"gen_"<<gen<<ends;  //needs end marker
@@ -320,9 +354,7 @@ Population *rdmNNFunction_test(int gens, std::string paramfile)
               genes[expcount]=winnergenes;
               nodes[expcount]=winnernodes;
               gen=gens;
-
             }
-
             //Clear output filename
             fnamebuf->clear();
             delete fnamebuf;
@@ -333,41 +365,7 @@ Population *rdmNNFunction_test(int gens, std::string paramfile)
             delete pop;
 
     }
-
-    //Average and print stats
-//    cout<<"Nodes: "<<endl;
-//    for(expcount=0;expcount<NEAT::num_runs;expcount++)
-//    {
-//        cout<<nodes[expcount]<<endl;
-//        totalnodes+=nodes[expcount];
-//    }
-
-//    cout<<"Genes: "<<endl;
-//    for(expcount=0;expcount<NEAT::num_runs;expcount++)
-//    {
-//        cout<<genes[expcount]<<endl;
-//        totalgenes+=genes[expcount];
-//    }
-
-//    cout<<"Evals "<<endl;
-//    samples=0;
-//    for(expcount=0;expcount<NEAT::num_runs;expcount++)
-//    {
-//          cout<<evals[expcount]<<endl;
-//          if (evals[expcount]>0)
-//          {
-//             totalevals+=evals[expcount];
-//             samples++;
-//          }
-//    }
-
-//    cout<<"Failures: "<<(NEAT::num_runs-samples)<<" out of "<<NEAT::num_runs<<" runs"<<endl;
-//    cout<<"Average Nodes: "<<(samples>0 ? (double)totalnodes/samples : 0)<<endl;
-//    cout<<"Average Genes: "<<(samples>0 ? (double)totalgenes/samples : 0)<<endl;
-//    cout<<"Average Evals: "<<(samples>0 ? (double)totalevals/samples : 0)<<endl;
-
     return pop;
-
 }
 vector<vector<double> > readDoubleFile(string filename)
 {
@@ -390,6 +388,17 @@ vector<vector<double> > readDoubleFile(string filename)
   }
   return result;
 }
+double instanceError(vector<double> ref, vector<double> nnOut)
+{
+    double errorOneSample = 0.0;
+    for(vector<double>::iterator itDimO = ref.begin(), itDimNN = nnOut.begin();
+             itDimO != ref.end(); itDimO++, itDimNN++)
+    {
+      double squaredDifference = ((*itDimO) - (*itDimNN)) * ((*itDimO) - (*itDimNN));
+      errorOneSample+= squaredDifference;
+    }
+    return sqrt(errorOneSample);
+}
 
 double computeError(vector<vector<double> > reference, vector<vector<double> > nnOuts)
 {
@@ -398,14 +407,7 @@ double computeError(vector<vector<double> > reference, vector<vector<double> > n
     for(vector<vector<double> >::iterator itO = reference.begin(), itNN = nnOuts.begin();
         itO != reference.end(); itNN++, itO++)
       {
-        double errorOneSample = 0.0;
-        for(vector<double>::iterator itDimO = (*itO).begin(), itDimNN = (*itNN).begin();
-                 itDimO != (*itO).end(); itDimO++, itDimNN++)
-        {
-          double squaredDifference = ((*itDimO) - (*itDimNN)) * ((*itDimO) - (*itDimNN));
-          errorOneSample+= squaredDifference;
-        }
-        result += sqrt(errorOneSample);
+        result += instanceError((*itO),(*itNN));
       }
 
     return result / (double)reference.size();
@@ -413,29 +415,38 @@ double computeError(vector<vector<double> > reference, vector<vector<double> > n
 
 bool rdmNNFunction_evaluate(Organism *org)
 {
-  Network *net;
-  vector<vector<double> > out; //The network outputs
-  //double this_out; //The current output
+  vector<vector<double> > out, outOther; //The network outputs
+  //double this_out;
   unsigned int count;
   double errorsum;
 
-  bool success = false;  //Check for successful activation
-//  int numnodes;  /* Used to figure out how many nodes
-//            should be visited during activation */
+  bool success = false;  //successful activation
 
-  net=org->net;
-  //org->gnome->print_to_filename("lastTested.nn");
-  int net_depth; //The max depth of the network to be activated
+  Network* net=org->net;
+  int net_depth;
   //net_depth=net->max_depth();
   //Careful here: net depth "overestimated"
   net_depth = 20;
   int relax; //Activates until relaxation
-  //numnodes=((org->gnome)->nodes).size();
-
+  double previousError = 0.0;
+  org->approximatedDatapoints.clear();
   //Load and activate the network on each input
   for(count=0;count<inputSet[f].size();count++)
   {
-    net->load_sensors(&(inputSet[f][count][0]));
+      vector<double> inInstance = inputSet[f][count];
+      if(NEAT::isWithErrorInput)
+      {
+         inInstance.push_back(previousError);
+      }
+      if(NEAT::isWithNumberTask)
+      {
+          double taskInput = (f*2) - 1;
+          //Task number input to the NN adapted if both tasks simultaneously
+          if(NEAT::experiment == 2)
+              taskInput = (count < inputSet1.size())? 1:-1;
+          inInstance.push_back(taskInput);
+      }
+    net->load_sensors(&(inInstance[0]));
 
     //Relax net and get output
     success=net->activate();
@@ -443,8 +454,81 @@ bool rdmNNFunction_evaluate(Organism *org)
     //use depth to ensure relaxation
     for (relax=0;relax<=net_depth;relax++)
     {
+      success=net->activate();      
+    }
+    vector<double>outputInstance;
+    for(vector<NNode*>::iterator itONN = net->outputs.begin();
+        itONN != net->outputs.end();itONN++)
+    {
+        outputInstance.push_back((*itONN)->activation);        
+    }    
+    if(NEAT::isWithErrorInput)
+    {
+        previousError = instanceError(outputSet[f][count],outputInstance);
+    }
+    out.push_back(outputInstance);
+
+    net->flush();
+  }
+  org->approximatedDatapoints = out;
+
+  //Store the approximated dataset by this genome
+  std::stringstream ssfilename;
+    ssfilename << "sandbox/g" << org->generation
+               << "-t-" << f
+               << ".dat" <<"-ind" << org->gnome->genome_id;
+  std::ofstream oFile(ssfilename.str().c_str());
+
+  //Store approximated datapoints
+  for(unsigned int count=0;count<inputSet[f].size();count++)
+  {
+      for(unsigned int i = 0; i < inputSet[f][count].size(); i++)
+      {
+          oFile << inputSet[f][count][i] << " ";
+      }
+      for(unsigned int i = 0; i < org->approximatedDatapoints[count].size(); i++)
+      {
+          oFile << org->approximatedDatapoints[count][i] << " ";
+      }
+      oFile << std::endl;
+  }
+  oFile.close();
+  //Store neuralnet
+  std::stringstream ssfilenameNet;
+  ssfilenameNet << "sandbox/net" << org->generation
+                << "-t-"  << f
+                << ".dat" << "-ind" << org->gnome->genome_id << ".nn";
+  std::ofstream oFileNet(ssfilenameNet.str().c_str());
+
+  org->gnome->print_to_file(oFileNet);
+  oFileNet.close();
+
+  previousError = 0.0;
+  //Load and activate the network on each input
+  for(count=0;count<inputSet[1-f].size();count++)
+  {
+    vector<double> inInstance = inputSet[1-f][count];
+
+    if(NEAT::isWithErrorInput)
+    {
+       inInstance.push_back(previousError);
+    }
+    if(NEAT::isWithNumberTask)
+    {
+        double taskInput = ((1-f)*2) - 1;
+        //Task number input to the NN adapted if both tasks simultaneously
+        if(NEAT::experiment == 2)
+            taskInput = (count < inputSet1.size())? 1:-1;
+        inInstance.push_back(taskInput);
+    }
+    net->load_sensors(&(inInstance[0]));
+    //Relax net and get output
+    success=net->activate();
+
+    //use depth to ensure relaxation
+    for (relax=0;relax<=net_depth;relax++)
+    {
       success=net->activate();
-      //this_out=(*(net->outputs.begin()))->activation;
     }
     vector<double>outputInstance;
     for(vector<NNode*>::iterator itONN = net->outputs.begin();
@@ -452,75 +536,38 @@ bool rdmNNFunction_evaluate(Organism *org)
     {
         outputInstance.push_back((*itONN)->activation);
     }
-
-    out.push_back(outputInstance);
+    if(NEAT::isWithErrorInput)
+    {
+        previousError =  instanceError(outputSet[1-f][count],outputInstance);; //sqrt(errorOneSample);
+    }
+    outOther.push_back(outputInstance);
 
     net->flush();
   }
-
   if (success)
   {
     errorsum=computeError(outputSet[f],out);
-
+    double errorOther = computeError(outputSet[1-f],outOther);
     //normalize error and transform into fitness
     org->fitness=(2-errorsum);
     org->error=errorsum;
-    //Store the approximated dataset by genome 0 every 5 generations
-    /*if(((org->generation % 5) == 0) && (org->gnome->genome_id == 0))
-    {
-        stringstream ssfilename;
-          ssfilename << "sandbox/g" << org->generation << "-" << org->gnome->genome_id << "-f" << org->error << "-t-" << f << ".dat";
-
-        std::ofstream oFile(ssfilename.str().c_str());
-
-        //Store approximated datapoints
-        for(count=0;count<inputSet[f].size();count++)
-        {
-            for(int i = 0; i < inputSet[f][count].size(); i++)
-            {
-                oFile << inputSet[f][count][i] << " ";
-            }
-            for(int i = 0; i < out[count].size(); i++)
-            {
-                oFile << out[count][i] << " ";
-            }
-            oFile << std::endl;
-        }
-        oFile.close();
-    }*/
-
+    org->otherError = errorOther;
   }
   else
   {
     //Flawed network, mainly with output disconnected from input
     errorsum=999.0;
-    org->fitness=0.001;
+    org->fitness=-1;
     org->error = errorsum;
+    org->otherError = errorsum;
   }
-
- /* stringstream ss;
-    ss << "sandbox/g" << org->generation << "-" << org->gnome->genome_id << ".nn";
-    char* fname =(char*)(ss.str().c_str());
-    org->gnome->print_to_filename(fname);
-*/
-
-//    for(unsigned int i = 0; i < org->gnome->genes.size() ;  i++)
-//    {
-//        std::cout << org->gnome->getNumberSynapses(org->gnome->genes[i]) << ", ";
-//    }
-//    std::cout << std::endl;
-
 
   if (errorsum < -1) //Do not stop for low error
-  {
     org->winner=true;
-    return true;
-  }
-  else {
+  else
     org->winner=false;
-    return false;
-  }
 
+  return org->winner;
 }
 
 int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winnernum,int &winnergenes,int &winnernodes)
@@ -540,6 +587,7 @@ int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winne
       //Reset highest fitness
       //TORESET for all datasets in one
       pop->highest_fitness = -1;
+      NEAT::prevErr = 5.0;
       //?reevaluate population? Done in next loop
   }
 
@@ -549,19 +597,18 @@ int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winne
   //Evaluate each organism on a test
   for(curorg=(pop->organisms).begin();curorg!=(pop->organisms).end();++curorg)
   {
-
-      //(*curorg)->gnome->genome_id
-
+    (*curorg)->generation = generation;
     if (rdmNNFunction_evaluate(*curorg))
     {
       win=true;
       winnernum=(*curorg)->gnome->genome_id;
       winnergenes=(*curorg)->gnome->extrons();
       winnernodes=((*curorg)->gnome->nodes).size();
-      (*curorg)->gnome->print_to_filename("rdmNNFunction_optimal.nn");
-      //cout<<"DUMPED OPTIMAL"<<endl;
+      //(*curorg)->gnome->print_to_filename("rdmNNFunction_optimal.nn");
     }
+
   }
+
 
   //Average and max their fitnesses for dumping to file and snapshot
   for(curspecies=(pop->species).begin();curspecies!=(pop->species).end();++curspecies)
@@ -571,11 +618,7 @@ int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winne
     (*curspecies)->compute_average_fitness();
     (*curspecies)->compute_max_fitness();
   }
-
-  //Take a snapshot of the population visualized later on
-  //if ((generation%1)==0)
-  //  pop->snapshot();
-
+  /*
   //Only print to file every print_every generations
   if  (win||((generation%(NEAT::print_every))==0))
     pop->print_to_file_by_species(filename);
@@ -589,16 +632,218 @@ int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winne
       {
             //cout<<"WINNER IS #"<<((*curorg)->gnome)->genome_id<<endl;
             //Prints the winner to file
-            print_Genome_tofile((*curorg)->gnome,"rdmNNFunction_winner.nn");
+            //print_Genome_tofile((*curorg)->gnome,"rdmNNFunction_winner.nn");
       }
     }
 
+  }*/
+
+  std::stringstream filenameGen;
+  filenameGen << "heatmapData/genotypicDistance" << generation << ".csv";
+  writeMatrix(filenameGen.str(),computeGenotypicDistances(pop));
+  std::stringstream filenameBeh;
+  filenameBeh << "heatmapData/phenotypicDistance" << generation << ".csv";
+  writeMatrix(filenameBeh.str(),computeBehavioralDistances(pop));
+
+  std::stringstream stringAllFitness, stringAllOtherFitness;
+
+  for(curorg=(pop->organisms).begin();curorg!=(pop->organisms).end();++curorg)
+  {
+      stringAllFitness << (*curorg)->error << " ";
+      stringAllOtherFitness << (*curorg)->otherError << " ";
   }
 
   pop->isNewBest = false;
-  pop->epoch(generation);
 
-  if(pop->isNewBest)
+  if(NEAT::pop_size == 1)
+      pop->epoch2(generation); // (1+1)
+  else
+      pop->epoch(generation);
+
+  std::cout << stringAllFitness.str();
+  std::cout << stringAllOtherFitness.str();
+  std::cout << std::endl;
+
+  if(NEAT::pop_size == 1 || true)
+  {
+      Genome* genomeLog;
+      Network* netLog;
+      //log approx datapoints, log nn
+
+      if(NEAT::pop_size == 1)
+        genomeLog = (*pop->organisms.begin())->gnome->duplicate(-1);
+      else
+          genomeLog = pop->bestGenome->duplicate(-1);
+
+          netLog=genomeLog->genesis(-1);
+
+
+      //bool success;
+      unsigned int net_depth = 20;
+      //double this_out;
+      std::vector< std::vector<double> > out;
+      double previousError = 0.0;
+
+      for(unsigned int count=0;count<inputSet[f].size();count++)
+      {
+        vector<double> instanceInput = inputSet[f][count];
+        if(NEAT::isWithErrorInput)
+        {
+            instanceInput.push_back(previousError);
+        }
+        if(NEAT::isWithNumberTask)
+        {
+            double taskInput = (f*2) - 1;
+            //Task number input to the NN adapted if both tasks simultaneously
+            if(NEAT::experiment == 2)
+                taskInput = (count < inputSet1.size())? 1:-1;
+            instanceInput.push_back(taskInput);
+        }
+        netLog->load_sensors(&(instanceInput[0]));
+
+        //Relax net and get output
+        //success=
+        netLog->activate();
+
+        //use depth to ensure relaxation
+        for (unsigned int relax=0;relax<=net_depth;relax++)
+        {
+          netLog->activate();
+        }
+
+        vector<double>outputInstance;
+        for(vector<NNode*>::iterator itONN = netLog->outputs.begin();
+            itONN != netLog->outputs.end();itONN++)
+        {
+            outputInstance.push_back((*itONN)->activation);
+        }
+        if(NEAT::isWithErrorInput)
+        {
+            previousError =  instanceError(outputSet[f][count],outputInstance);
+        }
+        out.push_back(outputInstance);
+
+        netLog->flush();
+      }
+
+
+      //Store the approximated dataset by best genome
+
+          std::stringstream ssfilename;
+            ssfilename << "sandbox/g" << generation
+                       << "-t-" << f << ".dat";
+
+          std::ofstream oFile(ssfilename.str().c_str());
+
+          //Store approximated datapoints
+          for(unsigned int count=0;count<inputSet[f].size();count++)
+          {
+              for(unsigned int i = 0; i < inputSet[f][count].size(); i++)
+              {
+                  oFile << inputSet[f][count][i] << " ";
+              }
+              for(unsigned int i = 0; i < out[count].size(); i++)
+              {
+                  oFile << out[count][i] << " ";
+              }
+              oFile << std::endl;
+          }
+          oFile.close();
+
+          //Store best genome
+          std::stringstream ssfilenameNet;
+          ssfilenameNet << "sandbox/bestNet" << generation << ".nn";
+          std::ofstream oFileNet(ssfilenameNet.str().c_str());
+
+          genomeLog->print_to_file(oFileNet);
+          oFileNet.close();
+        delete genomeLog;
+        delete netLog;
+
+          if(NEAT::pop_size == 1)
+          {
+
+            genomeLog = pop->otherGenome->duplicate(-1);
+          }
+          else
+            genomeLog = pop->bestGenome->duplicate(-1);
+
+
+              netLog=genomeLog->genesis(-1);
+
+          net_depth = 20;
+
+          out = std::vector< std::vector<double> >();
+          previousError = 0.0;
+          for(unsigned int count=0;count<inputSet[f].size();count++)
+          {
+            vector<double> instanceInput = inputSet[f][count];
+            if(NEAT::isWithErrorInput)
+            {
+                instanceInput.push_back(previousError);
+            }
+            if(NEAT::isWithNumberTask)
+            {
+                double taskInput = (f*2) - 1;
+                //Task number input to the NN adapted if both tasks simultaneously
+                if(NEAT::experiment == 2)
+                    taskInput = (count < inputSet1.size())? 1:-1;
+                instanceInput.push_back(taskInput);
+            }
+            netLog->load_sensors(&(instanceInput[0]));
+
+            //Relax net and get output
+            netLog->activate();
+
+            //use depth to ensure relaxation
+            for (unsigned int relax=0;relax<=net_depth;relax++)
+            {
+              netLog->activate();
+            }
+
+            vector<double>outputInstance;
+            for(vector<NNode*>::iterator itONN = netLog->outputs.begin();
+                itONN != netLog->outputs.end();itONN++)
+            {
+                outputInstance.push_back((*itONN)->activation);
+            }
+            if(NEAT::isWithErrorInput)
+            {
+                previousError =  instanceError(outputSet[f][count],outputInstance);
+            }
+            out.push_back(outputInstance);
+
+            netLog->flush();
+          }
+
+          //Store the approximated dataset by best genome
+
+              std::stringstream ssOtherfilename;
+                ssOtherfilename << "sandbox/otherg" << generation
+                           << "-t-" << f << ".dat";
+
+              std::ofstream oOtherFile(ssOtherfilename.str().c_str());
+
+              //Store approximated datapoints
+              for(unsigned int count=0;count<inputSet[f].size();count++)
+              {
+                  for(unsigned int i = 0; i < inputSet[f][count].size(); i++)
+                  {
+                      oOtherFile << inputSet[f][count][i] << " ";
+                  }
+                  for(unsigned int i = 0; i < out[count].size(); i++)
+                  {
+                      oOtherFile << out[count][i] << " ";
+                  }
+                  oOtherFile << std::endl;
+              }
+              oOtherFile.close();
+
+              delete genomeLog;
+              delete netLog;
+
+  }
+  if(pop->isNewBest && false)
   {
 
 
@@ -610,6 +855,7 @@ int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winne
       std::vector< std::vector<double> > out;
       for(unsigned int count=0;count<inputSet[f].size();count++)
       {
+          //TODO with error
         net->load_sensors(&(inputSet[f][count][0]));
 
         //Relax net and get output

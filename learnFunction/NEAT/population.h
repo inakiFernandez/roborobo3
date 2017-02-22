@@ -87,7 +87,8 @@ namespace NEAT {
 		// Turnover the population to a new generation using fitness 
 		// The generation argument is the next generation
 		bool epoch(int generation);
-
+        // Generation with 1+1? TODO
+        bool epoch2(int generation);
 		// *** Real-time methods *** 
 
 		// Places the organisms in species in order from best to worst fitness 
@@ -119,6 +120,7 @@ namespace NEAT {
 		// It does the latter if it sees the species list is empty
 		~Population();
 
+        Genome* otherGenome;//For 1+1 mutated genome datalogs
         Genome* bestGenome;
         bool isNewBest;
 

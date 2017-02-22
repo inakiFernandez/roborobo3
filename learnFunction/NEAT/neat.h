@@ -18,6 +18,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <string>
 
 namespace NEAT {
 
@@ -74,6 +75,16 @@ namespace NEAT {
     extern bool withBias;
     extern bool allowMultisynapses;
     extern int experiment;
+    extern bool isWithErrorInput;
+    extern bool isWithNumberTask;
+    extern bool doLogAllPoints;
+    extern bool loadGenome;
+    extern bool injectGenome;
+    extern int injectIter;
+    extern std::string genomeInjectFile;
+
+    //DEBUG
+    extern double prevErr;
 
 	//extern MRandomR250 NEATRandGen; // Random number generator; can pass seed value as argument
 

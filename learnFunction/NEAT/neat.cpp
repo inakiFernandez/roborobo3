@@ -54,8 +54,19 @@ int NEAT::babies_stolen = 0; // The number of babies to siphen off to the champi
 int NEAT::num_runs = 0;
 
 bool NEAT::withBias = false;
+bool NEAT::isWithErrorInput = false;
+bool NEAT::isWithNumberTask = false;
+
 bool NEAT::allowMultisynapses = false;
 int NEAT::experiment = 0;
+bool NEAT::doLogAllPoints = false;
+//DEBUG
+double NEAT::prevErr = 5.0;
+bool NEAT::loadGenome = false;
+bool NEAT::injectGenome = false;
+int NEAT::injectIter= -1;
+std::string NEAT::genomeInjectFile = "";
+
 
 //MRandomR250 NEAT::NEATRandGen = MRandomR250(Platform::getRealMilliseconds()); // Random number generator; can pass seed value as argument here
 //MRandomR250 NEAT::NEATRandGen = MRandomR250();

@@ -18,6 +18,9 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+
+//ATTENTION for 1+1 selection
+#include "experiments.h"
 using namespace NEAT;
 
 Population::Population(Genome *g,int size) {
@@ -39,9 +42,6 @@ Population::Population(Genome *g,int size, float power) {
 //Population::Population(int size,int i,int o, int nmax, bool r, double linkprob) {    
 //int count;
 //Genome *new_genome; 
-
-//cout<<"Making a random pop"<<endl;
-
 //winnergen=0;
 //highest_fitness=0.0;
 //highest_last_changed=0;
@@ -56,7 +56,6 @@ Population::Population(Genome *g,int size, float power) {
 
 //cout<<"Calling speciate"<<endl;
 //speciate(); 
-
 //}
 
 
@@ -205,6 +204,7 @@ Population::~Population() {
 	//std::vector<Generation_viz*>::iterator cursnap;
 
 	if (species.begin()!=species.end()) {
+
 		for(curspec=species.begin();curspec!=species.end();++curspec) {
 			delete (*curspec);
 		}
@@ -275,13 +275,12 @@ bool Population::spawn(Genome *g,int size) {
 
 	//Create size copies of the Genome
 	//Start with perturbed linkweights
-	for(count=1;count<=size;count++) {
-		//cout<<"CREATING ORGANISM "<<count<<endl;
-
-		new_genome=g->duplicate(count); 
-		//new_genome->mutate_link_weights(1.0,1.0,GAUSSIAN);
+    for(count=0;count< size;count++)
+    {
+		new_genome=g->duplicate(count); 		
 		new_genome->mutate_link_weights(1.0,1.0,COLDGAUSSIAN);
 		new_genome->randomize_traits();
+
 		new_organism=new Organism(0.0,new_genome,1);
 		organisms.push_back(new_organism);
 	}
@@ -470,7 +469,6 @@ bool Population::epoch(int generation)
 	}
 	*/
 
-
 	//Stick the Species pointers into a new Species list for sorting
 	for(curspecies=species.begin();curspecies!=species.end();++curspecies) {
 		sorted_species.push_back(*curspecies);
@@ -510,6 +508,7 @@ bool Population::epoch(int generation)
     double error = 0.0;
 	//Go through the organisms and add up their fitnesses to compute the
 	//overall average
+    //TODO maybe consider orig_fitness
     for(curorg=organisms.begin();curorg!=organisms.end();++curorg)
     {
 		total+=(*curorg)->fitness;
@@ -518,7 +517,6 @@ bool Population::epoch(int generation)
 	overall_average=total/total_organisms;
     //Log average fitness in population (error)
     std::cout << error/total_organisms << " ";
-
 
 	//Now compute expected number of offspring for each individual organism
     for(curorg=organisms.begin();curorg!=organisms.end();++curorg)
@@ -597,19 +595,21 @@ bool Population::epoch(int generation)
 
     //log depth best NN
     curspecies=sorted_species.begin();
-    (*(*curspecies)->organisms.begin())->gnome->print_to_filename("testDepth.nn");
-    std::cout
+    //(*(*curspecies)->organisms.begin())->gnome->print_to_filename("testDepth.nn");
+    /*std::cout
             << (*(*curspecies)->organisms.begin())->gnome->phenotype->max_depth()
             //<< "-1"
-            << " ";
+            << " ";*/
+    std::cout << "-1" << " ";//TODELETE
     //log nbLinks best NN //TODO not to count disabled genes
     std::cout << (*(*curspecies)->organisms.begin())->gnome->genes.size()<< " ";
     //log nbNodes best NN
     std::cout << (*(*curspecies)->organisms.begin())->gnome->nodes.size()<< " ";
 
-    //TODO average depth
+    //TODO
     double avg_depth = 0.0;
-    for(curspecies=species.begin();curspecies!=species.end();++curspecies)
+    //TOCheck DISABLED for reducing running time
+    /*for(curspecies=species.begin();curspecies!=species.end();++curspecies)
     {
         for(curorg = (*curspecies)->organisms.begin();
             curorg !=(*curspecies)->organisms.end(); curorg++)
@@ -617,47 +617,48 @@ bool Population::epoch(int generation)
             avg_depth += (*curorg)->gnome->phenotype->max_depth();
         }
     }
-    avg_depth /=pop_size;
+    avg_depth /=pop_size;*/
     std::cout << avg_depth << " ";
+    curspecies=sorted_species.begin();
+    //Log other function error on current best
+    std::cout << (*(*curspecies)->organisms.begin())->otherError<< " ";
+    error = 0.0;
+    for(curorg=organisms.begin();curorg!=organisms.end();++curorg)
+    {
+        error +=(*curorg)->otherError;
+    }
 
+    //Log average error on other function
+    std::cout << error/total_organisms << " ";
     //TODO log average nbLinks
     //TODO log average nbNodes
-
-    std::cout << std::endl;
-
-
 
     curspecies=sorted_species.begin();
     //Check for Population-level stagnation
 	(*(((*curspecies)->organisms).begin()))->pop_champ=true; //DEBUG marker of the best of pop
-
+    if(this->bestGenome != NULL)
+        delete bestGenome;
+    this->bestGenome= (*(((*curspecies)->organisms).begin()))->gnome->duplicate(-1);
 	if (((*(((*curspecies)->organisms).begin()))->orig_fitness)>
         highest_fitness)
     {
 			highest_fitness=((*(((*curspecies)->organisms).begin()))->orig_fitness);
 			highest_last_changed=0;
             (*(((*curspecies)->organisms).begin()))->gnome->print_to_filename("best.nn");
-
+            if(this->bestGenome != NULL)
+                delete bestGenome;
             this->bestGenome= (*(((*curspecies)->organisms).begin()))->gnome->duplicate(-1);
 
-            //std::cout
-             //       <<"NEW POPULATION RECORD FITNESS: "
-              //      <<highest_fitness<< " ";
             isNewBest = true;
     }
     else
     {
-
-
 		++highest_last_changed;
-        //std::cout
-               // <<highest_last_changed<<" generations since last population fitness record: "
-          //     <<highest_fitness<< " ";
 	}
 
     //std::cout << "Species: " << species.size() << std::endl;
 	//Check for stagnation- if there is stagnation, perform delta-coding
-	if (highest_last_changed>=NEAT::dropoff_age+5) {
+    /*if (highest_last_changed>=NEAT::dropoff_age+5) {
 
 		highest_last_changed=0;
 
@@ -691,11 +692,13 @@ bool Population::epoch(int generation)
 			(*curspecies)->expected_offspring=NEAT::pop_size-half_pop;
 		}
 
-    }
+    }*/
 	//STOLEN BABIES:  The system can take expected offspring away from
 	//  worse species and give them to superior species depending on
 	//  the system parameter babies_stolen (when babies_stolen > 0)
-	else if (NEAT::babies_stolen>0) {
+    //else
+    //Not used, so commented
+    /*if (NEAT::babies_stolen>0) {
 		//Take away a constant number of expected offspring from the worst few species
 
 		stolen_babies=0;
@@ -792,6 +795,7 @@ bool Population::epoch(int generation)
 						//Randomize a little which species get boosted by a super champ
 
 						if (randfloat()>0.1)
+                        {
                             if (stolen_babies>3)
                             {
 								(*(((*curspecies)->organisms).begin()))->super_champ_offspring=3;
@@ -804,7 +808,7 @@ bool Population::epoch(int generation)
 								(*curspecies)->expected_offspring+=stolen_babies;
                                 stolen_babies=0;
 							}
-
+                        }
 							curspecies++;
 
 							//Don't give to dying species even if they are champs
@@ -822,8 +826,7 @@ bool Population::epoch(int generation)
 						stolen_babies=0;
 					}
 
-	}
-
+    }*/
 
 	//Kill off all Organisms marked for death.  The remainder
 	//will be allowed to reproduce.
@@ -857,18 +860,6 @@ bool Population::epoch(int generation)
 
 	//Perform reproduction.  Reproduction is done on a per-Species
 	//basis.  (So this could be paralellized potentially.)
-	//	for(curspecies=species.begin();curspecies!=species.end();++curspecies) {
-
-	//KENHACK                                                                      
-	//		for(std::vector<Species*>::iterator curspecies2=species.begin();curspecies2!=species.end();++curspecies2) {
-	//		  std::cout<<"PRE in repro specloop SPEC EXISTING number "<<(*curspecies2)->id<<std::endl;
-	//	}
-
-	//	(*curspecies)->reproduce(generation,this,sorted_species);
-
-
-	//}    
-
 
 	curspecies=species.begin();
 	int last_id=(*curspecies)->id;
@@ -894,7 +885,6 @@ bool Population::epoch(int generation)
 	    last_id=(*curspecies)->id;
 
 	}
-
 	//Destroy and remove the old generation from the organisms and species  
 	curorg=organisms.begin();
 	while(curorg!=organisms.end()) {
@@ -961,7 +951,6 @@ bool Population::epoch(int generation)
 
 		curinnov=innovations.erase(deadinnov);
 	}
-
 	//DEBUG: Check to see if the best species died somehow
 	// We don't want this to happen
 	curspecies=species.begin();
@@ -973,9 +962,242 @@ bool Population::epoch(int generation)
 		++curspecies;
 	}
 
-
 	return true;
 }
+
+
+bool Population::epoch2(int generation)
+{
+    std::vector<Species*>::iterator curspecies;
+    std::vector<Organism*>::iterator curorg;
+    std::vector<Innovation*>::iterator curinnov;
+    std::vector<Innovation*>::iterator deadinnov;  //For removing old Innovs
+
+    double total=0.0; //Used to compute average fitness over all Organisms
+    double overall_average;  //The average modified fitness among ALL organisms
+    int orgcount;
+    int total_organisms=organisms.size();
+    std::vector<Species*> sorted_species;  //Species sorted by max fit org in Species
+    int num_species=species.size();
+
+    //Stick the Species pointers into a new Species list for sorting
+    for(curspecies=species.begin();curspecies!=species.end();++curspecies)
+        sorted_species.push_back(*curspecies);
+
+    //Sort the Species by max fitness. These need to use ORIGINAL fitness
+    std::sort(sorted_species.begin(), sorted_species.end(), order_species);
+
+    //Then adjust the fitness using the species size to "share" fitness
+    for(curspecies=species.begin();curspecies!=species.end();++curspecies)
+        (*curspecies)->adjust_fitness();
+
+
+    double error = 0.0;
+    //Loop over organisms to sum fitnesses and compute overall average
+    for(curorg=organisms.begin();curorg!=organisms.end();++curorg)
+    {
+        total+=(*curorg)->fitness;
+        error +=(*curorg)->error;
+    }
+    overall_average=total/total_organisms;
+    //Log average fitness in population (error)
+    std::cout << error/total_organisms << " ";
+
+    //Sort Species by max fitness (with extra list) using ORIGINAL fitness
+    std::sort(sorted_species.begin(), sorted_species.end(), order_species);
+    curspecies=sorted_species.begin();
+
+    //Log best fitness in population (error)
+    std::cout << (*(*curspecies)->organisms.begin())->error << " ";
+
+    if((error/total_organisms) != (*(*curspecies)->organisms.begin())->error)
+        std::cerr << "AvgError different than best" << std::endl;
+
+    //std::cout << organisms[0]->gnome->genome_id << " ";
+    //TOERASE
+    //std::cout << "NB species: " << species.size() << std::endl;
+    //std::cout << "NB indiv S1: " << species[0]->organisms.size() << std::endl;
+
+    //Log number of species
+    std::cout << num_species << " ";
+    //Log average species size
+    double avg_species_size = 0.0;
+    for(curspecies=species.begin();curspecies!=species.end();++curspecies)
+        avg_species_size += (*curspecies)->organisms.size();
+    avg_species_size /= num_species;
+    std::cout << avg_species_size << " ";
+
+    //log depth best NN
+    curspecies=sorted_species.begin();
+    std::cout
+            << (*(*curspecies)->organisms.begin())->gnome->phenotype->max_depth()
+            << " ";
+    //log nbLinks best NN //TODO not to count disabled genes
+    std::cout << (*(*curspecies)->organisms.begin())->gnome->genes.size()<< " ";
+    //log nbNodes best NN
+    std::cout << (*(*curspecies)->organisms.begin())->gnome->nodes.size()<< " ";
+
+    //TODO average depth
+    double avg_depth = 0.0;
+
+    for(curspecies=species.begin();curspecies!=species.end();++curspecies)
+    {
+        for(curorg = (*curspecies)->organisms.begin();
+            curorg !=(*curspecies)->organisms.end(); curorg++)
+        {
+            avg_depth += (*curorg)->gnome->phenotype->max_depth();
+        }
+    }
+    avg_depth /=pop_size;
+    std::cout << avg_depth << " ";
+
+    curspecies=sorted_species.begin();
+    //Log other function error on current best
+    std::cout << (*(*curspecies)->organisms.begin())->otherError<< " ";
+
+    error = 0.0;
+    for(curorg=organisms.begin();curorg!=organisms.end();++curorg)
+    {
+        error +=(*curorg)->otherError;
+    }
+
+    //Log average error on other function
+    std::cout << error/total_organisms << " ";
+
+    //TODO log average nbLinks //remember not to count disabled links
+    //TODO log average nbNodes
+    std::cout << std::endl;
+
+
+
+    curspecies=sorted_species.begin();
+    //Check for Population-level stagnation
+    (*(((*curspecies)->organisms).begin()))->pop_champ=true;
+    if (((*(((*curspecies)->organisms).begin()))->orig_fitness)>
+        highest_fitness)
+    {
+            highest_fitness=((*(((*curspecies)->organisms).begin()))->orig_fitness);
+            highest_last_changed=0;
+            //(*(((*curspecies)->organisms).begin()))->gnome->print_to_filename("best.nn");
+            this->bestGenome= (*(((*curspecies)->organisms).begin()))->gnome->duplicate(-1);
+            isNewBest = true;
+    }
+    else
+        ++highest_last_changed;
+
+    curspecies=(this->species).begin();
+    if (curspecies==(this->species).end())
+    {
+        // Create the first species
+        Species* newspecies=new Species(++(this->last_species),true);
+        (this->species).push_back(newspecies);
+    }
+
+    curspecies=species.begin();
+    Organism* baby;
+    bool mut_struct_baby = false;
+    if ((randfloat()<NEAT::mutate_only_prob))
+    {
+        Genome* child = (*(*curspecies)->organisms.begin())->gnome->duplicate(-1);
+        child->genome_id = (*(*curspecies)->organisms.begin())->gnome->genome_id + 1;
+            //Mutate depending on probabilities of various mutations
+            if (randfloat()<NEAT::mutate_add_node_prob)
+            {
+                child->mutate_add_node(this->innovations,this->cur_node_id,this->cur_innov_num);
+                mut_struct_baby=true;
+            }
+            else if (randfloat()<NEAT::mutate_add_link_prob)
+            {
+                Network* net_analogue=child->genesis(generation);
+                child->mutate_add_link(this->innovations,this->cur_innov_num,NEAT::newlink_tries);
+                delete net_analogue;
+                mut_struct_baby=true;
+            }
+            else
+            {
+                if (randfloat()<NEAT::mutate_link_weights_prob)
+                    child->mutate_link_weights(NEAT::weight_mut_power,1.0,GAUSSIAN);
+                if (randfloat()<NEAT::mutate_toggle_enable_prob)
+                    child->mutate_toggle_enable(1);
+                if (randfloat()<NEAT::mutate_gene_reenable_prob)
+                    child->mutate_gene_reenable();
+            }
+
+            baby=new Organism(0.0,child,generation);
+    }
+
+    baby->mut_struct_baby=mut_struct_baby;
+    baby->mate_baby=false;
+    rdmNNFunction_evaluate(baby);
+    baby->species=(*curspecies);
+
+    if(baby->fitness > (*(*curspecies)->organisms.begin())->fitness)
+    {        
+        if(NEAT::prevErr<baby->error)
+        {
+            std::cerr << "Error non-monotonic. Generation: " << generation << std::endl;
+            exit(-1);
+        }
+        NEAT::prevErr = baby->error;        
+
+        if(otherGenome != NULL)
+            delete otherGenome;
+        otherGenome =(*(*curspecies)->organisms.begin())->gnome->duplicate(-1);
+        Organism* babyDup = new Organism(0.0,baby->gnome->duplicate(baby->gnome->genome_id),generation);
+
+        delete baby;
+
+        (*curspecies)->organisms.erase((*curspecies)->organisms.begin());
+        organisms.erase(organisms.begin());
+        (*curspecies)->add_Organism(babyDup);
+        organisms.push_back(babyDup);
+        babyDup->species=(*curspecies);  //Point baby to its species
+
+
+    }
+    else //add duplicate of parent to reevaluate
+    {
+        if(otherGenome != NULL)
+            delete otherGenome;
+
+
+        otherGenome = baby->gnome->duplicate(-1);
+
+        delete baby;
+
+        (*curspecies)->organisms.erase(((*curspecies)->organisms.begin()));
+        organisms.erase(organisms.begin());
+
+        int parentId = (*(*curspecies)->organisms.begin())->gnome->genome_id;
+        Organism* parent=new Organism(0.0,(*(*curspecies)->organisms.begin())->gnome
+                                      ->duplicate(parentId),generation);
+
+        (*curspecies)->add_Organism(parent);
+        organisms.push_back(parent);
+
+        parent->species = (*curspecies);
+    }
+    curspecies=species.begin();
+    orgcount=0;
+
+    //Age Species
+    if ((*curspecies)->novel)
+        (*curspecies)->novel=false;
+    else
+        ++(*curspecies)->age;
+
+    //Remove the innovations of the current generation
+    curinnov=innovations.begin();
+    while(curinnov!=innovations.end())
+    {
+        delete (*curinnov);
+        deadinnov=curinnov;
+        ++curinnov;
+        curinnov=innovations.erase(deadinnov);
+    }
+    return true;
+}
+
 
 bool Population::rank_within_species() {
 	std::vector<Species*>::iterator curspecies;

@@ -1,0 +1,72 @@
+Expériences + Motivation (question)
+				
+Idée générale: est-ce que j'étudie les fonctions 1D abstraites un peu plus ou je reviens sur des robots?
+			
+	
+Topologie fixe
+Question: est-ce que la bonne topologie ou une surestimation en termes de structure permet d'apprendre des bons poids pour approximer chacune des fonctions indépendament
+et de l'une après l'autre ?
+
+Jouer sur le sigma + proba muter des poids 
+
+									Initialisation
+						"bonne" topologie (T2 car plus riche) | "grande" topologie
+																   (surestimée)
+-Apprendre T1					X
+-Apprendre T2					X
+-Apprendre T1 puis T2			quelle topo? T2 
+	(ou inversément)
+	+ plusieurs alternances
+
+  
+
+
+
+Apprendre Topo + poids
+
+Question: quel type de réglage permet d'arriver à des bonnes approximation de la (des)
+fonction(s)[T1,T2]? 
+
+Jouer sur les paramètres de mutation (pour avoir de la diversité [donc exploration])
+SigmaMutation ProbaN ProbaL ProbaToggle ProbaMut
+(donc proba rien toucher)
+
+
+Réglage(s) Conservateur(s)
+
+Réglage(s) explorateur(s)
+
+
+Injecter le meilleur (parfait) puis continuer evo
+sur T2
+Question: est-ce qu'il est maintenu et si oui, avec quel réglage de param mutation?
+
+
+
+
+Influence de diversité génotypique sur diversité phénotypique
+(Cartes des deux mesures de distance puis calcul d'une "corrélation" entre les deux à chaque génération puis voir l'évolution sur le temps)
+Question: est-ce que la diversité génotypique favorisée par NEAT (mécanisme de spéciation ou niching) pousse vers une diversité phénotypique (différentes fonctions 1D approximées donc ce qu'on cherche) et si oui dans quels cas(quels réglages[evotopo, evo no topo, réglage explorateur ou pas, quelle population?])?
+
+Quels leviers (des plages de valeurs) jouent sur: 
+		Pression de sélection (seuil d'appartenance à espèce[, définition de distance (donc coefficients),taille de population???]
+		Diversité (exploration): Mutation: sigma + proba muter des poids
+				   ProbaStructurelles	
+
+			Comment comparer les deux (Wilcoxon? trier couples individus par rapport à la distance puis comparer les deux tris? avec une partie de Wilcoxon? autre chose? 
+
+
+
+
+
+
+
+
+
+
+Questions techniques
+
+Comment normaliser les cartes de distance (intragénérationnel ou transgénérationnel)? 
+	Même normalisation pour tous les réglages (ex. evotopo evonotopo)?
+
+Stocker les fitness de toute la population, sur les deux tâches (pas juste meilleur et moyenne)  Histogramme des fitness par génération

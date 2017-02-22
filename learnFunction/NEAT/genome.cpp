@@ -121,36 +121,39 @@ Genome::Genome(int id, std::ifstream &iFile) {
 	int curwordnum = 0;
 
 	//Loop until file is finished, parsing each line
-	while (!done) {
-
-        //std::cout << curline << std::endl;
-
-		if (curwordnum > wordcount || wordcount == 0) {
+    while (!done)
+    {
+        if (curwordnum > wordcount || wordcount == 0)
+        {
 			iFile.getline(curline, sizeof(curline));
 			wordcount = NEAT::getUnitCount(curline, delimiters);
 			curwordnum = 0;
 		}
         
         std::stringstream ss(curline);
-		//strcpy(curword, NEAT::getUnit(curline, curwordnum++, delimiters));
+
         ss >> curword;
 
-		//printf(curword);
-		//printf(" test\n");
 		//Check for end of Genome
-		if (strcmp(curword,"genomeend")==0) {
-			//strcpy(curword, NEAT::getUnit(curline, curwordnum++, delimiters));
-            ss >> curword;
-			int idcheck = atoi(curword);
-			//iFile>>idcheck;
-			if (idcheck!=genome_id) printf("ERROR: id mismatch in genome");
+        if (strcmp(curword,"genomeend")==0)
+        {
+            ss >> curword; //R ID
+            ss >>curword; //Genome ID
+
+            char *pointerChar = curword;
+            pointerChar++;
+            int idcheck = atoi(pointerChar);
+            if (idcheck!=genome_id)
+            {
+                std::cerr << "ERROR: id mismatch in genome: " << idcheck << " vs. " << genome_id << std::endl;
+            }
 			done=1;
 		}
 
 		//Ignore genomestart if it hasn't been gobbled yet
-		else if (strcmp(curword,"genomestart")==0) {
-			++curwordnum;
-			//cout<<"genomestart"<<endl;
+        else if (strcmp(curword,"genomestart")==0)
+        {
+			++curwordnum;		
 		}
 
 		//Ignore comments surrounded by - they get printed to screen
@@ -1685,7 +1688,6 @@ bool Genome::mutate_add_link(std::vector<Innovation*> &innovs,double &curinnov,i
 	//Make attempts to find an unconnected pair
 	trycount=0;
 
-
 	//Decide whether to make this recurrent
 	if (randfloat()<NEAT::recur_only_prob) 
 		do_recur=true;
@@ -1783,6 +1785,7 @@ bool Genome::mutate_add_link(std::vector<Innovation*> &innovs,double &curinnov,i
 		}
 	}
 	else {
+
 		//Loop to find a nonrecurrent link
 		while(trycount<tries) {
 
@@ -1791,6 +1794,7 @@ bool Genome::mutate_add_link(std::vector<Innovation*> &innovs,double &curinnov,i
 			//Choose random nodenums
 			nodenum1=randint(0,nodes.size()-1);
 			nodenum2=randint(first_nonsensor,nodes.size()-1);
+
 
 			//Find the first node
 			thenode1=nodes.begin();
@@ -1889,9 +1893,9 @@ bool Genome::mutate_add_link(std::vector<Innovation*> &innovs,double &curinnov,i
 				//cout<<"nodep2 analogue: "<<nodep2->analogue<<std::endl;
 				//cout<<"recurflag: "<<recurflag<<std::endl;
 
-
 				//Choose a random trait
 				traitnum=randint(0,(traits.size())-1);
+
 				thetrait=traits.begin();
 
 				//Choose the new weight
@@ -3172,13 +3176,19 @@ int Genome::extrons() {
 void Genome::randomize_traits() {
 
 	int numtraits=traits.size();
+    if(numtraits == 0)
+    {
+        Trait* newtrait=new Trait(1,0,0,0,0,0,0,0,0,0);
+        traits.push_back(newtrait);
+        numtraits=traits.size();
+    }
 	int traitnum; //number of selected random trait
 	std::vector<NNode*>::iterator curnode;
 	std::vector<Gene*>::iterator curgene;
 	std::vector<Trait*>::iterator curtrait;
-
 	//Go through all nodes and randomize their trait pointers
-	for(curnode=nodes.begin();curnode!=nodes.end();++curnode) {
+    for(curnode=nodes.begin();curnode!=nodes.end();++curnode)
+    {
 		traitnum=randint(1,numtraits); //randomize trait
 		(*curnode)->trait_id=traitnum;
 
@@ -3190,7 +3200,6 @@ void Genome::randomize_traits() {
 		//if ((*curtrait)==0) cout<<"ERROR: Random trait empty"<<std::endl;
 
 	}
-
 	//Go through all connections and randomize their trait pointers
 	for(curgene=genes.begin();curgene!=genes.end();++curgene) {
 		traitnum=randint(1,numtraits); //randomize trait

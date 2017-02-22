@@ -27,10 +27,10 @@ int main(int argc, char *argv[])
 {
   NEAT::Population *p=0;
 
-  //RANDOM SETUP
-  unsigned int seed =(unsigned)time(NULL);
-  //seed = 14782676; // !!!!
-  //std::cout << seed << std::endl;
+  //RANDOM SETUP, to the clock tick
+  unsigned int seed =(unsigned)time(NULL) + (unsigned)clock();
+  //seed = 1481293865; // !!!!
+  //std::cerr << seed << std::endl;
   srand(seed);
 
   if (argc != 3)
@@ -53,7 +53,6 @@ int main(int argc, char *argv[])
   thecart->nmarkov_long=true; thecart->generalization_test=false;
   pole2_evaluate(org,0,thecart); cout<<"made score "<<org->fitness<<endl;
   */
-
   if (p)
     delete p;
 

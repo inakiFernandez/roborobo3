@@ -28,7 +28,7 @@ def perc(data_l):
     perc_75 = np.zeros(data.shape[0])
     for i in range(0, len(median)):
         median[i] = np.median(data[i, :])
-        perc_25[i] = np.percentile(data[i, :], 25)
+        perc_25[i] = np.percentile(data[i, :], 5)
         perc_75[i] = np.percentile(data[i, :], 75)
         # perc_25[i] = np.percentile(data[i, :], 5)
         # perc_75[i] = np.percentile(data[i, :], 95)
@@ -38,7 +38,9 @@ def perc(data_l):
 def plot_mean_curve(data, color, axis, label):
     mean = np.mean(data, 1)
     axis.plot(mean, lw=2, label=label, color=color)
+    
     axis.grid(axis='y', color="0.9", linestyle='-', linewidth=1)
+    
     axis.spines['top'].set_visible(False)
     axis.spines['right'].set_visible(False)
     axis.spines['left'].set_visible(False)
@@ -53,12 +55,14 @@ def plot_mean_curve(data, color, axis, label):
 
 def plot_one_curve(data, color, axis, label, quartiles=False):
     med, perc_25, perc_75 = perc(data)
-    print med
+    
     if quartiles:
         axis.fill_between(np.arange(0, len(med)), perc_25, perc_75,
                           alpha=0.25, linewidth=0, color=color)
-    axis.plot(med, lw=2, label=label, color=color)
-    axis.grid(axis='y', color="0.9", linestyle='-', linewidth=1)
+    lineWidth = 5
+    axis.plot(med, lw=lineWidth, label=label, color=color)
+    gridcolor="#FFFFFF"    
+    
     axis.spines['top'].set_visible(False)
     axis.spines['right'].set_visible(False)
     axis.spines['left'].set_visible(False)
@@ -69,12 +73,14 @@ def plot_one_curve(data, color, axis, label, quartiles=False):
     for spine in axis.spines.values():
         spine.set_position(('outward', 5))
     axis.set_axisbelow(True)
+    #axis.grid(color='red', linestyle='-', linewidth=1)  
+    plt.grid(color=gridcolor,linewidth=1,linestyle='-')
 
 def taskIntervals(horSize,interv=25):
     #vertical coordinates for taskswitch
     isT1 = True
     xcoords =  np.arange(0,horSize,interv)
-    plt.locator_params(axis='y',nbins=20)
+    plt.locator_params(axis='y',nbins=30)
     for xc in xcoords:
         plt.axvline(x=xc,color='gray')
         if(isT1):
@@ -97,6 +103,6 @@ if __name__ == "__main__":
     colors = bmap.mpl_colors
     axis = subplot2grid((1, 1), (0, 0))
 
-    print len(dat[-1])
+    print(len(dat[-1]))
     plot_one_curve(dat, colors[1], axis, "Collecting", True)
     show()

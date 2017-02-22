@@ -34,6 +34,8 @@ namespace NEAT {
 
 	public:
 		double fitness;  //A measure of fitness for the Organism
+        double otherError;
+
 		double orig_fitness;  //A fitness measure that won't change during adjustments
 		double error;  //Used just for reporting purposes
 		bool winner;  //Win marker (if needed for a particular task)
@@ -53,6 +55,8 @@ namespace NEAT {
 		// Track its origin- for debugging or analysis- we can tell how the organism was born
 		bool mut_struct_baby;
 		bool mate_baby;
+
+        std::vector<std::vector<double> > approximatedDatapoints;
 
 		// MetaData for the object
 		char metadata[128];
