@@ -6,7 +6,7 @@
 #include <cmath>
 #include <stdio.h>
 #include <vector>
-//#define ODNEAT_FUNCTIONS
+#define ODNEAT_FUNCTIONS
 #ifdef ODNEAT_FUNCTIONS
 #include <odneatgc/network.h>
 #include <odneatgc/genome.h>
