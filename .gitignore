@@ -39,6 +39,7 @@ learnFunction/build/
 learnFunction/datasets/
 learnFunction/NEATbase/
 learnFunction/NEAT/multi*
+learnFunction/NEAT/neatLearnFunction
 learnFunction/NEAT/exp*
 learnFunction/NEAT/test*
 learnFunction/NEAT/t1*
