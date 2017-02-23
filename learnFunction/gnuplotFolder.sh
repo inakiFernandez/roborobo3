@@ -56,9 +56,9 @@ do
 	   numberInd=`ls -F $folder/${i}-ind*aa.sorted | wc -l`
 	   #echo $i
 
-	   gnuplot -e "datafile='$folder/${i}aa.sorted'; datafile2='$folder/${i}ab.sorted'; dataother='${othername}aa.sorted' ; dataother2='${othername}ab.sorted'; f1='$f1' ; f2='$f2' ; sizePop='$numberInd' ; database='$folder/${i}" $gnuScript > $folder/$i.png  
+	   gnuplot -e "datafile='$folder/${i}aa.sorted'; datafile2='$folder/${i}ab.sorted'; dataother='${othername}aa.sorted' ; dataother2='${othername}ab.sorted'; f1='$f1' ; f2='$f2' ; sizePop='$numberInd' ; database='$folder/${i}" $gnuScript > $folder/$i.png  2> /dev/null
        else
-	   gnuplot -e "datafile='$folder/${i}aa.sorted'; datafile2='$folder/${i}ab.sorted'; dataother='${othername}aa.sorted' ; dataother2='${othername}ab.sorted'; f1='$f1' ; f2='$f2'" $gnuScript > $folder/$i.png 
+	   gnuplot -e "datafile='$folder/${i}aa.sorted'; datafile2='$folder/${i}ab.sorted'; dataother='${othername}aa.sorted' ; dataother2='${othername}ab.sorted'; f1='$f1' ; f2='$f2'" $gnuScript > $folder/$i.png 2> /dev/null
        fi
    else
        sort -g -t$'\t' -k 1,2 $folder/${i} > $folder/${i}.sorted
@@ -74,9 +74,9 @@ do
 	   numberInd=`ls -F $folder/${i}-ind*.sorted | wc -l`
 	   #echo $numberInd
 
-	   gnuplot -e "datafile='$folder/${i}.sorted'; dataother='${othername}.sorted'; f1='$f1' ; f2='$f2' ; sizePop='$numberInd' ; database='$folder/${i}" $gnuScript > $folder/$i.png  
+	   gnuplot -e "datafile='$folder/${i}.sorted'; dataother='${othername}.sorted'; f1='$f1' ; f2='$f2' ; sizePop='$numberInd' ; database='$folder/${i}" $gnuScript > $folder/$i.png  2> /dev/null
        else
-	   gnuplot -e "datafile='$folder/${i}.sorted'; dataother='${othername}.sorted'; f1='$f1' ; f2='$f2'" $gnuScript > $i.png    
+	   gnuplot -e "datafile='$folder/${i}.sorted'; dataother='${othername}.sorted'; f1='$f1' ; f2='$f2'" $gnuScript > $i.png  2> /dev/null  
        fi
    fi 
    #rm $folder/*.sorted
