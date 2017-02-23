@@ -74,7 +74,7 @@ def plot_one_curve(data, color, axis, label, quartiles=False):
         spine.set_position(('outward', 5))
     axis.set_axisbelow(True)
     #axis.grid(color='red', linestyle='-', linewidth=1)  
-    plt.grid(color=gridcolor,linewidth=1,linestyle='-')
+    plt.grid(color=gridcolor,linewidth=1,linestyle='-') 
 
 def taskIntervals(horSize,interv=25):
     #vertical coordinates for taskswitch
