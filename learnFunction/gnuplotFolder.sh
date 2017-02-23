@@ -23,7 +23,7 @@ f2="$folderScript/datasets/in-o2.sorted.dat"
 #rm $folder/*ind*aa
 #rm $folder/*ind*ab
 
-filesBest=`ls $folder | grep "\.dat$" | grep "^g" | grep -v "\-ind"`
+filesBest=`ls $folder | grep '\.dat$' | grep '^g' | grep -v '\-ind'`
 #(>&2 echo $filesBest)
 
 # in $folder/g*.dat ; 
