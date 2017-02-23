@@ -36,7 +36,9 @@ sandbox/
 
 #build and learn abstract function NEAT
 learnFunction/build/
-learnFunction/datasets/
+learnFunction/datasets/*
+!learnFunction/datasets/*.dat
+!learnFunction/datasets/*.nn
 learnFunction/NEATbase/
 learnFunction/NEAT/multi*
 learnFunction/NEAT/neatLearnFunction
