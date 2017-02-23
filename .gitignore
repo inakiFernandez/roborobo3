@@ -35,6 +35,9 @@ logs/genomes
 sandbox/
 
 #build and learn abstract function NEAT
+*.dat
+*.nn
+*.pyc
 learnFunction/build/
 learnFunction/datasets/*
 !learnFunction/datasets/*.dat
@@ -54,9 +57,7 @@ learnFunction/NEAT/heatmapData/progressbar/*.png
 learnFunction/NEAT/heatmapData/progressbar/*.mp4
 
 
-*.dat
-*.nn
-*.pyc
+
 learnFunction/NEAT/oldExp/
 learnFunction/NEAT/noEvoTopo/
 Roborobo3.*
