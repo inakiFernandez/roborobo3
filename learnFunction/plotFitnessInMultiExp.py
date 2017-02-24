@@ -28,7 +28,7 @@ import multirunFitness
 import tmpDataFilesExp as filenames
 import argparse
 import matplotlib 
-matplotlib.use('Qt4Agg')
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import os, time
 import numpy as np
