@@ -6,8 +6,10 @@ Created on Mon Jan 16 14:41:07 2017
 
 Plot two 2D heatmap with two ordered data files
 """
-import matplotlib.pyplot as plt
 import matplotlib
+matplotlib.use('svg')
+import matplotlib.pyplot as plt
+
 from matplotlib import gridspec
 import matplotlib.colors as clrs
 import os, sys
