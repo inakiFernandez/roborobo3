@@ -27,9 +27,9 @@ import sys
 import multirunFitness
 import tmpDataFilesExp as filenames
 import argparse
-import matplotlib as matplt
-matplt.use('Qt4Agg')
-import matplt.pyplot as plt
+import matplotlib 
+matplotlib.use('Qt4Agg')
+import matplotlib.pyplot as plt
 import os, time
 import numpy as np
 import brewer2mpl
