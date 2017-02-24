@@ -5,7 +5,7 @@ General reasoning experiments:
 Sequence of alternating tasks: [T1,T2] x R (repetitions)
 
 How to learn topology and weights to approximate the functions? 
-	Fuck!
+	But does not seem to work...
 	Maybe I need more population?
 	Maybe stop topology evolution at some point then do only weights?
 
