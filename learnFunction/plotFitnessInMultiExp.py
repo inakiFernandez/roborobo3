@@ -27,18 +27,16 @@ import sys
 import matplotlib 
 matplotlib.use('svg')
 import multirunFitness
-import tmpDataFilesExp as filenames
 import argparse
-
 import matplotlib.pyplot as plt
 import os, time
 import numpy as np
 import brewer2mpl
-
+import importlib
 ############################################################################
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='To png or not')
-
+    
     parser.add_argument('outfile', help='output filename for png')
     parser.add_argument('nbExp', type=int,
                         help='Number of variants of the experiments')
@@ -46,13 +44,17 @@ if __name__ == '__main__':
                     help='output to png file?')
     parser.add_argument('itPerTask', type=int,
                         help='Number of iterations per task')                
+    parser.add_argument('runId', type=int,
+                        help='ID of the current run')                
     args = parser.parse_args()
 
     isToPng = args.png
 
     outfile = args.outfile
     nbExp =  args.nbExp
-    
+    runId = args.runId
+    filenames = importlib.import_module("tmpDataFilesExp" + str(runId)) 
+    # import tmpDataFilesExp as filenames    
     fnames = filenames.fnames
 
     labels = ["".join(n.split('/')[-1].split('.')[:-1]) for n in fnames]  #file name without .log

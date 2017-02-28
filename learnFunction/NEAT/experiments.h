@@ -38,7 +38,8 @@ using namespace NEAT;
 
 
 //Random NN Function approximation
-Population *rdmNNFunction_test(int gens, std::string paramfile);
+Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labelRun);
+
 bool rdmNNFunction_evaluate(Organism *org);
 int rdmNNFunction_epoch(Population *pop,int generation,char *filename, int &winnernum, int &winnergenes,int &winnernodes);
 vector<vector<double> > readDoubleFile(string filename);

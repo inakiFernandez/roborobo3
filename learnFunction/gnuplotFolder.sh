@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ $# -ne 3 ]; then
-    echo "Wrong number of parameters. [progname] folder withSplit withAllPop"
+if [ $# -ne 4 ]; then
+    echo "Wrong number of parameters. [progname] folder withSplit withAllPop "
     exit
 fi
 export LC_ALL=C
@@ -9,6 +9,8 @@ folder=$1
 folderScript=`dirname $0`
 withSplit=$2 # attention to gnu script
 withAllPop=$3
+numRun=$4
+echo "Start $0"
 gnuScript="$folderScript/plotdatapoints.gnu"
 if [ "$withAllPop" = true ] ; then
     gnuScript="$folderScript/plotdataAllPop.gnu"
@@ -56,9 +58,9 @@ do
 	   numberInd=`ls -F $folder/${i}-ind*aa.sorted | wc -l`
 	   #echo $i
 
-	   gnuplot -e "datafile='$folder/${i}aa.sorted'; datafile2='$folder/${i}ab.sorted'; dataother='${othername}aa.sorted' ; dataother2='${othername}ab.sorted'; f1='$f1' ; f2='$f2' ; sizePop='$numberInd' ; database='$folder/${i}" $gnuScript > $folder/$i.png  2> /dev/null
+	   gnuplot -e "datafile='$folder/${i}aa.sorted'; datafile2='$folder/${i}ab.sorted'; dataother='${othername}aa.sorted' ; dataother2='${othername}ab.sorted'; f1='$f1' ; f2='$f2' ; sizePop='$numberInd' ; database='$folder/${i}" $gnuScript > $folder/$i.png  #2> /dev/null
        else
-	   gnuplot -e "datafile='$folder/${i}aa.sorted'; datafile2='$folder/${i}ab.sorted'; dataother='${othername}aa.sorted' ; dataother2='${othername}ab.sorted'; f1='$f1' ; f2='$f2'" $gnuScript > $folder/$i.png 2> /dev/null
+	   gnuplot -e "datafile='$folder/${i}aa.sorted'; datafile2='$folder/${i}ab.sorted'; dataother='${othername}aa.sorted' ; dataother2='${othername}ab.sorted'; f1='$f1' ; f2='$f2'" $gnuScript > $folder/$i.png #2> /dev/null
        fi
    else
        sort -g -t$'\t' -k 1,2 $folder/${i} > $folder/${i}.sorted
@@ -74,38 +76,43 @@ do
 	   numberInd=`ls -F $folder/${i}-ind*.sorted | wc -l`
 	   #echo $numberInd
 
-	   gnuplot -e "datafile='$folder/${i}.sorted'; dataother='${othername}.sorted'; f1='$f1' ; f2='$f2' ; sizePop='$numberInd' ; database='$folder/${i}" $gnuScript > $folder/$i.png  2> /dev/null
+	   gnuplot -e "datafile='$folder/${i}.sorted'; dataother='${othername}.sorted'; f1='$f1' ; f2='$f2' ; sizePop='$numberInd' ; database='$folder/${i}" $gnuScript > $folder/$i.png  #2> /dev/null
        else
-	   gnuplot -e "datafile='$folder/${i}.sorted'; dataother='${othername}.sorted'; f1='$f1' ; f2='$f2'" $gnuScript > $i.png  2> /dev/null  
+	   gnuplot -e "datafile='$folder/${i}.sorted'; dataother='${othername}.sorted'; f1='$f1' ; f2='$f2'" $gnuScript > $folder/$i.png  #2> /dev/null  
        fi
    fi 
    #rm $folder/*.sorted
 done
 
-cd $folder
-find -maxdepth 1 -type f -name 'g*-t-*.dat-ind*' -exec rm {} \;
-find -maxdepth 1 -type f -name '*.sorted' -exec rm {} \;
-cd ..
-#rm $folder/*.sorted
-#rm $folder/g*-t-*.dat-ind*
-
-for j in $folder/g*-t-0.dat.png ; 
+sleep 2;
+listFiles=`ls  $folder/g*-t-0.dat.png`
+for j in $listFiles ; #$folder/g*-t-0.dat.png ; 
 do 
 #echo $j
 index=`echo $j | sed -e 's/g\(.*\)-t-0.dat.png/\1/'` ; 
 mv "$j" "$index.png"; 
 done
 
-for j in $folder/g*-t-1.dat.png ; 
+listFiles=`ls  $folder/g*-t-1.dat.png`
+for j in $listFiles ; #$folder/g*-t-1.dat.png ; 
 do 
 #echo $j
 index=`echo $j | sed -e 's/g\(.*\)-t-1.dat.png/\1/'` ; 
 mv "$j" "$index.png"; 
 done
 
-DATE=$(date +"%Y%m%d%H%M")
-avconv -loglevel quiet -y -r 4 -start_number 1 -i $folder/%d.png -b:v 1000k $folder/$DATE.mp4
-echo $folder/$DATE.mp4
+cd $folder
+find -maxdepth 1 -type f -name 'g*-t-*.dat-ind*' -exec rm {} \;
+find -maxdepth 1 -type f -name '*.sorted' -exec rm {} \;
+cd - > /dev/null
+#rm $folder/*.sorted
+#rm $folder/g*-t-*.dat-ind*
+
+
+#DATE=$(date +"%Y%m%d%H%M")
+
+avconv -loglevel quiet  -y -r 4 -start_number 1 -i $folder/%d.png -b:v 1000k $folder/vidApprox.mp4
+echo $folder/vidApprox.mp4 
 
 #avconv -i beh.mp4 -i gen.mp4 -i ../sandbox/201701181431.mp4 -filter_complex "[0:v]pad=iw*2:ih*2[a]; [a][1:v]overlay=w; [2:v]overlay=w:ih[bg]" allInOne2.mp4
 

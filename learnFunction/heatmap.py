@@ -31,19 +31,19 @@ from pylab import MaxNLocator
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Normalize or not.')
     parser.add_argument('datapath',
-                    help='folder with heatmap data and for hearmap images')
+                    help='folder with heatmap data and for heatmap images')
     parser.add_argument('nbGen', type=int, help='number of generations')
     parser.add_argument('--norm', action='store_true',
                     help='normalize distances in heatmap?')
     parser.add_argument('--rank', action='store_true',
                     help='rank pheno and geno distances?')
-
+    parser.add_argument('numRuns', type=int, help='number of runs experiment')
     args = parser.parse_args()
     normalize = args.norm
     datapath = args.datapath
     doRank = args.rank
-    nbGen = args.nbGen
-    
+    nbGen = args.nbGen 
+    numRuns = args.numRuns
     #For Chi square distribution (k)
     nbSamples = 50
     
@@ -357,7 +357,7 @@ if __name__ == '__main__':
         minCorrRanks = np.min([minKendall,minSpearman])
         minPValRanks = np.min([minPValKendall,minPValSpearman])
 
-        kendallFile = open(datapath + '/kendalltau.data', 'w')
+        kendallFile = open(datapath + '/kendalltau' + str(numRuns) + '.data', 'w')
         for item in kendalltau:
             kendallFile.write("%s,%s\n" % item)
         kendallFile.close()
@@ -369,7 +369,7 @@ if __name__ == '__main__':
         plt.ylim(ymin=minPValRanks)
         plt.grid(True,color=gridcolor)   
         figureKendall.get_axes()[0].set_facecolor(bgcolor)
-        plt.savefig(datapath + "/correlationPval.png")
+        plt.savefig(datapath + "/correlationPval" + str(numRuns) + ".png")
         plt.close(figureKendall)
         
         figureKendall= plt.figure("Correlation Stats",facecolor=bgcolor)
@@ -380,10 +380,10 @@ if __name__ == '__main__':
         plt.ylim(ymin=minCorrRanks,ymax=1.0)
         plt.grid(True,color=gridcolor)        
         figureKendall.get_axes()[0].set_facecolor(bgcolor)
-        plt.savefig(datapath + "/correlationStats.png")
+        plt.savefig(datapath + "/correlationStats" +  str(numRuns) + ".png")
         plt.close(figureKendall)
 
-        spearmanFile = open(datapath + '/spearman.data', 'w')
+        spearmanFile = open(datapath + '/spearman' +  str(numRuns) + '.data', 'w')
         for item in spearmanR:
             spearmanFile.write("%s,%s\n" % item)
         spearmanFile.close()
@@ -422,7 +422,7 @@ if __name__ == '__main__':
         
         plt.ylim(0.0,2.0)
         plt.xlim(xmin=0.0)
-        plt.savefig(datapath + "/scatterAllRelGenoPheno.png")
+        plt.savefig(datapath + "/scatterAllRelGenoPheno" +  str(numRuns) + ".png")
         plt.close(scatterFig)
     plt.show()
 

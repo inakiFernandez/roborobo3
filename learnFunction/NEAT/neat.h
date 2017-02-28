@@ -82,6 +82,7 @@ namespace NEAT {
     extern bool injectGenome;
     extern int injectIter;
     extern std::string genomeInjectFile;
+    extern std::string labelRunExp;
 
     //DEBUG
     extern double prevErr;

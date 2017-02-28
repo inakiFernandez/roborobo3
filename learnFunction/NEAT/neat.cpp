@@ -66,6 +66,7 @@ bool NEAT::loadGenome = false;
 bool NEAT::injectGenome = false;
 int NEAT::injectIter= -1;
 std::string NEAT::genomeInjectFile = "";
+std::string NEAT::labelRunExp = "";
 
 
 //MRandomR250 NEAT::NEATRandGen = MRandomR250(Platform::getRealMilliseconds()); // Random number generator; can pass seed value as argument here

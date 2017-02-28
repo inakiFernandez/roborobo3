@@ -218,10 +218,12 @@ bool addLink(Genome* g, int inId, int outId,double &curinnov)
     else
         return false;
 }
-Population *rdmNNFunction_test(int gens, std::string paramfile)
+Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labelRun)
 {
     Population *pop=0;
     Genome *start_genome;
+
+    NEAT::labelRunExp = labelRun;
 
     int id = 1;
 
@@ -474,7 +476,7 @@ bool rdmNNFunction_evaluate(Organism *org)
 
   //Store the approximated dataset by this genome
   std::stringstream ssfilename;
-    ssfilename << "sandbox/g" << org->generation
+    ssfilename << "sandbox/" << NEAT::labelRunExp << "/g" << org->generation
                << "-t-" << f
                << ".dat" <<"-ind" << org->gnome->genome_id;
   std::ofstream oFile(ssfilename.str().c_str());
@@ -495,7 +497,7 @@ bool rdmNNFunction_evaluate(Organism *org)
   oFile.close();
   //Store neuralnet
   std::stringstream ssfilenameNet;
-  ssfilenameNet << "sandbox/net" << org->generation
+  ssfilenameNet << "sandbox/" << NEAT::labelRunExp << "/net" << org->generation
                 << "-t-"  << f
                 << ".dat" << "-ind" << org->gnome->genome_id << ".nn";
   std::ofstream oFileNet(ssfilenameNet.str().c_str());
@@ -639,10 +641,10 @@ int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winne
   }*/
 
   std::stringstream filenameGen;
-  filenameGen << "heatmapData/genotypicDistance" << generation << ".csv";
+  filenameGen << "heatmapData/" << NEAT::labelRunExp << "/genotypicDistance" << generation << ".csv";
   writeMatrix(filenameGen.str(),computeGenotypicDistances(pop));
   std::stringstream filenameBeh;
-  filenameBeh << "heatmapData/phenotypicDistance" << generation << ".csv";
+  filenameBeh << "heatmapData/" << NEAT::labelRunExp << "/phenotypicDistance" << generation << ".csv";
   writeMatrix(filenameBeh.str(),computeBehavioralDistances(pop));
 
   std::stringstream stringAllFitness, stringAllOtherFitness;
@@ -730,7 +732,7 @@ int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winne
       //Store the approximated dataset by best genome
 
           std::stringstream ssfilename;
-            ssfilename << "sandbox/g" << generation
+            ssfilename << "sandbox/" << NEAT::labelRunExp << "/g" << generation
                        << "-t-" << f << ".dat";
 
           std::ofstream oFile(ssfilename.str().c_str());
@@ -752,7 +754,7 @@ int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winne
 
           //Store best genome
           std::stringstream ssfilenameNet;
-          ssfilenameNet << "sandbox/bestNet" << generation << ".nn";
+          ssfilenameNet << "sandbox/" << NEAT::labelRunExp << "/bestNet" << generation << ".nn";
           std::ofstream oFileNet(ssfilenameNet.str().c_str());
 
           genomeLog->print_to_file(oFileNet);
@@ -819,7 +821,7 @@ int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winne
           //Store the approximated dataset by best genome
 
               std::stringstream ssOtherfilename;
-                ssOtherfilename << "sandbox/otherg" << generation
+                ssOtherfilename << "sandbox/" << NEAT::labelRunExp << "/otherg" << generation
                            << "-t-" << f << ".dat";
 
               std::ofstream oOtherFile(ssOtherfilename.str().c_str());
@@ -843,72 +845,7 @@ int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winne
               delete netLog;
 
   }
-  if(pop->isNewBest && false)
-  {
 
-
-      Network* net=pop->bestGenome->genesis(-1);
-
-      //bool success;
-      unsigned int net_depth = 20;
-      //double this_out;
-      std::vector< std::vector<double> > out;
-      for(unsigned int count=0;count<inputSet[f].size();count++)
-      {
-          //TODO with error
-        net->load_sensors(&(inputSet[f][count][0]));
-
-        //Relax net and get output
-        //success=
-        net->activate();
-
-        //use depth to ensure relaxation
-        for (unsigned int relax=0;relax<=net_depth;relax++)
-        {
-          //success=
-          net->activate();
-          //this_out=(*(net->outputs.begin()))->activation;
-        }
-
-        vector<double>outputInstance;
-        for(vector<NNode*>::iterator itONN = net->outputs.begin();
-            itONN != net->outputs.end();itONN++)
-        {
-            outputInstance.push_back((*itONN)->activation);
-        }
-
-        out.push_back(outputInstance);
-
-        net->flush();
-      }
-
-      //Store the approximated dataset by best genome
-
-          std::stringstream ssfilename;
-            ssfilename << "sandbox/g" << generation
-                       //<< "-"
-                       //<< pop->bestGenome->genome_id
-                       //<< "-f" << (*(((*curspecies)->organisms).begin()))->error
-                       << "-t-" << f << ".dat";
-
-          std::ofstream oFile(ssfilename.str().c_str());
-
-          //Store approximated datapoints
-          for(unsigned int count=0;count<inputSet[f].size();count++)
-          {
-              for(unsigned int i = 0; i < inputSet[f][count].size(); i++)
-              {
-                  oFile << inputSet[f][count][i] << " ";
-              }
-              for(unsigned int i = 0; i < out[count].size(); i++)
-              {
-                  oFile << out[count][i] << " ";
-              }
-              oFile << std::endl;
-          }
-          oFile.close();
-
-    }
   if (win)
       return 1;
   else
