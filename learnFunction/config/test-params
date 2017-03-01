@@ -34,35 +34,35 @@ num_runs 1
 
 
 
-nIn = 1
-nO = 1
+nIn= 1
+nO= 1
 
-G = 1000
-durationPerFunction = 25
+G= 1000
+durationPerFunction= 25
 
-mu = 100
-lambda = 100
+mu= 100
+lambda= 100
 
-newstructure_tries = 100
+newstructure_tries= 100
 
-mutate_individual_weight_prob = 1.0
+mutate_individual_weight_prob= 1.0
 
-sigma = 0.1
+sigma= 0.1
 
-bias = true
-numberSamples = 50
+bias= true
+numberSamples= 50
 
 #exp: 0 first T1 then T2, 1 first T2 then T1, 2 T1 and T2 together
-exp = 1
-isWithErrorInput = false
-isWithNumberTask = false
-doLogAllPoints = false
+exp= 1
+isWithErrorInput= false
+isWithNumberTask= false
+doLogAllPoints= false
 
-allowMultisynapses = false
-loadGenome = false
-randomTopoInit = false
-initTopoN = 8
-initTopoL = 15
-injectGenome = true
-injectIter = 15
-genomeInjectFile = ../datasets/o2-template-params.nn
+allowMultisynapses= false
+loadGenome= false
+randomTopoInit= false
+initTopoN= 8
+initTopoL= 15
+injectGenome= true
+injectIter= 15
+genomeInjectFile= ../datasets/o2-template-params.nn

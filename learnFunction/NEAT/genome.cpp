@@ -1853,13 +1853,11 @@ bool Genome::mutate_add_link(std::vector<Innovation*> &innovs,double &curinnov,i
 					if (recurflag)
                     {
 						trycount++;
-                                                std::cout << "Bad Found"<< std::endl;
                     }
                     else
                     {
 						trycount=tries;
 						found=true;
-                                                std::cout << "Found"<< std::endl;
 					}                    
 
 				}

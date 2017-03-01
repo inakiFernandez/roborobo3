@@ -2,7 +2,7 @@ trait_param_mut_prob 0.0
 trait_mutation_power 0.0
 linktrait_mut_sig 0.0
 nodetrait_mut_sig 0.0
-weigh_mut_power 0.1
+weigh_mut_power 0.9
 recur_prob 0.05
 disjoint_coeff 1.0
 excess_coeff 1.0
@@ -23,7 +23,7 @@ interspecies_mate_rate 0.0
 mate_multipoint_prob 0.0
 mate_multipoint_avg_prob 0.0
 mate_singlepoint_prob 0.0
-mate_only_prob 0.0
+mate_only_prob 0.0 
 recur_only_prob 0.0
 pop_size 80
 dropoff_age 15000
@@ -33,38 +33,36 @@ babies_stolen 0
 num_runs 1
 
 
+nIn= 1
+nO= 1 
 
-nIn = 1
-nO = 1
+G= 1000
+durationPerFunction= 25
 
-G = 1000
-durationPerFunction = 25
+mu= 100
+lambda= 100
 
-mu = 100
-lambda = 100
+newstructure_tries= 100
 
-newstructure_tries = 100
+mutate_individual_weight_prob= 1.0
 
-mutate_individual_weight_prob = 1.0
+sigma= 0.1
 
-sigma = 0.1
-
-bias = true
-numberSamples = 50
+bias= true
+numberSamples= 50
 
 #exp: 0 first T1 then T2, 1 first T2 then T1, 2 T1 and T2 together
-exp = 1
-isWithErrorInput = false
-isWithNumberTask = false
-doLogAllPoints = false
+exp= 1
+isWithErrorInput= false
+isWithNumberTask= false
+doLogAllPoints= false
 
-allowMultisynapses = false
-loadGenome = false
-randomTopoInit = true
-initTopoN = 8
-initTopoL = 15
-injectGenome = true
-injectIter = 15
-genomeInjectFile = ../datasets/o2-template-params.nn
-
+allowMultisynapses= false
+loadGenome= false
+randomTopoInit= true
+initTopoN= 25
+initTopoL= 40
+injectGenome= true
+injectIter= 15
+genomeInjectFile= ../datasets/o2-template-params.nn
 

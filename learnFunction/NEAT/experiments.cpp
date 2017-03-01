@@ -323,12 +323,10 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
               }
               start_genome->genesis(start_genome->genome_id);
 
-              start_genome->print_to_filename("testRandomTopoBefore.nn");
               for(double nLinks= gene_innov; nLinks <= NEAT::initTopoL; nLinks++)
               {
                   start_genome->mutate_add_link(innovsSpawn,gene_innov,NEAT::newlink_tries);
               }
-              start_genome->print_to_filename("testRandomTopo.nn");
           }
           else
               start_genome = Genome::makeGenome(id,nI,nO);
