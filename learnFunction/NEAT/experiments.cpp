@@ -257,7 +257,7 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
     {
         nI++;
     }
-
+    std::cout << "New link tries: " << NEAT::newlink_tries << std::endl;
     gProperties.checkAndGetPropertyValue("nO",&nO,true);
     gProperties.checkAndGetPropertyValue("allowMultisynapses",&NEAT::allowMultisynapses,true);
     gProperties.checkAndGetPropertyValue("bias",&NEAT::withBias,true);
@@ -267,6 +267,9 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
     gProperties.checkAndGetPropertyValue("injectGenome",&NEAT::injectGenome,true);
     gProperties.checkAndGetPropertyValue("injectIter",&NEAT::injectIter,true);
     gProperties.checkAndGetPropertyValue("genomeInjectFile",&NEAT::genomeInjectFile,true);
+    gProperties.checkAndGetPropertyValue("randomTopoInit",&NEAT::randomTopoInit,true);
+    gProperties.checkAndGetPropertyValue("initTopoN",&NEAT::initTopoN,true);
+    gProperties.checkAndGetPropertyValue("initTopoL",&NEAT::initTopoL,true);
 
     switch(NEAT::experiment)
     {
@@ -307,6 +310,25 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
 
             for(int nb=0; nb < 40; nb++)
                 start_genome->mutate_link_weights(NEAT::weight_mut_power,1.0,GAUSSIAN);
+          }
+          else if (NEAT::randomTopoInit)
+          {
+              start_genome = Genome::makeGenome(id,nI,nO);
+              std::vector<Innovation*> innovsSpawn;
+              int node_innov = start_genome->get_last_node_id();
+              double gene_innov = start_genome->get_last_gene_innovnum();
+              for(int nNeur = node_innov; nNeur <= NEAT::initTopoN; nNeur++)
+              {
+                  start_genome->mutate_add_node(innovsSpawn,node_innov,gene_innov);
+              }
+              start_genome->genesis(start_genome->genome_id);
+
+              start_genome->print_to_filename("testRandomTopoBefore.nn");
+              for(double nLinks= gene_innov; nLinks <= NEAT::initTopoL; nLinks++)
+              {
+                  start_genome->mutate_add_link(innovsSpawn,gene_innov,NEAT::newlink_tries);
+              }
+              start_genome->print_to_filename("testRandomTopo.nn");
           }
           else
               start_genome = Genome::makeGenome(id,nI,nO);

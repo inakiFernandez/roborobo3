@@ -1801,7 +1801,7 @@ bool Genome::mutate_add_link(std::vector<Innovation*> &innovs,double &curinnov,i
 			for(nodecount=0;nodecount<nodenum1;nodecount++)
 				++thenode1;
 
-			//cout<<"RETRIEVED NODE# "<<(*thenode1)->node_id<<std::endl;
+            //std::cout<<"RETRIEVED NODE# "<<(*thenode1)->node_id<<std::endl;
 
 			//Find the second node
 			thenode2=nodes.begin();
@@ -1838,22 +1838,29 @@ bool Genome::mutate_add_link(std::vector<Innovation*> &innovs,double &curinnov,i
 
 					//ADDED: CONSIDER connections out of outputs recurrent
                     if (nodep1->gen_node_label==OUTPUT)
+                    {
                         recurflag=true;
+                        //std::cout << "Found out neuron as input"<< std::endl;
+                    }
 
 					//Exit if the network is faulty (contains an infinite loop)
-					if (count>thresh) {
-						//cout<<"LOOP DETECTED DURING A RECURRENCY CHECK"<<std::endl;
+                    //if (count>thresh) {
+                        //std::cout<<"LOOP DETECTED DURING A RECURRENCY CHECK"<<std::endl;
 						//return false;
-					}
+                    //}
 
 					//Make sure it finds the right kind of link (recur or not)
 					if (recurflag)
+                    {
 						trycount++;
+                                                std::cout << "Bad Found"<< std::endl;
+                    }
                     else
                     {
 						trycount=tries;
 						found=true;
-					}
+                                                std::cout << "Found"<< std::endl;
+					}                    
 
 				}
 

@@ -27,7 +27,7 @@ mate_only_prob 0.0
 recur_only_prob 0.0
 pop_size 80
 dropoff_age 15000
-newlink_tries 50
+newlink_tries 150
 print_every 10000
 babies_stolen 0
 num_runs 1
@@ -60,6 +60,9 @@ doLogAllPoints = false
 
 allowMultisynapses = false
 loadGenome = false
+randomTopoInit = false
+initTopoN = 8
+initTopoL = 15
 injectGenome = true
 injectIter = 15
 genomeInjectFile = ../datasets/o2-template-params.nn

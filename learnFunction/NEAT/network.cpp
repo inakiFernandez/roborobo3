@@ -569,7 +569,6 @@ bool Network::is_recur(NNode *potin_node,NNode *potout_node,int &count,int thres
 {
 	std::vector<Link*>::iterator curlink;
 
-
 	++count;  //Count the node as visited
 
     if (count>thresh)
