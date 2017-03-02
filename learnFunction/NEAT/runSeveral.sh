@@ -48,7 +48,7 @@ do
 done
 
 #nbCores=8
-parallel -j $nbCores -a $outbasename/noMulti.parallel
+parallel --results $outbasename/outExp -j $nbCores -a $outbasename/noMulti.parallel
 
 folderFiles="./sandbox"
 folderHeatmapFiles="./heatmapData"
@@ -188,7 +188,7 @@ if [ "$buildVideo" = true ] ; then
 
     mkdir $outbasename/stats
     echo "Before data treatment parallel"
-    parallel -j $nbCores -a $outbasename/dataplots.parallel
+    parallel --results $outbasename/outData -j $nbCores -a $outbasename/dataplots.parallel
  
 else
     echo "fnames += ["
