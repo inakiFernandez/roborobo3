@@ -150,7 +150,7 @@ if [ "$buildVideo" = true ] ; then
     heatmapDataScript="../heatmap.py"
     allVideoScript="../heatmapsRun.sh"
     #Extract duration per function
-    durPerFunction=`grep "durationPerFunction = .*$" ../config/template-params | sed -e "s/durationPerFunction = \(.*\)$/\1/"`
+    durPerFunction=`grep "durationPerFunction= .*$" ../config/template-params | sed -e "s/durationPerFunction= \(.*\)$/\1/"`
    
     #TODO copy results into final stats folder 
     echo "Before loop create data treatment parallel script"
@@ -180,7 +180,7 @@ if [ "$buildVideo" = true ] ; then
 	    printf \"$i\", >> ../tmpDataFilesExp$j.py
 	done
 	printf "]" >> ../tmpDataFilesExp$j.py
-	        
+	echo "python3 $fitnessDataScript $folderFiles/$j-runFolder/$outbasename.png $nbExp --png $durPerFunction $j"
 	parallelCommand="python3 $fitnessDataScript $folderFiles/$j-runFolder/$outbasename.png $nbExp --png $durPerFunction $j; echo 'Fitness Img done: run '$j; sleep 2; $videoApproxScript $folderFiles/$j-runFolder true true $j; echo 'Video approx done: run '$j' '; sleep 2;  python3 $heatmapDataScript $folderHeatmapFiles/$j-runFolder $iter --norm --rank $j; echo 'Heatmap images done: run '$j; rm $folderHeatmapFiles/$j-runFolder/*.csv; sleep 2; avconv -loglevel quiet -y -r 4 -start_number 1 -i $folderHeatmapFiles/$j-runFolder/phenotypicDistance%d.png -b:v 1000k $folderHeatmapFiles/$j-runFolder/beh.mp4; avconv -loglevel quiet -y -r 4 -start_number 1 -i $folderHeatmapFiles/$j-runFolder/genotypicDistance%d.png -b:v 1000k $folderHeatmapFiles/$j-runFolder/gen.mp4; rm $folderHeatmapFiles/$j-runFolder/*istance*.png; echo 'Heatmap videos done: run '$j; $allVideoScript $folderHeatmapFiles $folderFiles/$j-runFolder $outbasename.png $folderFiles/$j-runFolder/vidApprox.mp4 $iter $playVideo $j; sleep 2; mv $folderHeatmapFiles/$j-runFolder/scatterRelGenoPheno$j.flv $outbasename/stats; mv $folderHeatmapFiles/$j-runFolder/binsScatterRelGenoPheno$j.flv $outbasename/stats; mv $folderHeatmapFiles/$j-runFolder/*.data $outbasename/stats; mv $folderHeatmapFiles/$j-runFolder/*.png $outbasename/stats; mv $folderFiles/$j-runFolder/$outbasename.pngAll$j.flv $outbasename/stats; rm $folderFiles/$j-runFolder/*.png; rm $folderHeatmapFiles/$j-runFolder/*.mp4; rm $folderFiles/$j-runFolder/*.nn; echo 'Full videos done: run '$j; rm $folderFiles/$j-runFolder/*.dat; rm -rf $folderFiles/$j-runFolder; rm -rf $folderHeatmapFiles/$j-runFolder; " 
 	echo $parallelCommand >> $outbasename/dataplots.parallel 
     done
