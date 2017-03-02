@@ -257,7 +257,7 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
     {
         nI++;
     }
-    std::cout << "New link tries: " << NEAT::newlink_tries << std::endl;
+
     gProperties.checkAndGetPropertyValue("nO",&nO,true);
     gProperties.checkAndGetPropertyValue("allowMultisynapses",&NEAT::allowMultisynapses,true);
     gProperties.checkAndGetPropertyValue("bias",&NEAT::withBias,true);

@@ -62,7 +62,6 @@ if __name__ == '__main__':
     #if isToPng:
     #   plt.ioff()
 
-
     pixw, pixh = 2100, 1205
     dpi = 100
     winch = pixw/dpi # width in inches is pixel width / dpi
