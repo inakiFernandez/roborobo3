@@ -55,7 +55,7 @@ learnFunction/Makefile
 !learnFunction/NEAT/heatmapData/progressbar
 learnFunction/NEAT/heatmapData/progressbar/*.png
 learnFunction/NEAT/heatmapData/progressbar/*.mp4
-
+learnFunction/tmpDataFiles*
 
 
 learnFunction/NEAT/oldExp/
