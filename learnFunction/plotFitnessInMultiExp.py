@@ -80,7 +80,6 @@ if __name__ == '__main__':
     axis = plt.subplot2grid((1, 1), (0, 0),facecolor=bgcolor) # (2, 1), (0, 0))
     
     for i in range(len(fnames)):
-        print(fnames[i])
         #depends on alphabetical order of files and locale order
         if((i % (len(fnames) / nbExp)) in [0,2,6,7]): #[1,3,7,8]): 
             multirunFitness.plot_one_curve(multirunFitness.read_logfile(fnames[i]), 
