@@ -1538,8 +1538,10 @@ bool Genome::mutate_add_node(std::vector<Innovation*> &innovs,int &curnode_id,do
 				++thegene;
 
 			//If either the gene is disabled, or it has a bias input, try again
-			if (!(((*thegene)->enable==false)||
-				(((((*thegene)->lnk)->in_node)->gen_node_label)==BIAS)))
+            if (!(((*thegene)->enable==false)
+                 // ||
+                //(((((*thegene)->lnk)->in_node)->gen_node_label)==BIAS)
+                    ))
 				found=true;
 
 			++trycount;
@@ -1843,12 +1845,6 @@ bool Genome::mutate_add_link(std::vector<Innovation*> &innovs,double &curinnov,i
                         //std::cout << "Found out neuron as input"<< std::endl;
                     }
 
-					//Exit if the network is faulty (contains an infinite loop)
-                    //if (count>thresh) {
-                        //std::cout<<"LOOP DETECTED DURING A RECURRENCY CHECK"<<std::endl;
-						//return false;
-                    //}
-
 					//Make sure it finds the right kind of link (recur or not)
 					if (recurflag)
                     {
@@ -1888,15 +1884,6 @@ bool Genome::mutate_add_link(std::vector<Innovation*> &innovs,double &curinnov,i
 					//cout<<"ERROR: Attempt to add link to genome with no phenotype"<<std::endl;
 					return false;
 				}
-
-				//Useful for debugging
-				//cout<<"nodep1 id: "<<nodep1->node_id<<std::endl;
-				//cout<<"nodep1: "<<nodep1<<std::endl;
-				//cout<<"nodep1 analogue: "<<nodep1->analogue<<std::endl;
-				//cout<<"nodep2 id: "<<nodep2->node_id<<std::endl;
-				//cout<<"nodep2: "<<nodep2<<std::endl;
-				//cout<<"nodep2 analogue: "<<nodep2->analogue<<std::endl;
-				//cout<<"recurflag: "<<recurflag<<std::endl;
 
 				//Choose a random trait
 				traitnum=randint(0,(traits.size())-1);

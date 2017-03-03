@@ -331,15 +331,26 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
           else
               start_genome = Genome::makeGenome(id,nI,nO);
 
+          //start_genome->print_to_filename("testRdm/gStart.nn");
+
           //Spawn the Population
           pop=new Population(start_genome,NEAT::pop_size);
 
           //Verifying Spawned Pop
           pop->verify();
-
           for (gen=1;gen<=gens;gen++)
           {
+              /*for(std::vector<Organism*>::iterator it=pop->organisms.begin(); it != pop->organisms.end();it++)
+              {
+                  std::stringstream ss;
 
+                  ss << "testRdm/" << gen << "-"<< ((*it)->gnome->genome_id) << ".nn";
+
+                  std::ofstream oFileNet(ss.str().c_str());
+
+                  (*it)->gnome->print_to_file(oFileNet);
+
+              }*/
             //Replace "last" genome in pop by "model" genome
             //to test if it survives
             if(NEAT::injectGenome && (NEAT::injectIter == (gen - 1)))

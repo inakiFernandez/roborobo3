@@ -27,23 +27,24 @@ def process_gene(g, d):
     n0 = "<"+d[1]+","+d[2]+">"#int(d[2])
     n1 = "<"+d[3]+","+d[4]+">" #int(d[3])
     w  = float(d[5])
-    g.add_edge(n0, n1, weight=w)
+    if d[9]!='0':
+        g.add_edge(n0, n1, weight=w)
     #print g.edges(data=True,keys=True)
     #multidigraph adds a key
-    g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['label']    = "{0: 2.3f}".format(float(d[5]))
-    g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['recurent'] =d[6] # 0/1 yes/no
-    g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['inov_num'] ="<"+d[7]+","+d[8]+">" # pair idRobot gc
+        g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['label']    = "{0: 2.3f}".format(float(d[5]))
+        g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['recurent'] =d[6] # 0/1 yes/no
+        g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['inov_num'] ="<"+d[7]+","+d[8]+">" # pair idRobot gc
     #g.edge[n0][n1]['mut_num']  =d[7] # float
-    g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['enable']   =d[9] # 0/1 yes/no
-    g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['style'] = 'solid'
-    g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['color'] = 'black'
-    g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['labelfontcolor'] = 'black'
-    g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['labelfontsize'] = 4
+        g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['enable']   =d[9] # 0/1 yes/no
+        g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['style'] = 'solid'
+        g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['color'] = 'black'
+        g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['labelfontcolor'] = 'black'
+        g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['labelfontsize'] = 4
 
-    if d[9]=='0':
-        g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['style'] = 'dashed' 
-        g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['color'] = 'red'
-        g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['labelfontcolor'] = 'red'
+    #if d[9]=='0':
+        #g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['style'] = 'dashed' 
+        #g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['color'] = 'red'
+        #g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['labelfontcolor'] = 'red'
 
 # Reads a GC neat genome filename and greate the corresponding graph
 # in  : a filename of the genome (GC neat format)
