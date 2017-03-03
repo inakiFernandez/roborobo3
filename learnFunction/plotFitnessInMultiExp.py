@@ -78,9 +78,11 @@ if __name__ == '__main__':
     bmap = brewer2mpl.get_map('Set2', 'qualitative', 7)
     colors = bmap.mpl_colors
     axis = plt.subplot2grid((1, 1), (0, 0),facecolor=bgcolor) # (2, 1), (0, 0))
-    print(fnames)
+    
     for i in range(len(fnames)):
-        if((i % (len(fnames) / nbExp)) in [1,3,7,8]): #depends on alphabetical order of files
+        print(fnames[i])
+        #depends on alphabetical order of files and locale order
+        if((i % (len(fnames) / nbExp)) in [0,2,6,7]): #[1,3,7,8]): 
             multirunFitness.plot_one_curve(multirunFitness.read_logfile(fnames[i]), 
                                            colors[(i)%len(colors)], 
                                            axis, labels[i], True)
@@ -100,7 +102,7 @@ if __name__ == '__main__':
     axis2 = subplot2grid((3, 1), (1, 0)) #axis.twinx()
 
     for i in range(len(fnames)):
-        if(not((i % (len(fnames) / nbExp)) in [1,3,7,8,9,10,0])): #depends on alphabetical order of files
+        if(not((i % (len(fnames) / nbExp)) in [0,2,6,7,8,9,10])): #depends on alphabetical order of files
             plot_one_curve(read_logfile(fnames[i]), colors[(i+1)%len(colors)], axis2, labels[i], True)
 
     axis2.legend(loc='upper left')
@@ -108,7 +110,7 @@ if __name__ == '__main__':
 
     axis3 = subplot2grid((3, 1), (2, 0)) #axis.twinx()
     for i in range(len(fnames)):
-        if((i % (len(fnames) / nbExp)) in [9,10]): #depends on alphabetical order of files
+        if((i % (len(fnames) / nbExp)) in [8,9]): #depends on alphabetical order of files
             plot_one_curve(read_logfile(fnames[i]),
                            colors[(i+1)%len(colors)], axis3, labels[i], True)
 
