@@ -78,7 +78,7 @@ if __name__ == '__main__':
     bmap = brewer2mpl.get_map('Set2', 'qualitative', 7)
     colors = bmap.mpl_colors
     axis = plt.subplot2grid((1, 1), (0, 0),facecolor=bgcolor) # (2, 1), (0, 0))
-    
+    print(fnames)
     for i in range(len(fnames)):
         if((i % (len(fnames) / nbExp)) in [1,3,7,8]): #depends on alphabetical order of files
             multirunFitness.plot_one_curve(multirunFitness.read_logfile(fnames[i]), 
