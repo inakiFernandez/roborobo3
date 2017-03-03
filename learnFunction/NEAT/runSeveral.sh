@@ -21,6 +21,15 @@ nbCores=$7 #TOTEST numer of cores
 program="./neatLearnFunction "
 nbExp=1
 
+doGenerate="false"
+#Generate dataset every
+if [ $doGenerate = "true" ]; then
+    echo "Not yet implemented"
+    exit
+fi
+
+
+
 doMulti="false"
 if [ $doMulti = "true" ]; then
     echo "Do multi"
