@@ -104,8 +104,8 @@ mv "$j" "$index.png";
 done
 
 cd $folder
-find -maxdepth 1 -type f -name 'g*-t-*.dat-ind*' -exec rm {} \;
-find -maxdepth 1 -type f -name '*.sorted' -exec rm {} \;
+find -maxdepth 1 -type f -name 'g*-t-*.dat-ind*' -delete # -exec rm {} \;
+find -maxdepth 1 -type f -name '*.sorted' -delete #-exec rm {} \;
 cd - > /dev/null
 #rm $folder/*.sorted
 #rm $folder/g*-t-*.dat-ind*

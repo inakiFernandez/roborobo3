@@ -76,7 +76,7 @@ if __name__ == '__main__':
         p=nx.circular_layout(g)
         nx.draw(g)
         pylab.draw()
-        print 'Press enter to exit'
+        print('Press enter to exit')
         raw_input()
 
    

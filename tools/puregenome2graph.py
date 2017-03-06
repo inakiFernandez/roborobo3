@@ -29,7 +29,7 @@ def process_gene(g, d):
     w  = float(d[5])
     if d[9]!='0':
         g.add_edge(n0, n1, weight=w)
-    #print g.edges(data=True,keys=True)
+    #print(g.edges(data=True,keys=True))
     #multidigraph adds a key
         g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['label']    = "{0: 2.3f}".format(float(d[5]))
         g.edge[n0][n1][g.number_of_edges(n0, n1)-1]['recurent'] =d[6] # 0/1 yes/no
@@ -64,11 +64,11 @@ def process_graph(fname):
             process_gene(G,data)
         elif data[0] == 'genomeend' :
             if gid != data[1] : 
-                print 'Error: mismatch genome end tag'
+                print('Error: mismatch genome end tag')
                 return None
         else :
-            print data
-            print 'Error: unexpected token'
+            print(data)
+            print('Error: unexpected token')
             return None
     fh.close()
     return G
@@ -304,8 +304,8 @@ def genome_animation(genomes_files, indir, outdir=None):
     # print the command line to create the movie 
     zpad = len(str(i)) 
     cmd_line = 'ffmpeg -framerate 1 -i '+outdir+'/'+'%0'+str(zpad)+'d.png  -c:v libx264 -pix_fmt yuv420p '+outdir+'/out.mp4';
-    print 'To create the movies run the following command:'
-    print cmd_line
+    print('To create the movies run the following command:')
+    print(cmd_line)
 
     # scratchapd no meant to be used
     # to clean up from the script (removing dot & png files)
