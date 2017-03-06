@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ $# -ne 4 ]; then
-    echo "Wrong number of parameters. [progname] folder withSplit withAllPop "
+if [ $# -ne 5 ]; then
+    echo "Wrong number of parameters. [progname] folder withSplit withAllPop idRun nameExp"
     exit
 fi
 export LC_ALL=C
@@ -10,14 +10,16 @@ folderScript=`dirname $0`
 withSplit=$2 # attention to gnu script
 withAllPop=$3
 numRun=$4
+outbasename=$5
+
 echo "Start $0"
 gnuScript="$folderScript/plotdatapoints.gnu"
 if [ "$withAllPop" = true ] ; then
     gnuScript="$folderScript/plotdataAllPop.gnu"
 fi
 
-f1="$folderScript/datasets/in-o1.sorted.dat"  
-f2="$folderScript/datasets/in-o2.sorted.dat"
+f1="$folderScript/datasets/in-o1-$outbasename.sorted.dat"  
+f2="$folderScript/datasets/in-o2-$outbasename.sorted.dat"
 #rm $folder/*.png
 #rm $folder/*.sorted
 #rm $folder/*.dataa

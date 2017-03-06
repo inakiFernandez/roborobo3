@@ -45,9 +45,9 @@ int main(int argc, char *argv[])
   srand (time(NULL));
   int nIn; int nO;
 
-  if (argc != 2)
+  if (argc != 3)
   {
-    std::cerr << "A parameter file is required to run the experiments!"
+    std::cerr << "A parameter file and a basename are required to run the experiments!"
          << std::endl;
     return -1;
   }
@@ -113,10 +113,21 @@ int main(int argc, char *argv[])
     outputSet[1].push_back(activateNN(n2, inputSample2));
     n2->flush();
   }
+//paramfile.substr(paramfile.find("/")+1,paramfile.size()
+    std::stringstream ssFname;
+    ssFname << "../datasets/o1-" << argv[2] << ".nn";
+    //g1 -> print_to_filename(("datasets/o1-" + argv[2] +".nn").c_str());
 
-    g1 -> print_to_filename(("datasets/o1-" + paramfile.substr(paramfile.find("/")+1,paramfile.size()) +".nn").c_str());
-    g2 -> print_to_filename(("datasets/o2-" + paramfile.substr(paramfile.find("/")+1,paramfile.size()) +".nn").c_str());
-  std::ofstream inputOFile("datasets/in-" + paramfile.substr(paramfile.find("/")+1,paramfile.size()) +".dat");
+    g1 -> print_to_filename(ssFname.str().c_str());
+    ssFname.str(std::string());
+    ssFname << "../datasets/o2-" << argv[2] << ".nn";
+
+    //("datasets/o2-" + argv[2] +".nn").c_str()
+    g2 -> print_to_filename(ssFname.str().c_str());
+    ssFname.str(std::string());
+    ssFname << "../datasets/in-" << argv[2] << ".dat";
+    //"datasets/in-" + argv[2] +".dat"
+  std::ofstream inputOFile(ssFname.str().c_str());
   for(auto &input:inputSet)
   {
       for(auto &elt:input)
@@ -126,7 +137,10 @@ int main(int argc, char *argv[])
       inputOFile << "\n";
   }
   inputOFile.close();
-  std::ofstream inputOFile2("datasets/in2-" + paramfile.substr(paramfile.find("/")+1,paramfile.size()) +".dat");
+  ssFname.str(std::string());
+  ssFname << "../datasets/in2-" << argv[2] << ".dat";
+  //"datasets/in2-" + argv[2] +".dat"
+  std::ofstream inputOFile2(ssFname.str().c_str());
   for(auto &input:inputSet2)
   {
       for(auto &elt:input)
@@ -136,8 +150,10 @@ int main(int argc, char *argv[])
       inputOFile2 << "\n";
   }
   inputOFile2.close();
-
-  std::ofstream output1OFile("datasets/o1-" + paramfile.substr(paramfile.find("/")+1,paramfile.size()) +".dat");
+  ssFname.str(std::string());
+  ssFname << "../datasets/o1-" << argv[2] << ".dat";
+  //"datasets/o1-" + argv[2] +".dat"
+  std::ofstream output1OFile(ssFname.str().c_str());
   for(auto &output:outputSet[0])
   {
       for(auto &elt:output)
@@ -147,7 +163,10 @@ int main(int argc, char *argv[])
       output1OFile << "\n";
   }
   output1OFile.close();
-  std::ofstream output2OFile("datasets/o2-" + paramfile.substr(paramfile.find("/")+1,paramfile.size()) +".dat");
+  ssFname.str(std::string());
+  ssFname << "../datasets/o2-" << argv[2] << ".dat";
+  //"datasets/o2-" + argv[2] +".dat"
+  std::ofstream output2OFile(ssFname.str().c_str());
   for(auto &output:outputSet[1])
   {
       for(auto &elt:output)

@@ -17,15 +17,19 @@ outbasename=$3
 iter=$4
 nbRuns=$5
 playVideo=$6
-nbCores=$7 #TOTEST numer of cores 
+nbCores=$7 
+
 program="./neatLearnFunction "
 nbExp=1
 
-doGenerate="false"
-#Generate dataset every
-if [ $doGenerate = "true" ]; then
-    echo "Not yet implemented"
-    exit
+scriptGenerate="../cmdDatasets.sh"
+doGenerate="true"
+
+#Generate dataset every time
+if [ $doGenerate == "true" ]; then
+    echo "Generate dataset $outbasename"
+    echo "$scriptGenerate $template $outbasename"
+    $scriptGenerate $template $outbasename
 fi
 
 
@@ -35,10 +39,11 @@ if [ $doMulti = "true" ]; then
     echo "Do multi"
     nbExp=2
     ##TODO ATTENTION USE template and templateMulti variables    
-    rm ../config/template-params-multi # $2
-    cp ../config/template-params ../config/template-params-multi # $1 $2
+    rm $templateMulti #../config/template-params-multi # $2
+    cp $template $templateMulti 
+#../config/template-params ../config/template-params-multi # $1 $2
     #Add allowMulti 
-    echo "allowMultisynapses=true" >> ../config/template-params-multi #$2
+    echo "allowMultisynapses=true" >> $templateMulti #../config/template-params-multi #$2
 fi
 
 rm -rf $outbasename
@@ -51,7 +56,7 @@ for (( j=1; j<=$nbRuns; j++))
 do
     #Non paralelized version
     #$program $template $iter > $outbasename/noMulti/run-$j.log #oneRun $j &   
-    echo "$program $template $iter $j-runFolder > $outbasename/noMulti/run-$j.log; echo $j" >> $outbasename/noMulti.parallel
+    echo "$program $template $iter $j-runFolder $outbasename > $outbasename/noMulti/run-$j.log; echo $j" >> $outbasename/noMulti.parallel
     mkdir sandbox/$j-runFolder
     mkdir heatmapData/$j-runFolder
 done
@@ -75,7 +80,7 @@ if [ $doMulti = "true" ]; then
     do
 	echo $j
         #TODO parallelized version
-	$program $templateMulti $iter > $outbasename/multi/run-$j.log 
+	$program $templateMulti $iter $j-runFolder $outbasename > $outbasename/multi/run-$j.log 
     done
     cp $templateMulti $outbasename
 fi
@@ -191,7 +196,7 @@ if [ "$buildVideo" = true ] ; then
 	done
 	printf "]" >> ../tmpDataFilesExp$j.py
 	
-	parallelCommand="python3 $fitnessDataScript $folderFiles/$j-runFolder/$outbasename.png $nbExp --png $durPerFunction $j; echo 'Fitness Img done: run '$j; sleep 2; $videoApproxScript $folderFiles/$j-runFolder true true $j; echo 'Video approx done: run '$j' '; sleep 2;  python3 $heatmapDataScript $folderHeatmapFiles/$j-runFolder $iter --norm --rank $j; echo 'Heatmap images done: run '$j; rm $folderHeatmapFiles/$j-runFolder/*.csv; sleep 2; avconv -loglevel quiet -y -r 4 -start_number 1 -i $folderHeatmapFiles/$j-runFolder/phenotypicDistance%d.png -b:v 1000k $folderHeatmapFiles/$j-runFolder/beh.mp4; avconv -loglevel quiet -y -r 4 -start_number 1 -i $folderHeatmapFiles/$j-runFolder/genotypicDistance%d.png -b:v 1000k $folderHeatmapFiles/$j-runFolder/gen.mp4; rm $folderHeatmapFiles/$j-runFolder/*istance*.png; echo 'Heatmap videos done: run '$j; $allVideoScript $folderHeatmapFiles $folderFiles/$j-runFolder $outbasename.png $folderFiles/$j-runFolder/vidApprox.mp4 $iter $playVideo $j; sleep 2; mv $folderHeatmapFiles/$j-runFolder/scatterRelGenoPheno$j.flv $outbasename/stats; mv $folderHeatmapFiles/$j-runFolder/binsScatterRelGenoPheno$j.flv $outbasename/stats; mv $folderHeatmapFiles/$j-runFolder/*.data $outbasename/stats; mv $folderHeatmapFiles/$j-runFolder/*.png $outbasename/stats; mv $folderFiles/$j-runFolder/$outbasename.pngAll$j.flv $outbasename/stats; rm $folderFiles/$j-runFolder/*.png; rm $folderHeatmapFiles/$j-runFolder/*.mp4; rm $folderFiles/$j-runFolder/*.nn; echo 'Full video done: run '$j; rm $folderFiles/$j-runFolder/*.dat; rm -rf $folderFiles/$j-runFolder; rm -rf $folderHeatmapFiles/$j-runFolder; " 
+	parallelCommand="python3 $fitnessDataScript $folderFiles/$j-runFolder/$outbasename.png $nbExp --png $durPerFunction $j; echo 'Fitness Img done: run '$j; sleep 2; $videoApproxScript $folderFiles/$j-runFolder true true $j $outbasename; echo 'Video approx done: run '$j' '; sleep 2;  python3 $heatmapDataScript $folderHeatmapFiles/$j-runFolder $iter --norm --rank $j; echo 'Heatmap images done: run '$j; rm $folderHeatmapFiles/$j-runFolder/*.csv; sleep 2; avconv -loglevel quiet -y -r 4 -start_number 1 -i $folderHeatmapFiles/$j-runFolder/phenotypicDistance%d.png -b:v 1000k $folderHeatmapFiles/$j-runFolder/beh.mp4; avconv -loglevel quiet -y -r 4 -start_number 1 -i $folderHeatmapFiles/$j-runFolder/genotypicDistance%d.png -b:v 1000k $folderHeatmapFiles/$j-runFolder/gen.mp4; rm $folderHeatmapFiles/$j-runFolder/*istance*.png; echo 'Heatmap videos done: run '$j; $allVideoScript $folderHeatmapFiles $folderFiles/$j-runFolder $outbasename.png $folderFiles/$j-runFolder/vidApprox.mp4 $iter $playVideo $j; sleep 2; mv $folderHeatmapFiles/$j-runFolder/scatterRelGenoPheno$j.flv $outbasename/stats; mv $folderHeatmapFiles/$j-runFolder/binsScatterRelGenoPheno$j.flv $outbasename/stats; mv $folderHeatmapFiles/$j-runFolder/*.data $outbasename/stats; mv $folderHeatmapFiles/$j-runFolder/*.png $outbasename/stats; mv $folderFiles/$j-runFolder/$outbasename.pngAll$j.flv $outbasename/stats; rm $folderFiles/$j-runFolder/*.png; rm $folderHeatmapFiles/$j-runFolder/*.mp4; rm $folderFiles/$j-runFolder/*.nn; echo 'Full video done: run '$j; rm $folderFiles/$j-runFolder/*.dat; rm -rf $folderFiles/$j-runFolder; rm -rf $folderHeatmapFiles/$j-runFolder; " 
 	echo $parallelCommand >> $outbasename/dataplots.parallel 
     done
     sleep 2   

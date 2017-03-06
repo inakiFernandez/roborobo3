@@ -5,13 +5,13 @@ reset
 set terminal png
 
 
-print filename1 
-print filename2
+#print filename1 
+#print filename2
 
 col_count=1
 good_data=1
 while (good_data){
-   stats filename1 u (valid(col_count))
+   stats filename1 u (valid(col_count)) nooutput
    if ( STATS_max ){
       col_count = col_count+1
    } else {

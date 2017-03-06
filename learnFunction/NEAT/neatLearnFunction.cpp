@@ -33,9 +33,10 @@ int main(int argc, char *argv[])
   //std::cerr << seed << std::endl;
   srand(seed);
 
-  if (argc != 4)
+  if (argc != 5)
   {
-    cerr << "A NEAT parameters file (.ne file), a number of generations and idRun are required to run the experiments!"
+    cerr << "A NEAT parameters file (.ne file), a number of generations, idRun and a expBasename"
+            << " are required to run the experiments!"
          << endl;
     return -1;
   }
@@ -43,7 +44,8 @@ int main(int argc, char *argv[])
   //Load in the params
   NEAT::load_neat_params(argv[1],false);
   int gens = atoi(argv[2]);
-  p = rdmNNFunction_test(gens,argv[1], argv[3]); //third parameter is folder Run for out logfiles
+  //third parameter is folder Run for out logfiles, fourth is nameExperiment for getting datasets
+  p = rdmNNFunction_test(gens,argv[1], argv[3],argv[4]);
 
 
   /*

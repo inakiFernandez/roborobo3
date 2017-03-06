@@ -38,7 +38,7 @@ using namespace NEAT;
 
 
 //Random NN Function approximation
-Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labelRun);
+Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labelRun, std::string expBasename);
 
 bool rdmNNFunction_evaluate(Organism *org);
 int rdmNNFunction_epoch(Population *pop,int generation,char *filename, int &winnernum, int &winnergenes,int &winnernodes);

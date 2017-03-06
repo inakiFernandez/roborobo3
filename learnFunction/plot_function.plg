@@ -7,12 +7,12 @@ set terminal png
 
 if (!exists("filename")) filename='default.dat'
 
-print filename
+#print filename
 
 col_count=1
 good_data=1
 while (good_data){
-   stats filename u (valid(col_count))
+   stats filename u (valid(col_count)) nooutput
    if ( STATS_max ){
       col_count = col_count+1
    } else {
