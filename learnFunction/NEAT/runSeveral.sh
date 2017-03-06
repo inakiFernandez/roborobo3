@@ -28,7 +28,6 @@ doGenerate="true"
 #Generate dataset every time
 if [ $doGenerate == "true" ]; then
     echo "Generate dataset $outbasename"
-    echo "$scriptGenerate $template $outbasename"
     $scriptGenerate $template $outbasename
 fi
 
