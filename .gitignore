@@ -42,6 +42,10 @@ learnFunction/build/
 learnFunction/datasets/*
 !learnFunction/datasets/*.dat
 !learnFunction/datasets/*.nn
+learnFunction/datasets/o1*
+learnFunction/datasets/o2*
+learnFunction/datasets/in*
+learnFunction/datasets/oAll*
 learnFunction/NEATbase/
 learnFunction/generateDataset
 learnFunction/NEAT/multi*
