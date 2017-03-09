@@ -164,7 +164,7 @@ if [ "$buildVideo" = true ] ; then
     heatmapDataScript="../heatmap.py"
     allVideoScript="../heatmapsRun.sh"
     #Extract duration per function
-    durPerFunction=`grep "durationPerFunction= .*$" ../config/template-params | sed -e "s/durationPerFunction= \(.*\)$/\1/"`
+    durPerFunction=`grep "durationPerFunction= .*$" $template | sed -e "s/durationPerFunction= \(.*\)$/\1/"`
    
     #TODO copy results into final stats folder 
     echo "Before loop create data treatment parallel script"
@@ -181,7 +181,7 @@ if [ "$buildVideo" = true ] ; then
 	it=$(($j))
 	convert $folderHeatmapFiles/progressbar/empty.png -strokewidth 0 -fill "rgba( 0, 255, 50 )" -draw "rectangle 0,0 $xend,100 " -fill "rgba( 0, 0, 0 )" -gravity Center -weight 2200 -pointsize 50 -annotate 0 "It. $it"  -append $folderHeatmapFiles/progressbar/progressbar$j.jpg; 
     done;
-    avconv -loglevel quiet  -y -r 4 -start_number 1 -i $folderHeatmapFiles/progressbar/progressbar%d.jpg -b:v 1000k  -vcodec mpeg4 -t 100  $folderHeatmapFiles/progressbar/progressbar.mp4 #TOFIX maybe remove -t 100
+    avconv -loglevel quiet  -y -r 4 -start_number 1 -i $folderHeatmapFiles/progressbar/progressbar%d.jpg -b:v 1000k  -vcodec mpeg4  $folderHeatmapFiles/progressbar/progressbar.mp4 #TOFIX maybe remove -t 100
     rm $folderHeatmapFiles/progressbar/progressbar*.jpg
 
     for (( j=1; j<=$nbRuns; j++))

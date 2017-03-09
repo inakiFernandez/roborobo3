@@ -22,3 +22,93 @@ How to keep good solution for previous tasks?
 
 How about in distributed evo. algorithms for robots ? (think about it) 
 	Maybe the same techniques? Like have a higher probability to select genomes that were "kind of" good in the past (choose coefficients for current performance w.r.t. previous performance [i.e. how important is optimizing current function w.r.t. keeping previous one]) [cumulate "fitness savings"]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Motivation
+----------
+
+Robots may be deployed for long periods of time.
+
+To perform possibly changing tasks in unforeseen environments.
+
+So, it is critical that robots are able to adapt fast and learn from new tasks online.
+
+However, once a task is learned and a new one arrives, learning robots tend to lose (forget) the previous one.
+
+Thus, if they are confronted to the same task later on, they need to relearn everything again.
+
+As such, if we want for robots to be able to able to quickly readapt to a previously seen task, we need to alleviate the forgetting issue when learning tasks in sequence.
+
+
+
+Teams of robots may be more effective to perform a task than single robots.
+
+Also, they are able to perform some tasks (collaborative tasks) that single robots are not able to.
+
+Finally, a team or swarm of learning robots are able to help each other learning by using a distributed learning algorithm.
+
+Goal
+----
+In such a distributed swarm robot learning conditions, we wish to propose an algorithm that helps a swarm of robots to avoid task forgetting when dealing with a sequence of tasks.
+Problem: avoiding forgetting when addressing sequential learning of multiple tasks for a swarm of robots.
+
+
+Analysis
+--------
+In order to get a better grasp of the problem of avoiding forgetting when addressing sequential learning of multiple tasks, tests with evolving ANNs for approximating 1D functions are being performed.
+
+In these experiments, NEAT algorithm is used to evolve both the weights and the topology of ANNs to approximate as close as possible a sequence of two one-dimensionnal functions (T1,T2).
+
+It should be noted that both tasks could have common inputs and require different outputs for these.
+
+In this case, a single ANN without a way of differentiate between tasks that share the same inputs and outputs (e.g. additional input coding for the task index, tasks differenciable in terms of input distributions, etc.) is unable to encode simultaneously the solution to a set of different tasks.
+
+In our work, we do make the assumption that the learning system has an explicit information of which one is the current task. As such, a single ANN of our experiments is not able to perform simulaneously T1 and T2.
+
+However, neuroevolution algorithms keep a population of neural nets, not a single one.
+
+We define the problem of task forgetting at the population level as:
+.....TODO
+
+
+
+Approach
+--------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
