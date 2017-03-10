@@ -64,7 +64,7 @@ do
     mkdir heatmapData/$outbasename/$j-runFolder
 done
 
-#nbCores=8
+echo "Running $nbRuns runs of $outbasename experiments in $nbCores processors for $iter generations"
 #--results $outbasename/outExp
 parallel -j $nbCores -a $outbasename/noMulti.parallel
 
