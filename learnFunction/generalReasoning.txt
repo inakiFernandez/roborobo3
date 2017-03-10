@@ -8,10 +8,13 @@ How to learn topology and weights to approximate the functions?
 	But does not seem to work...
 	Maybe I need more population?
 	Maybe stop topology evolution at some point then do only weights?
+	Maybe start with a big random topology? (and either further evolve it with the weights 
+		or just the weights)
 
 How to keep good solutions previously found (on a single task)?
 	Explicit elitism (save the best one(s) for the following generation)
-	Kind of elitism : e.g. probability of not mutating at all
+	Kind of elitism : e.g. probability of not mutating at all: Yes! but with big enough population
+		
 
 How to keep good solution for previous tasks? 
 
@@ -25,28 +28,14 @@ How about in distributed evo. algorithms for robots ? (think about it)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+-----------------------------------------------------------------------
 
 
 
 Motivation
 ----------
 
-Robots may be deployed for long periods of time.
-
-To perform possibly changing tasks in unforeseen environments.
+Robots may be deployed for long periods of time, to perform possibly changing tasks in unforeseen environments.
 
 So, it is critical that robots are able to adapt fast and learn from new tasks online.
 
@@ -80,21 +69,41 @@ It should be noted that both tasks could have common inputs and require differen
 
 In this case, a single ANN without a way of differentiate between tasks that share the same inputs and outputs (e.g. additional input coding for the task index, tasks differenciable in terms of input distributions, etc.) is unable to encode simultaneously the solution to a set of different tasks.
 
-In our work, we do make the assumption that the learning system has an explicit information of which one is the current task. As such, a single ANN of our experiments is not able to perform simulaneously T1 and T2.
+In our work, we do not make the assumption that the learning system has an explicit information of which task is the current one. As such, a single ANN of our experiments is not able to perform simulaneously T1 and T2.
 
 However, neuroevolution algorithms keep a population of neural nets, not a single one.
 
-We define the problem of task forgetting at the population level as:
-.....TODO
+	Given a sequence of different tasks (Ti,di) [task and duration] and an EA with a population of individuals, we define the problem of catastrophic task forgetting at the population level as the loss of all previously acquired high fitness solutions in T(i-1) task when learning Ti for a learning time lt < di.
 
+To enable the population to readapt quickly to a replay of a previously learnt task, we wish to keep one or more good individuals in that task during the time they face an adverse  selection pressure on learning a different task.
 
 
 Approach
 --------
+The question now is how to manage to add a component of selection pressure pushing towards keeping (some) good individuals in the previous task.
+
+One approach could be to exploit previous evaluations of ancestors of the current individuals. 
+
+One idea is to add selection pressure toward individuals that were good in the past, or mutate less individuals that were good in the past.
+
+Let us assume that learning of a first task T1 has been achieved, and the majority of the population has converged to good solutions. We switch to a different task T2. 
+
+If no specific mechanism is applied to keep T1, the majority of the population will move to T2, with maybe another part of the population still exploring, if diversity mechanisms are in place. In any case, there is no force that could contribute to keeping T1.
+
+However, if we reward individuals that were good in the past (i.e. whose ancestors were good in the previous task where they were evaluated), individuals close to the ancestors that were good in the past could be kept. In this sense, the algorithm would keep some kind of memory of the past (a kind of inertial force), and selective pressure would be added exploiting these memory of the past.
 
 
+So the proposed technique needs to:
+	1) Keep track of the quality of the ancestors of a network (easy)
+	2) Exploit this information when
+		2.1) Selecting new individuals (how?)
+				and/or
+		2.2) Mutating new individuals (how?)
 
-
+To evaluate our technique we need to define a set of measures:
+	1) How well are previous skills retained in a lineage? (individual level)
+	2) How well are previous skills retained in the population? (populational level)
+	3) How well are individuals able to readapt to previously learned tasks?
 
 
 

@@ -7,8 +7,8 @@ oneRun()
 }
 start=`date +%s`
 
-if [ $# -ne 7 ]; then
-    echo "Wrong number of parameters. [progname] templateNotMulti templateMulti outconfigbasename nbIter nbRuns playVideo nbCores"
+if [ $# -ne 8 ]; then
+    echo "Wrong number of parameters. [progname] templateNotMulti templateMulti outconfigbasename nbIter nbRuns playVideo nbCores doBuildVideo"
     exit
 fi
 template=$1
@@ -154,9 +154,8 @@ echo "End paste log files"
 
 filenames=`realpath $outbasename/*.log` ;
 
-buildVideo=true
 
-if [ "$buildVideo" = true ] ; then
+
     echo "Before last scripts"
     #python fitness
     fitnessDataScript="../plotFitnessInMultiExp.py"
@@ -202,16 +201,14 @@ if [ "$buildVideo" = true ] ; then
 
     mkdir $outbasename/stats
     echo "Before data treatment parallel"
+    buildVideo=$8
+
+if [ "$buildVideo" = true ] ; then
     #--results $outbasename/outData
     parallel -j $nbCores -a $outbasename/dataplots.parallel
  
 else
-    echo "fnames += ["
-    for i in $filenames ;
-    do
-	echo \"$i\",
-    done
-    echo "]"
+    echo "TODO parallel -j $nbCores -a $outbasename/dataplots.parallel"
 fi
 
 end=`date +%s`
