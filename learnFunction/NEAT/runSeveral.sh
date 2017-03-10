@@ -45,10 +45,14 @@ if [ $doMulti = "true" ]; then
     echo "allowMultisynapses=true" >> $templateMulti #../config/template-params-multi #$2
 fi
 
-rm -rf $outbasename
+rm -rf $outbasenam
+rm -rf sandbox/$outbasename
+rm -rf headmapData/$outbasename
 mkdir $outbasename
 
 mkdir $outbasename/noMulti
+mkdir sandbox/$outbasename
+mkdir heatmapData/$outbasename
 echo "No multi"
 touch $outbasename/noMulti.parallel
 for (( j=1; j<=$nbRuns; j++))
@@ -56,16 +60,16 @@ do
     #Non paralelized version
     #$program $template $iter > $outbasename/noMulti/run-$j.log #oneRun $j &   
     echo "$program $template $iter $j-runFolder $outbasename > $outbasename/noMulti/run-$j.log; echo $j" >> $outbasename/noMulti.parallel
-    mkdir sandbox/$j-runFolder
-    mkdir heatmapData/$j-runFolder
+    mkdir sandbox/$outbasename/$j-runFolder
+    mkdir heatmapData/$outbasename/$j-runFolder
 done
 
 #nbCores=8
 #--results $outbasename/outExp
 parallel -j $nbCores -a $outbasename/noMulti.parallel
 
-folderFiles="./sandbox"
-folderHeatmapFiles="./heatmapData"
+folderFiles="./sandbox/$outbasename"
+folderHeatmapFiles="./heatmapData/$outbasename"
 if [ $doMulti = "true" ]; then
     rm $folderFiles/*.dat   
     cd $folderFiles

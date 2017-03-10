@@ -282,6 +282,8 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
     inputSetAll = readDoubleFile("../datasets/inAll-" + expBasename  + ".data");
     outputSetAll = readDoubleFile("../datasets/oAll-" + expBasename  + ".dat");
 
+    NEAT::expBasename =expBasename;
+
     switch(NEAT::experiment)
     {
         case 0:
@@ -519,7 +521,7 @@ bool rdmNNFunction_evaluate(Organism *org)
 
   //Store the approximated dataset by this genome
   std::stringstream ssfilename;
-    ssfilename << "sandbox/" << NEAT::labelRunExp << "/g" << org->generation
+    ssfilename << "sandbox/" << NEAT::expBasename << NEAT::labelRunExp << "/g" << org->generation
                << "-t-" << f
                << ".dat" <<"-ind" << org->gnome->genome_id;
   std::ofstream oFile(ssfilename.str().c_str());
@@ -540,7 +542,7 @@ bool rdmNNFunction_evaluate(Organism *org)
   oFile.close();
   //Store neuralnet
   std::stringstream ssfilenameNet;
-  ssfilenameNet << "sandbox/" << NEAT::labelRunExp << "/net" << org->generation
+  ssfilenameNet << "sandbox/" << NEAT::expBasename << NEAT::labelRunExp << "/net" << org->generation
                 << "-t-"  << f
                 << ".dat" << "-ind" << org->gnome->genome_id << ".nn";
   std::ofstream oFileNet(ssfilenameNet.str().c_str());
@@ -684,10 +686,10 @@ int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winne
   }*/
 
   std::stringstream filenameGen;
-  filenameGen << "heatmapData/" << NEAT::labelRunExp << "/genotypicDistance" << generation << ".csv";
+  filenameGen << "heatmapData/" << NEAT::expBasename << NEAT::labelRunExp << "/genotypicDistance" << generation << ".csv";
   writeMatrix(filenameGen.str(),computeGenotypicDistances(pop));
   std::stringstream filenameBeh;
-  filenameBeh << "heatmapData/" << NEAT::labelRunExp << "/phenotypicDistance" << generation << ".csv";
+  filenameBeh << "heatmapData/" << NEAT::expBasename << NEAT::labelRunExp << "/phenotypicDistance" << generation << ".csv";
   writeMatrix(filenameBeh.str(),computeBehavioralDistances(pop));
 
   std::stringstream stringAllFitness, stringAllOtherFitness;
@@ -775,7 +777,7 @@ int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winne
       //Store the approximated dataset by best genome
 
           std::stringstream ssfilename;
-            ssfilename << "sandbox/" << NEAT::labelRunExp << "/g" << generation
+            ssfilename << "sandbox/" << NEAT::expBasename << NEAT::labelRunExp << "/g" << generation
                        << "-t-" << f << ".dat";
 
           std::ofstream oFile(ssfilename.str().c_str());
@@ -797,7 +799,7 @@ int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winne
 
           //Store best genome
           std::stringstream ssfilenameNet;
-          ssfilenameNet << "sandbox/" << NEAT::labelRunExp << "/bestNet" << generation << ".nn";
+          ssfilenameNet << "sandbox/" << NEAT::expBasename  << NEAT::labelRunExp << "/bestNet" << generation << ".nn";
           std::ofstream oFileNet(ssfilenameNet.str().c_str());
 
           genomeLog->print_to_file(oFileNet);
@@ -864,7 +866,7 @@ int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winne
           //Store the approximated dataset by best genome
 
               std::stringstream ssOtherfilename;
-                ssOtherfilename << "sandbox/" << NEAT::labelRunExp << "/otherg" << generation
+                ssOtherfilename << "sandbox/" << NEAT::expBasename << NEAT::labelRunExp << "/otherg" << generation
                            << "-t-" << f << ".dat";
 
               std::ofstream oOtherFile(ssOtherfilename.str().c_str());

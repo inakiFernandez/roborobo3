@@ -83,6 +83,7 @@ namespace NEAT {
     extern int injectIter;
     extern std::string genomeInjectFile;
     extern std::string labelRunExp;
+    extern std::string expBasename;
     extern bool randomTopoInit;
     extern int initTopoN;
     extern int initTopoL;

@@ -67,6 +67,7 @@ bool NEAT::injectGenome = false;
 int NEAT::injectIter= -1;
 std::string NEAT::genomeInjectFile = "";
 std::string NEAT::labelRunExp = "";
+std::string NEAT::expBasename = "";
 bool NEAT::randomTopoInit = false;
 int NEAT::initTopoN = 0;
 int NEAT::initTopoL = 0;
