@@ -72,6 +72,8 @@ bool NEAT::randomTopoInit = false;
 int NEAT::initTopoN = 0;
 int NEAT::initTopoL = 0;
 
+double NEAT::minError = 10000.0;
+
 
 //MRandomR250 NEAT::NEATRandGen = MRandomR250(Platform::getRealMilliseconds()); // Random number generator; can pass seed value as argument here
 //MRandomR250 NEAT::NEATRandGen = MRandomR250();

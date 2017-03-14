@@ -348,10 +348,13 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
 
           //Spawn the Population
           pop=new Population(start_genome,NEAT::pop_size);
-
+          double epsilon = 1e-5; //target error (epsilon on the error)
           //Verifying Spawned Pop
           pop->verify();
-          for (gen=1;gen<=gens;gen++)
+          for (gen=1;
+               //gen<=gens;
+               epsilon < NEAT::minError;
+               gen++)
           {
               /*for(std::vector<Organism*>::iterator it=pop->organisms.begin(); it != pop->organisms.end();it++)
               {

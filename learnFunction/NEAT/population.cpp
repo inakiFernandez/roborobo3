@@ -993,11 +993,14 @@ bool Population::epoch2(int generation)
 
 
     double error = 0.0;
+    double lowestError = 10000.0;
     //Loop over organisms to sum fitnesses and compute overall average
     for(curorg=organisms.begin();curorg!=organisms.end();++curorg)
     {
         total+=(*curorg)->fitness;
         error +=(*curorg)->error;
+        if(((*curorg)->error) < lowestError)
+            lowestError = ((*curorg)->error);
     }
     overall_average=total/total_organisms;
     //Log average fitness in population (error)
@@ -1008,7 +1011,9 @@ bool Population::epoch2(int generation)
     curspecies=sorted_species.begin();
 
     //Log best fitness in population (error)
-    std::cout << (*(*curspecies)->organisms.begin())->error << " ";
+    //std::cout << (*(*curspecies)->organisms.begin())->error << " ";
+    std::cout << lowestError << " ";
+    NEAT::minError= lowestError;
 
     if((error/total_organisms) != (*(*curspecies)->organisms.begin())->error)
         std::cerr << "AvgError different than best" << std::endl;

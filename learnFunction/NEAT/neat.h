@@ -87,7 +87,7 @@ namespace NEAT {
     extern bool randomTopoInit;
     extern int initTopoN;
     extern int initTopoL;
-
+    extern double minError;
     //DEBUG
     extern double prevErr;
 
