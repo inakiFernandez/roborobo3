@@ -15,27 +15,11 @@
 */
 #include "experiments.h"
 #include <cstring>
-#include "../auxlearnfunction.h"
-#include <string>
-#include <iostream>
-
-#define NO_SCREEN_OUT
-vector<vector<double> > inputSet1 = readDoubleFile("../datasets/in-template-params.dat");
-vector<vector<double> > inputSet2 = readDoubleFile("../datasets/in2-template-params.dat");
-//Reverse learning 2 then 1 (Research Q: is order important?)[inconclusive, see Invert]
-vector<vector<double> > outputSet1 = readDoubleFile("../datasets/o1-template-params.dat");
-vector<vector<double> > outputSet2 = readDoubleFile("../datasets/o2-template-params.dat");
-
-// TODO ERASE ALL IN ONE
-vector<vector<double> > inputSetAll = readDoubleFile("../datasets/inAll.data");
-vector<vector<double> > outputSetAll = readDoubleFile("../datasets/oAll.dat");
-
-
-
-std::vector<std::vector<std::vector<double> > > inputSet(2, std::vector<std::vector<double> >());
-std::vector<std::vector<std::vector<double> > > outputSet(2, std::vector<std::vector<double> >());
-int f = 0;
-
+#include <ExtendedProperties.h>
+// ///////////////////////////////////////////////////////////////////////////////
+//For keeping and generating the dataset at the beginning as a NN
+//then polling it with different point at every evaluation (?generation)
+//TODO
 
 ExtendedProperties gProperties;
 bool loadProperties(std::string filename)
@@ -48,6 +32,82 @@ bool loadProperties(std::string filename)
     in.close();
     return true;
 }
+//Repeated function... needs fixing
+std::vector<double> generateRandomInputs(int dim,double inBound)
+{
+    //Returns a vector of size dim with uniformly distributed values between -1 and 1
+    std::vector<double> result;
+    for(unsigned int i=0; i < (unsigned int)dim; i++)
+    {
+      double rdm = ((double)(rand() % 10000)/5000.0 - 1.0) * inBound;
+      result.push_back(rdm);
+    }
+    if(ODNEATGC::Helper::withBias)
+        result.push_back(1.0);
+    return result;
+}
+/*ODNEATGC::Genome* createRandomGenome(int nIn,int nO,  ODNEATGC::GC id)
+{
+
+    ODNEATGC::Genome* randomG = new ODNEATGC::Genome(id,nIn,nO);
+    int neuronId = nIn + nO + 1;
+    int linkId = nIn * nO + 1;
+
+    int nbNodeMut = nIn + nO + 5; //TOERASE A LOT OF MUTATIONS FOR FUNCTION TO LEARN
+    ODNEATGC::Network* n;
+    for(int i = 0 ; i < nbNodeMut;i++)
+    {
+          randomG->mutate_add_node(ODNEATGC::Helper::newStructureTries,-1,neuronId,linkId);
+          n = randomG->genesis();
+    }
+    int nbLinkMut = nbNodeMut * nbNodeMut / 4;//TOERASE A LOT OF MUTATIONS FOR FUNCTION TO LEARN
+    for(int i = 0 ; i< nbLinkMut;i++)
+    {
+        randomG->mutate_add_link(ODNEATGC::Helper::newStructureTries,-1,linkId);
+        n = randomG->genesis();
+    }
+    double sigma = 0.1;
+    int nbWeightMut = 20 * 4;//TOERASE A LOT OF MUTATIONS FOR FUNCTION TO LEARN
+    for(int i = 0 ; i< nbWeightMut;i++)
+    {
+       randomG->mutate_link_weights(sigma);
+       n = randomG->genesis();
+    }
+    return randomG;
+}*/
+NEAT::Network* generateNNFunction(int gid, std::ifstream &nnFileStream)//ODNEATGC ODNEATGC::GC
+{
+    NEAT::Network* nn;//ODNEATGC
+
+    NEAT::Genome* g = new NEAT::Genome(gid, nnFileStream);// ODNEATGC ODNEATGC
+
+    nn = g->genesis(gid); //else with no parameters
+
+    return nn;
+}
+
+// ///////////////////////////////////////////////////////////////////////////////
+
+#define NO_SCREEN_OUT
+vector<vector<double> > inputSet1 = readDoubleFile("../datasets/in-template-params.dat");
+vector<vector<double> > inputSet2 = readDoubleFile("../datasets/in2-template-params.dat");
+//Reverse learning 2 then 1 (Research Q: is order important?)[inconclusive, see Invert]
+vector<vector<double> > outputSet1 = readDoubleFile("../datasets/o1-template-params.dat");
+vector<vector<double> > outputSet2 = readDoubleFile("../datasets/o2-template-params.dat");
+
+//ALL IN ONE
+vector<vector<double> > inputSetAll = readDoubleFile("../datasets/inAll.data");
+vector<vector<double> > outputSetAll = readDoubleFile("../datasets/oAll.dat");
+
+extern NEAT::Network* _nnModel1; //first task model net ODNEATGC
+extern NEAT::Network* _nnModel2; //second task model net ODNEATGC
+
+std::vector<std::vector<std::vector<double> > > inputSet(2, std::vector<std::vector<double> >());
+std::vector<std::vector<std::vector<double> > > outputSet(2, std::vector<std::vector<double> >());
+int f = 0;
+
+
+
 void writeMatrix(std::string filename,std::vector<std::vector<double> > data)
 {
     std::ofstream out(filename.c_str());
@@ -168,8 +228,8 @@ bool addLink(Genome* g, int inId, int outId,double &curinnov)
 
     bool foundI = false;
     bool foundO = false;
-    NNode* inNode;
-    NNode* outNode;
+    NNode* inNode = NULL;
+    NNode* outNode = NULL;
     std::vector<NNode*>::iterator thenode;
     for(thenode = g->nodes.begin(); thenode != g->nodes.end();thenode++)
     {
@@ -270,15 +330,27 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
     gProperties.checkAndGetPropertyValue("randomTopoInit",&NEAT::randomTopoInit,true);
     gProperties.checkAndGetPropertyValue("initTopoN",&NEAT::initTopoN,true);
     gProperties.checkAndGetPropertyValue("initTopoL",&NEAT::initTopoL,true);
-    //TOTEST
-    //Load datasets for this experiment
+    gProperties.checkAndGetPropertyValue("probbiggaussian",&NEAT::probBigGaussian,true);
+    NEAT::expBasename = expBasename;
+    NEAT::inputBound = 1; // / sqrt(nIn); for sphere function
+    //Dataset as neural network to be queried or dataset as fixed file
+
+    int gcid  = 0;
+    std::ifstream iNNFile1(("../datasets/o1-"+expBasename+".nn").c_str());
+    _nnModel1 = generateNNFunction(gcid,iNNFile1);
+
+    gcid++;
+    std::ifstream iNNFile2(("../datasets/o2-"+expBasename+".nn").c_str());
+    _nnModel2 = generateNNFunction(gcid, iNNFile2);
+
+
+    /*//Load datasets for this experiment
     inputSet1 = readDoubleFile("../datasets/in-" + expBasename  + ".dat");
     inputSet2 = readDoubleFile("../datasets/in2-" + expBasename  + ".dat");
     //Reverse learning 2 then 1 (Research Q: is order important?)[inconclusive, see Invert]
     outputSet1 = readDoubleFile("../datasets/o1-" + expBasename  + ".dat");
     outputSet2 = readDoubleFile("../datasets/o2-" + expBasename  + ".dat");
 
-    // TODO ERASE ALL IN ONE
     inputSetAll = readDoubleFile("../datasets/inAll-" + expBasename  + ".data");
     outputSetAll = readDoubleFile("../datasets/oAll-" + expBasename  + ".dat");
 
@@ -308,6 +380,11 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
             std::cerr << "Wrong order of experiments" << std::endl;
             exit(-1);
     }
+    TODO setup for stored neural net models
+    */
+    //ATTENTION
+    if(NEAT::experiment == 1)
+        f = 1;
 
     for(expcount=0;expcount<NEAT::num_runs;expcount++)
     {
@@ -320,7 +397,7 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
             std::ifstream loadInitGenomeFile (NEAT::genomeInjectFile.c_str());
 
             start_genome = new Genome(id, loadInitGenomeFile);
-
+            //TODO sample weights uniformly!! Also in Population::spawn()!
             for(int nb=0; nb < 40; nb++)
                 start_genome->mutate_link_weights(NEAT::weight_mut_power,1.0,GAUSSIAN);
           }
@@ -344,11 +421,13 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
           else
               start_genome = Genome::makeGenome(id,nI,nO);
 
-          //start_genome->print_to_filename("testRdm/gStart.nn");
+          double stepFactor = 0.9975; //0.995; //TODO vary stepFactor for decreasing sigma
+          //(decrease more slowly?: more exploration at the beginning)
 
           //Spawn the Population
           pop=new Population(start_genome,NEAT::pop_size);
-          double epsilon = 1e-5; //target error (epsilon on the error)
+          double epsilon = 0.001; //5e-3 target error (epsilon on the error)
+          bool doChangingSigma = true;
           //Verifying Spawned Pop
           pop->verify();
           for (gen=1;
@@ -356,6 +435,10 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
                epsilon < NEAT::minError;
                gen++)
           {
+              //ATTENTION to multiple runs inside NEAT code
+              if(doChangingSigma)
+                  NEAT::weight_mut_power *= stepFactor;
+              //std::cerr << "Sigma:" << NEAT::weight_mut_power << std::endl;
               /*for(std::vector<Organism*>::iterator it=pop->organisms.begin(); it != pop->organisms.end();it++)
               {
                   std::stringstream ss;
@@ -410,7 +493,6 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
             delete fnamebuf;
 
         }
-
         if (expcount<NEAT::num_runs-1)
             delete pop;
 
@@ -464,8 +546,9 @@ double computeError(vector<vector<double> > reference, vector<vector<double> > n
 }
 
 bool rdmNNFunction_evaluate(Organism *org)
-{
-  vector<vector<double> > out, outOther; //The network outputs
+{    
+  vector<vector<double> > out, outOther,outModel, outModelOther; //The network outputs
+  vector<vector<double> > in,inOther; //the network inputs
   //double this_out;
   unsigned int count;
   double errorsum;
@@ -480,10 +563,17 @@ bool rdmNNFunction_evaluate(Organism *org)
   int relax; //Activates until relaxation
   double previousError = 0.0;
   org->approximatedDatapoints.clear();
+  org->sampledInputs.clear();
+  int nInputs = _nnModel1->inputs.size();
+  if(ODNEATGC::Helper::withBias)
+      nInputs--;
   //Load and activate the network on each input
-  for(count=0;count<inputSet[f].size();count++)
+  //for(count=0;count<inputSet[f].size();count++)
+  for(count=0;count<(unsigned int)NEAT::numberSamples;count++)
   {
-      vector<double> inInstance = inputSet[f][count];
+      //Sample input
+      vector<double> inInstance = generateRandomInputs(nInputs, NEAT::inputBound);//;nIn, NEAT::inputBound);
+      //vector<double> inInstance = inputSet[f][count];
       if(NEAT::isWithErrorInput)
       {
          inInstance.push_back(previousError);
@@ -512,15 +602,49 @@ bool rdmNNFunction_evaluate(Organism *org)
     {
         outputInstance.push_back((*itONN)->activation);        
     }    
+    //Activate model NN
+
+    NEAT::Network* nnModel;//ODNEATGC
+    if(f==0)
+        nnModel = _nnModel1;
+    else if (f==1)
+        nnModel = _nnModel2;
+    nnModel->flush();
+    nnModel->load_sensors(&(inInstance[0]));
+    if (!(nnModel->activate ()))
+        {
+            std::cerr << "[ERROR] Activation of ANN not correct"
+                      << std::endl;
+            exit (-1);
+        }
+    //use depth to ensure relaxation TOERASE (Only if NEAT::Network is used)
+        for (relax=0;relax<=net_depth;relax++)
+        {
+          success=net->activate();
+        }
+    vector<double>outputInstanceModel;
+    for (vector<NEAT::NNode*>::iterator out_iter  = nnModel->outputs.begin();//ODNEATGC
+             out_iter != nnModel->outputs.end();
+             out_iter++)
+      {
+        outputInstanceModel.push_back((*out_iter)->activation);
+      }
+
+
     if(NEAT::isWithErrorInput)
     {
-        previousError = instanceError(outputSet[f][count],outputInstance);
+        previousError = instanceError(outputInstanceModel,outputInstance);
     }
+
+
     out.push_back(outputInstance);
+    outModel.push_back(outputInstanceModel);
+    in.push_back(inInstance);
 
     net->flush();
   }
   org->approximatedDatapoints = out;
+  org->sampledInputs = in;
 
   //Store the approximated dataset by this genome
   std::stringstream ssfilename;
@@ -530,11 +654,14 @@ bool rdmNNFunction_evaluate(Organism *org)
   std::ofstream oFile(ssfilename.str().c_str());
 
   //Store approximated datapoints
-  for(unsigned int count=0;count<inputSet[f].size();count++)
+  //for(unsigned int count=0;count<inputSet[f].size();count++)
+  for(unsigned int count=0;count<(unsigned int)NEAT::numberSamples;count++)
   {
-      for(unsigned int i = 0; i < inputSet[f][count].size(); i++)
+      //for(unsigned int i = 0; i < inputSet[f][count].size(); i++)
+      for(unsigned int i = 0; i < (unsigned int)nInputs; i++)
       {
-          oFile << inputSet[f][count][i] << " ";
+          //oFile << inputSet[f][count][i] << " ";
+          oFile << org->sampledInputs[count][i] << " ";
       }
       for(unsigned int i = 0; i < org->approximatedDatapoints[count].size(); i++)
       {
@@ -553,15 +680,18 @@ bool rdmNNFunction_evaluate(Organism *org)
   org->gnome->print_to_file(oFileNet);
   oFileNet.close();
 
+    /*TORESET FOR T1 T2
   previousError = 0.0;
   //Load and activate the network on each input
-  for(count=0;count<inputSet[1-f].size();count++)
+  //for(count=0;count<inputSet[1-f].size();count++)
+  for(count=0;count<(unsigned int)NEAT::numberSamples;count++)
   {
-    vector<double> inInstance = inputSet[1-f][count];
+    //vector<double> inInstance = inputSet[1-f][count];
+    vector<double> inInstanceOther = generateRandomInputs(nInputs, NEAT::inputBound);
 
     if(NEAT::isWithErrorInput)
     {
-       inInstance.push_back(previousError);
+       inInstanceOther.push_back(previousError);
     }
     if(NEAT::isWithNumberTask)
     {
@@ -569,9 +699,9 @@ bool rdmNNFunction_evaluate(Organism *org)
         //Task number input to the NN adapted if both tasks simultaneously
         if(NEAT::experiment == 2)
             taskInput = (count < inputSet1.size())? 1:-1;
-        inInstance.push_back(taskInput);
+        inInstanceOther.push_back(taskInput);
     }
-    net->load_sensors(&(inInstance[0]));
+    net->load_sensors(&(inInstanceOther[0]));
     //Relax net and get output
     success=net->activate();
 
@@ -580,28 +710,53 @@ bool rdmNNFunction_evaluate(Organism *org)
     {
       success=net->activate();
     }
-    vector<double>outputInstance;
+    vector<double>outputInstanceOther;
     for(vector<NNode*>::iterator itONN = net->outputs.begin();
         itONN != net->outputs.end();itONN++)
     {
-        outputInstance.push_back((*itONN)->activation);
+        outputInstanceOther.push_back((*itONN)->activation);
     }
+    //Activate model NN
+    NEAT::Network* nnModel; //ODNEATGC
+    if(f==0)
+        nnModel = _nnModel2;
+    else if (f==1)
+        nnModel = _nnModel1;
+    nnModel->flush();
+    nnModel->load_sensors(&(inInstanceOther[0]));
+    if (!(nnModel->activate ()))
+        {
+            std::cerr << "[ERROR] Activation of ANN not correct"
+                      << std::endl;
+            exit (-1);
+        }
+    vector<double>outputInstanceModelOther;
+    for (vector<NEAT::NNode*>::iterator out_iter  = nnModel->outputs.begin();//ODNEATGC
+             out_iter != nnModel->outputs.end();
+             out_iter++)
+      {
+        outputInstanceModelOther.push_back((*out_iter)->activation);
+      }
+
+
     if(NEAT::isWithErrorInput)
     {
-        previousError =  instanceError(outputSet[1-f][count],outputInstance);; //sqrt(errorOneSample);
+        previousError =  instanceError(outputInstanceModelOther,outputInstanceOther);
     }
-    outOther.push_back(outputInstance);
-
+    outOther.push_back(outputInstanceOther);
+    outModelOther.push_back(outputInstanceModelOther);
+    inOther.push_back(inInstanceOther);
     net->flush();
-  }
+  }*/
   if (success)
-  {
-    errorsum=computeError(outputSet[f],out);
-    double errorOther = computeError(outputSet[1-f],outOther);
+  {     
+    errorsum=computeError(outModel,out);
+    //double errorOther = computeError(outModelOther,outOther);
+
     //normalize error and transform into fitness
     org->fitness=(2-errorsum);
     org->error=errorsum;
-    org->otherError = errorOther;
+    org->otherError = 1.0;//errorOther;
   }
   else
   {
@@ -612,7 +767,7 @@ bool rdmNNFunction_evaluate(Organism *org)
     org->otherError = errorsum;
   }
 
-  if (errorsum < -1) //Do not stop for low error
+  if (errorsum < -1) //Do not stop for low error (for experiments until epsilon it is done in generational loop)
     org->winner=true;
   else
     org->winner=false;
@@ -626,8 +781,7 @@ int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winne
   vector<Organism*>::iterator curorg;
   vector<Species*>::iterator curspecies;
 
-  bool win=false;
-
+  bool win=false;   
   //switch tasks
   int durationPerFunction;
   gProperties.checkAndGetPropertyValue("durationPerFunction",&durationPerFunction,true);
@@ -657,8 +811,7 @@ int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winne
       //(*curorg)->gnome->print_to_filename("rdmNNFunction_optimal.nn");
     }
 
-  }
-
+  }    
 
   //Average and max their fitnesses for dumping to file and snapshot
   for(curspecies=(pop->species).begin();curspecies!=(pop->species).end();++curspecies)
@@ -725,7 +878,7 @@ int rdmNNFunction_epoch(Population *pop,int generation,char *filename,int &winne
       else
           genomeLog = pop->bestGenome->duplicate(-1);
 
-          netLog=genomeLog->genesis(-1);
+      netLog=genomeLog->genesis(-1);
 
 
       //bool success;

@@ -22,7 +22,9 @@
 #include "experiments.h"
 using namespace std;
 
-
+//To avoid circular dependency
+NEAT::Network* _nnModel1; //first task model net ODNEATGC
+NEAT::Network* _nnModel2; //second task model net ODNEATGC
 int main(int argc, char *argv[])
 {
   NEAT::Population *p=0;

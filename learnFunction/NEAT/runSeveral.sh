@@ -1,10 +1,4 @@
 #!/bin/bash
-oneRun()
-{
-    local j=$1
-    echo $j
-    $program $template $iter > $outbasename/noMulti/run-$j.log
-}
 start=`date +%s`
 
 if [ $# -ne 8 ]; then
@@ -25,7 +19,7 @@ nbExp=1
 scriptGenerate="../cmdDatasets.sh"
 doGenerate="true"
 
-#Generate dataset every time
+#Generate dataset every time (before experiments)
 if [ $doGenerate == "true" ]; then
     echo "Generate dataset $outbasename"
     $scriptGenerate $template $outbasename
@@ -37,22 +31,22 @@ doMulti="false"
 if [ $doMulti = "true" ]; then
     echo "Do multi"
     nbExp=2
-    ##TODO ATTENTION USE template and templateMulti variables    
-    rm $templateMulti #../config/template-params-multi # $2
+   
+    rm $templateMulti 
     cp $template $templateMulti 
-#../config/template-params ../config/template-params-multi # $1 $2
+
     #Add allowMulti 
-    echo "allowMultisynapses=true" >> $templateMulti #../config/template-params-multi #$2
+    echo "allowMultisynapses=true" >> $templateMulti
 fi
 
 rm -rf $outbasenam
 rm -rf sandbox/$outbasename
 rm -rf headmapData/$outbasename
-mkdir $outbasename
+mkdir -p $outbasename
 
 mkdir $outbasename/noMulti
-mkdir sandbox/$outbasename
-mkdir heatmapData/$outbasename
+mkdir -p sandbox/$outbasename
+mkdir -p heatmapData/$outbasename
 echo "No multi"
 touch $outbasename/noMulti.parallel
 for (( j=1; j<=$nbRuns; j++))
@@ -60,8 +54,9 @@ do
     #Non paralelized version
     #$program $template $iter > $outbasename/noMulti/run-$j.log #oneRun $j &   
     echo "$program $template $iter $j-runFolder $outbasename > $outbasename/noMulti/run-$j.log; echo $j" >> $outbasename/noMulti.parallel
-    mkdir sandbox/$outbasename/$j-runFolder
-    mkdir heatmapData/$outbasename/$j-runFolder
+    
+    mkdir -p sandbox/$outbasename/$j-runFolder
+    mkdir -p heatmapData/$outbasename/$j-runFolder
 done
 
 echo "Running $nbRuns runs of $outbasename experiments in $nbCores processors for $iter generations"

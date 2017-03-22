@@ -56,6 +56,8 @@ namespace NEAT {
 		bool mut_struct_baby;
 		bool mate_baby;
 
+        //for sampled inputs when approximating a NN (different inputs at every evaluation)
+        std::vector<std::vector<double> > sampledInputs;
         std::vector<std::vector<double> > approximatedDatapoints;
 
 		// MetaData for the object

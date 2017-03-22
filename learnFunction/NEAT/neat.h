@@ -88,6 +88,9 @@ namespace NEAT {
     extern int initTopoN;
     extern int initTopoL;
     extern double minError;
+    extern int numberSamples;
+    extern double inputBound;
+    extern double probBigGaussian;
     //DEBUG
     extern double prevErr;
 

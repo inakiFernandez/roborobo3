@@ -53,7 +53,7 @@ Genome::Genome(GC id, std::ifstream &iFile)
             ss >> curword; id.robot_id = atoi(curword);
             ss >> curword; id.gene_id = atoi(curword);
 
-            if (!(id==genome_id)) printf("ERROR: id mismatch in genome");
+            if (!(id==genome_id)) std::cerr << "ERROR: id mismatch in genome" << std::endl;
             done=1;
         }
 
@@ -347,7 +347,7 @@ void Genome::mutate_link_weights(double power)
             if(curgene->enable)
             {
                 if (Helper::randFloat() < Helper::mutateIndividualWeightProb)
-                {
+                {                   
                     curgene->lnk->weight += getGaussianRand(0, power);
                     //curgene->lnk->weight = capWeights(curgene->lnk->weight);
                 }

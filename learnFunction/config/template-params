@@ -49,6 +49,7 @@ mutate_individual_weight_prob= 1.0
 sigma= 0.1
 
 bias= true
+
 numberSamples= 50
 
 #exp: 0 first T1 then T2, 1 first T2 then T1, 2 T1 and T2 together
@@ -66,4 +67,4 @@ injectGenome= true
 injectIter= 15
 genomeInjectFile= ../datasets/o2-template-params.nn
 
-
+probbiggaussian= 0.0

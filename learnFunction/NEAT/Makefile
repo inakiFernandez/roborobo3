@@ -1,16 +1,17 @@
 
-CC = g++ -O3 -I.. -I../../include/core/Utilities/ -I../../include/contrib/ -g #-std=c++11
+CC = g++ -O3 -I../ -I../../include/core/Utilities/ -I../../include/contrib/ -I../../include/contrib/ -I../../include/core/Utilities/ #-std=c++11
 
 #LIBS = -L/usr/lib /usr/lib/libqthreads.so.0 -lguile -ldl -lreadline -ltermcap -lm
-
 #INCLUDES = -I/usr/include/g++-2 -I/usr/lib/gtkmm/include -I/usr/lib/sigc++/include -I/usr/lib/glib/include -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2
 
 #CFLAGS = -g -Wall -Wno-return-type $(INCLUDES) -DSWIG_GLOBAL
 #CFLAGS = -g -Wall -Werror
-CFLAGS = -g -Wall 
+CFLAGS = -Wall 
+
+#-pg
 
 neat: neat.o network.o nnode.o link.o trait.o gene.o genome.o innovation.o organism.o species.o population.o experiments.o neatLearnFunction.o #neatmain.o #neatswig_wrap.o visual.o
-	$(CC) $(CFLAGS) $(LIBS) -L ../build -lauxlearnfunction neat.o network.o nnode.o link.o trait.o gene.o genome.o innovation.o organism.o species.o population.o experiments.o neatLearnFunction.o  ../../src/core/ExtendedProperties.o ../../src/contrib/zsu/*.o ../../src/core/Misc.o -o neatLearnFunction  
+	$(CC) $(CFLAGS) $(LIBS) -L ../build -lauxlearnfunction neat.o network.o nnode.o link.o trait.o gene.o genome.o innovation.o organism.o species.o population.o experiments.o neatLearnFunction.o  ../../src/core/ExtendedProperties.o ../../src/contrib/odneatgc/*.o ../../src/contrib/zsu/*.o ../../src/core/Misc.o -o neatLearnFunction  
 #	$(CC) $(CFLAGS) $(LIBS) networks.o genetics.o visual.o experiments.o neatswig_wrap.o neatmain.o -o neat `gtkmm-config --cflags --libs`
 
 ########################

@@ -1244,8 +1244,8 @@ void Genome::mutate_link_weights(double power,double rate,mutator mut_type) {
             if (!((*curgene)->frozen) && (*curgene)->enable)
 
             {
-    
-                if (severe)
+                //Attention remodified to do gaussian only everytime
+                /*if (severe)
                 {
                     gausspoint=0.3;
                     coldgausspoint=0.1;
@@ -1268,20 +1268,26 @@ void Genome::mutate_link_weights(double power,double rate,mutator mut_type) {
                         gausspoint=1.0-rate;
                         coldgausspoint=1.0-rate;
                     }
-                }
+                }*/
     
                 //Possible methods of setting the perturbation:
-                randnum=gaussrand()*power; //power is standard deviation
+                //TOTEST Big mutation with low probability and small mutation with high probability
+                double powerFactor = 10.0;
+                if(randfloat() < NEAT::probBigGaussian)
+                    randnum = gaussrand()*power * powerFactor;
+                else
+                    randnum=gaussrand()*power; //power is standard deviation
                 //randnum=gaussrand();
                 //randnum=randposneg()*randfloat()*power*powermod;
     
                 if (mut_type==GAUSSIAN)
                 {
-                    randchoice=randfloat();
-                    if (randchoice>gausspoint)
+                    //Commented code to do only gaussian mutation every time
+                   /* randchoice=randfloat();
+                    if (randchoice>gausspoint)*/
                         ((*curgene)->lnk)->weight+=randnum;
-                    else if (randchoice>coldgausspoint)
-                        ((*curgene)->lnk)->weight=randnum;
+                    /*else if (randchoice>coldgausspoint)
+                        ((*curgene)->lnk)->weight=randnum;*/
                 }
                 else if (mut_type==COLDGAUSSIAN)
                     ((*curgene)->lnk)->weight=randnum;

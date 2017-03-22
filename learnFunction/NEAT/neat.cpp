@@ -73,7 +73,9 @@ int NEAT::initTopoN = 0;
 int NEAT::initTopoL = 0;
 
 double NEAT::minError = 10000.0;
-
+int NEAT::numberSamples = 2000;
+double NEAT::inputBound = 0.0; // Bound for sampled inputs when diff. inputs per evaluation
+double NEAT::probBigGaussian = 0.0;
 
 //MRandomR250 NEAT::NEATRandGen = MRandomR250(Platform::getRealMilliseconds()); // Random number generator; can pass seed value as argument here
 //MRandomR250 NEAT::NEATRandGen = MRandomR250();

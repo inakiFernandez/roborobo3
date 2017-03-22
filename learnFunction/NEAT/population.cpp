@@ -21,6 +21,7 @@
 
 //ATTENTION for 1+1 selection
 #include "experiments.h"
+
 using namespace NEAT;
 
 Population::Population(Genome *g,int size) {
@@ -277,7 +278,8 @@ bool Population::spawn(Genome *g,int size) {
 	//Start with perturbed linkweights
     for(count=0;count< size;count++)
     {
-		new_genome=g->duplicate(count); 		
+        new_genome=g->duplicate(count);
+        //TODO sample weights uniformly!!
 		new_genome->mutate_link_weights(1.0,1.0,COLDGAUSSIAN);
 		new_genome->randomize_traits();
 
@@ -470,7 +472,8 @@ bool Population::epoch(int generation)
 	*/
 
 	//Stick the Species pointers into a new Species list for sorting
-	for(curspecies=species.begin();curspecies!=species.end();++curspecies) {
+    for(curspecies=species.begin();curspecies!=species.end();++curspecies)
+    {
 		sorted_species.push_back(*curspecies);
 	}
 
@@ -499,20 +502,22 @@ bool Population::epoch(int generation)
 	//Also penalize stagnant species
 	//Then adjust the fitness using the species size to "share" fitness
 	//within a species.
-	//Then, within each Species, mark for death 
-	//those below survival_thresh*average
+    //Then, within each Species, mark for death those below survival_thresh*average
     for(curspecies=species.begin();curspecies!=species.end();++curspecies)
     {
 		(*curspecies)->adjust_fitness();
 	}
     double error = 0.0;
+    double lowestError = 10000.0;
 	//Go through the organisms and add up their fitnesses to compute the
-	//overall average
-    //TODO maybe consider orig_fitness
+    //overall average. TODO maybe consider orig_fitness
     for(curorg=organisms.begin();curorg!=organisms.end();++curorg)
     {
 		total+=(*curorg)->fitness;
         error +=(*curorg)->error;
+
+        if(((*curorg)->error) < lowestError)
+            lowestError = ((*curorg)->error);
 	}
 	overall_average=total/total_organisms;
     //Log average fitness in population (error)
@@ -533,7 +538,7 @@ bool Population::epoch(int generation)
 		skim=(*curspecies)->count_offspring(skim);
 		total_expected+=(*curspecies)->expected_offspring;
 	}    
-	//Need to make up for lost foating point precision in offspring assignment
+    //Need to make up for lost floating point precision in offspring assignment
 	//If we lost precision, give an extra baby to the best Species
     if (total_expected<total_organisms)
     {
@@ -580,7 +585,10 @@ bool Population::epoch(int generation)
 	curspecies=sorted_species.begin();
 
     //Log best fitness in population (error)
-    std::cout << (*(*curspecies)->organisms.begin())->error << " ";
+    //std::cout << (*(*curspecies)->organisms.begin())->error << " ";
+    std::cout << lowestError << " ";
+    NEAT::minError= lowestError;
+
     //Log number of species
     std::cout << num_species << " ";
 
@@ -620,14 +628,19 @@ bool Population::epoch(int generation)
     avg_depth /=pop_size;*/
     std::cout << avg_depth << " ";
     curspecies=sorted_species.begin();
-    //Log other function error on current best
-    std::cout << (*(*curspecies)->organisms.begin())->otherError<< " ";
+
     error = 0.0;
+    double lowestOtherError = 10000.0;
     for(curorg=organisms.begin();curorg!=organisms.end();++curorg)
     {
         error +=(*curorg)->otherError;
+        if((*curorg)->otherError < lowestOtherError)
+            lowestOtherError = (*curorg)->otherError;
     }
 
+    //TOCHECK Log other function error on current best
+    //std::cout << (*(*curspecies)->organisms.begin())->otherError<< " ";
+    std::cout << lowestOtherError << " ";
     //Log average error on other function
     std::cout << error/total_organisms << " ";
     //TODO log average nbLinks
