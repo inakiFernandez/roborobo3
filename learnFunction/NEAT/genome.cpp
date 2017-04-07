@@ -1103,13 +1103,23 @@ void Genome::mutate_node_trait(int times) {
 	}
 }
 
+void Genome::initialize_link_weights(double max)
+{
+    for(std::vector<Gene*>::iterator curgene=genes.begin();curgene!=genes.end();curgene++)
+    {
+        double w = randfloat() * max;
+
+        ((*curgene)->lnk)->weight = w;
+        (*curgene)->mutation_num=((*curgene)->lnk)->weight;
+    }
+}
+
 void Genome::mutate_link_weights(double power,double rate,mutator mut_type) {
 	std::vector<Gene*>::iterator curgene;
 	double num;  //counts gene placement
 	double gene_total;
 	double powermod; //Modified power by gene number
-	//The power of mutation will rise farther into the genome
-	//on the theory that the older genes are more fit since
+    //on the theory that the older genes are more fit since
 	//they have stood the test of time
 
 	double randnum;
@@ -1119,10 +1129,6 @@ void Genome::mutate_link_weights(double power,double rate,mutator mut_type) {
 	double coldgausspoint;
 
 	bool severe;  //Once in a while really shake things up
-
-	//Wright variables
-	//double oldval;
-	//double perturb;
 
 
 	// --------------- WRIGHT'S MUTATION METHOD -------------- 
@@ -1176,7 +1182,6 @@ void Genome::mutate_link_weights(double power,double rate,mutator mut_type) {
 
 	//}
 
-	
 
 	// ------------------------------------------------------ 
 
@@ -1201,44 +1206,15 @@ void Genome::mutate_link_weights(double power,double rate,mutator mut_type) {
 	//    ((*lastgene)->lnk)->weight+=0.5*randposneg()*randfloat();
 	//}
 
-/*
-	//KENHACK: NOTE THIS HAS BEEN MAJORLY ALTERED
-	//     THE LOOP BELOW IS THE ORIGINAL METHOD
-	if (mut_type==COLDGAUSSIAN) {
-		//printf("COLDGAUSSIAN");
-		for(curgene=genes.begin();curgene!=genes.end();curgene++) {
-			if (randfloat()<0.9) {
-				randnum=randposneg()*randfloat()*power*powermod;
-				((*curgene)->lnk)->weight+=randnum;
-			}
-		}
-	}
-
-	
-	for(curgene=genes.begin();curgene!=genes.end();curgene++) {
-		if (randfloat()<0.2) {
-			randnum=randposneg()*randfloat()*power*powermod;
-			((*curgene)->lnk)->weight+=randnum;
-
-			//Cap the weights at 20.0 (experimental)
-			if (((*curgene)->lnk)->weight>1.0) ((*curgene)->lnk)->weight=1.0;
-			else if (((*curgene)->lnk)->weight<-1.0) ((*curgene)->lnk)->weight=-1.0;
-		}
-	}
-
-	*/
 
     if(!NEAT::allowMultisynapses)
     {
         //Loop on all genes  (ORIGINAL METHOD)
         for(curgene=genes.begin();curgene!=genes.end();curgene++)
         {
-            //The following if determines the probabilities of doing cold gaussian
+            //determines the probabilities of cold gaussian
             //mutation, meaning the probability of replacing a link weight with
-            //another, entirely random weight.  It is meant to bias such mutations
-            //to the tail of a genome, because that is where less time-tested genes
-            //reside.  The gausspoint and coldgausspoint represent values above
-            //which a random float will signify that kind of mutation.
+            //another, entirely random weight
     
             //Don't mutate weights of frozen or disabled links
             if (!((*curgene)->frozen) && (*curgene)->enable)
@@ -3130,7 +3106,7 @@ double Genome::compatibility(Genome *g) {
 
 		return (NEAT::disjoint_coeff*(num_disjoint/1.0)+
 			NEAT::excess_coeff*(num_excess/1.0)+
-			NEAT::mutdiff_coeff*(mut_diff_total/num_matching));
+            NEAT::mutdiff_coeff*((double)mut_diff_total/(double)num_matching));
 }
 
 double Genome::trait_compare(Trait *t1,Trait *t2) {

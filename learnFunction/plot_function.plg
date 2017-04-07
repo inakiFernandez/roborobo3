@@ -23,21 +23,21 @@ while (good_data){
 
 #call "col_counter.gp" filename #  'datasets/in-o1.sorted.dat' #
 
-print col_count 
+#print col_count 
 
-if(col_count == 2) {
-	plot filename
+#if(col_count == 2) {
+	plot filename using 1:3 with linespoints pointtype 4
 
-}
-else {
-     if(col_count == 3) {
-     		  splot filename
-     }
-     else {
-	print "Not possible to plot. Too many dimensions: "
-	print col_count
-    }
-}
+#}
+#else {
+#     if(col_count == 3) {
+#     		  splot filename
+#     }
+#     else {
+#	print "Not possible to plot. Too many dimensions: "
+#	print col_count
+#    }
+#}
 
 
 

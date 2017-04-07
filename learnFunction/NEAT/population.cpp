@@ -279,8 +279,9 @@ bool Population::spawn(Genome *g,int size) {
     for(count=0;count< size;count++)
     {
         new_genome=g->duplicate(count);
-        //TODO sample weights uniformly!!
-		new_genome->mutate_link_weights(1.0,1.0,COLDGAUSSIAN);
+        //sample weights uniformly!!
+        new_genome->initialize_link_weights(1.0);
+        //new_genome->mutate_link_weights(1.0,1.0,COLDGAUSSIAN);
 		new_genome->randomize_traits();
 
 		new_organism=new Organism(0.0,new_genome,1);
@@ -490,6 +491,7 @@ bool Population::epoch(int generation)
 	while((curspecies!=sorted_species.begin())&&
 		((*curspecies)->age<20))
 		--curspecies;
+    //TOTEST IF REMOVED
 	if ((generation%30)==0)
 		(*curspecies)->obliterate=true;
 
@@ -520,7 +522,7 @@ bool Population::epoch(int generation)
             lowestError = ((*curorg)->error);
 	}
 	overall_average=total/total_organisms;
-    //Log average fitness in population (error)
+    //Log average fitness in population (original error)
     std::cout << error/total_organisms << " ";
 
 	//Now compute expected number of offspring for each individual organism
@@ -576,7 +578,6 @@ bool Population::epoch(int generation)
 
 	//Sort the Species by max fitness (Use an extra list to do this)
 	//These need to use ORIGINAL fitness
-	//sorted_species.qsort(order_species);
     std::sort(sorted_species.begin(), sorted_species.end(), order_species);
 
 	best_species_num=(*(sorted_species.begin()))->id;
@@ -585,7 +586,6 @@ bool Population::epoch(int generation)
 	curspecies=sorted_species.begin();
 
     //Log best fitness in population (error)
-    //std::cout << (*(*curspecies)->organisms.begin())->error << " ";
     std::cout << lowestError << " ";
     NEAT::minError= lowestError;
 
@@ -603,7 +603,6 @@ bool Population::epoch(int generation)
 
     //log depth best NN
     curspecies=sorted_species.begin();
-    //(*(*curspecies)->organisms.begin())->gnome->print_to_filename("testDepth.nn");
     /*std::cout
             << (*(*curspecies)->organisms.begin())->gnome->phenotype->max_depth()
             //<< "-1"
@@ -614,10 +613,10 @@ bool Population::epoch(int generation)
     //log nbNodes best NN
     std::cout << (*(*curspecies)->organisms.begin())->gnome->nodes.size()<< " ";
 
-    //TODO
-    double avg_depth = 0.0;
-    //TOCheck DISABLED for reducing running time
-    /*for(curspecies=species.begin();curspecies!=species.end();++curspecies)
+    double avg_depth = -1.0;
+    //DISABLED for reducing running time
+    /*avg_depth = 0.0;
+    for(curspecies=species.begin();curspecies!=species.end();++curspecies)
     {
         for(curorg = (*curspecies)->organisms.begin();
             curorg !=(*curspecies)->organisms.end(); curorg++)
@@ -857,8 +856,6 @@ bool Population::epoch(int generation)
 			//Remember where we are
 			deadorg=curorg;
 			++curorg;
-
-			//iter2 =  v.erase(iter); 
 
 			//Remove the organism from the master list
 			curorg=organisms.erase(deadorg);

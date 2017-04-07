@@ -27,12 +27,11 @@ NEAT::Network* _nnModel1; //first task model net ODNEATGC
 NEAT::Network* _nnModel2; //second task model net ODNEATGC
 int main(int argc, char *argv[])
 {
-  NEAT::Population *p=0;
+  //NEAT::Population *p=0;
 
   //RANDOM SETUP, to the clock tick
   unsigned int seed =(unsigned)time(NULL) + (unsigned)clock();
-  //seed = 1481293865; // !!!!
-  //std::cerr << seed << std::endl;
+
   srand(seed);
 
   if (argc != 5)
@@ -46,10 +45,11 @@ int main(int argc, char *argv[])
   //Load in the params
   NEAT::load_neat_params(argv[1],false);
   int gens = atoi(argv[2]);
-  //third parameter is folder Run for out logfiles, fourth is nameExperiment for getting datasets
-  p = rdmNNFunction_test(gens,argv[1], argv[3],argv[4]);
+  //third parameter is folder Run for out logfiles, fourth is nameExperiment for getting datasets //p =
+  rdmNNFunction_test(gens,argv[1], argv[3],argv[4]);
 
-
+  delete _nnModel1;
+  delete _nnModel2;
   /*
   //Test a genome file
   Genome *g; Network *n; CartPole *thecart; thecart=new CartPole(true,0);
@@ -57,10 +57,9 @@ int main(int argc, char *argv[])
   thecart->nmarkov_long=true; thecart->generalization_test=false;
   pole2_evaluate(org,0,thecart); cout<<"made score "<<org->fitness<<endl;
   */
-  if (p)
-    delete p;
+  /*if (p)
+    delete p;*/
 
-  return(0);
-
+  return 0;
 }
 

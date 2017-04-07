@@ -45,7 +45,7 @@ if __name__ == '__main__':
     nbGen = args.nbGen 
     numRuns = args.numRuns
     #For Chi square distribution (k)
-    nbSamples = 50
+    #nbSamples = 50
     
     dirFiles = glob.glob(datapath + "/*istance*") # os.listdir(datapath)
     
@@ -98,15 +98,18 @@ if __name__ == '__main__':
 
         genoAllDist.extend(dataGNoDiag)
         phenoAllDist.extend(dataPhNoDiag)
+        
         if(doRank):
             x = np.concatenate(dataGNoDiag).ravel()
             y = np.concatenate(dataPhNoDiag).ravel()
             
-            ranksPh = stats.rankdata(dataPhNoDiag)
+
+            ranksPh = stats.rankdata(dataPhNoDiag)            
             ranksG = stats.rankdata(dataGNoDiag)
             kendalltau.append(stats.kendalltau(ranksG,ranksPh))
             spearmanR.append(stats.spearmanr(x,y))
-                      
+
+
             #Cluster scatterplot geno-pheno in discretized bins         
             fig = plt.figure("Bins scatter GenoPheno") # ,facecolor=bgcolor)        
             
@@ -117,8 +120,8 @@ if __name__ == '__main__':
             #xN = [d/len(x) for d in x]
             #yN = [d/len(y) for d in y]
             nbBins = 20
-            vmaxLogScale = int(np.power(10,1+int(np.trunc(np.log10(len(x))))))
-                                      
+            vmaxLogScale = int(np.power(10,1+int(np.trunc(np.log10(len(x))))))            
+               
             hist2DGenoPheno = np.histogram2d( # plt.hist2D(
                                          x, y, bins=nbBins, #per dimension
                                          range=[[0.0, maxGenAll], [0.0, 2.0]],
@@ -185,7 +188,7 @@ if __name__ == '__main__':
 
             axb = plt.subplot(gs[1,1], sharex=ax,facecolor=bgcolor)
             plt.grid(True,color=gridcolor)
-
+            
             density = gaussian_kde(x)
             ys = np.linspace(0.0,maxGenAll,1000)
             density.covariance_factor = lambda : covarFactor

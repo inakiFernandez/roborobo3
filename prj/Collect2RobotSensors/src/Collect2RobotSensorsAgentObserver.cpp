@@ -35,8 +35,9 @@ void Collect2RobotSensorsAgentObserver::step()
     for( int i = 0 ; i < _wm->_cameraSensorsNb; i++)
     {
         int targetIndex = _wm->getObjectIdFromCameraSensor(i);
-        
-        if ( PhysicalObject::isInstanceOf(targetIndex))   // sensor ray bumped into a physical object
+
+        // sensor ray bumped into a physical object
+        if ( PhysicalObject::isInstanceOf(targetIndex))
         {
             targetIndex = targetIndex - gPhysicalObjectIndexStartOffset;
             gPhysicalObjects[targetIndex]->isTouched(_wm->getId());

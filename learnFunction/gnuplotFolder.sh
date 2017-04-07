@@ -27,7 +27,7 @@ f2="$folderScript/datasets/in-o2-$outbasename.sorted.dat"
 #rm $folder/*ind*aa
 #rm $folder/*ind*ab
 
-filesBest=`ls $folder | grep '\.dat$' | grep '^g' | grep -v '\-ind'`
+filesBest=`ls $folder | grep '\.dat$' | grep '^g' | grep -v '\-ind' | grep -v 'gModel'`
 #(>&2 echo $filesBest)
 
 # in $folder/g*.dat ; 
@@ -86,12 +86,12 @@ do
    #rm $folder/*.sorted
 done
 
-sleep 2;
+sleep 4;
 listFiles=`ls  $folder/g*-t-0.dat.png`
 for j in $listFiles ; #$folder/g*-t-0.dat.png ; 
 do 
 #echo $j
-index=`echo $j | sed -e 's/g\(.*\)-t-0.dat.png/\1/'` ; 
+index=`echo $j | sed -e 's/\/g\(.*\)-t-0.dat.png/\/\1/'` ; 
 mv "$j" "$index.png"; 
 done
 
@@ -99,7 +99,8 @@ listFiles=`ls  $folder/g*-t-1.dat.png`
 for j in $listFiles ; #$folder/g*-t-1.dat.png ; 
 do 
 #echo $j
-index=`echo $j | sed -e 's/g\(.*\)-t-1.dat.png/\1/'` ; 
+index=`echo $j | sed -e 's/\/g\(.*\)-t-1.dat.png/\/\1/'` ; 
+#echo $index
 mv "$j" "$index.png"; 
 done
 
@@ -113,8 +114,8 @@ cd - > /dev/null
 
 #DATE=$(date +"%Y%m%d%H%M")
 
-avconv -loglevel quiet  -y -r 4 -start_number 1 -i $folder/%d.png -b:v 1000k $folder/vidApprox.mp4
-echo $folder/vidApprox.mp4 
+avconv -loglevel quiet -y -r 4 -start_number 1 -i $folder/%d.png -b:v 1000k $folder/vidApprox.mp4
+#echo $folder/vidApprox.mp4 
 
 #avconv -i beh.mp4 -i gen.mp4 -i ../sandbox/201701181431.mp4 -filter_complex "[0:v]pad=iw*2:ih*2[a]; [a][1:v]overlay=w; [2:v]overlay=w:ih[bg]" allInOne2.mp4
 

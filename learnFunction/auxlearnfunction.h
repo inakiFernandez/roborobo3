@@ -7,32 +7,25 @@
 #include <stdio.h>
 #include <vector>
 //#define ODNEAT_FUNCTIONS
-#ifdef ODNEAT_FUNCTIONS
-#include <odneatgc/network.h>
-#include <odneatgc/genome.h>
-#endif //ODNEAT_FUNCTIONS
+//#ifdef ODNEAT_FUNCTIONS
+//#include <odneatgc/network.h>
+//#include <odneatgc/genome.h>
+//#endif //ODNEAT_FUNCTIONS
 
 #include <ExtendedProperties.h>
 #include <fstream>
+#include<network.h>
+#include<genome.h>
+#include<neat.h>
 
-#ifdef ODNEAT_FUNCTIONS
-using namespace ODNEATGC;
-#endif //ODNEAT_FUNCTIONS
+//#ifdef ODNEAT_FUNCTIONS
+//using namespace ODNEATGC;
+//#endif //ODNEAT_FUNCTIONS
 
+//using namespace NEAT;//no NEAT
 
 template <typename T> std::vector<T> joinVectors(const std::vector<T>& v1, const std::vector<T>& v2);
-//{
-//    std::vector<T> result;
-//    for(auto &element:v1)
-//    {
-//        result.push_back(element);
-//    }
-//    for(auto &element:v2)
-//    {
-//        result.push_back(element);
-//    }
-//    return result;
-//}
+
 std::vector<double> generateRandomInputs(int dim,double inBound);
 
 std::vector<double> f1(std::vector<double> inputs, int outDim);
@@ -47,16 +40,19 @@ double worst(std::vector<double> v);
 
 std::vector<double> targetFunction(std::vector<double> inputInstance,int functionSelector, int dimOut);
 
-#ifdef ODNEAT_FUNCTIONS
-std::vector<double> activateNN(Network* nAct, std::vector<double> inputs);
 
-double functionError(Network* nTest, std::vector<std::vector<double> > inputBase,
+//#ifdef ODNEAT_FUNCTIONS
+std::vector<double> activateNN(NEAT::Network* nAct, std::vector<double> inputs); //noNEAT
+
+double functionError(NEAT::Network* nTest, std::vector<std::vector<double> > inputBase, //noNEAT
                std::vector<std::vector<double>> outReference);
 
-extern ExtendedProperties gProperties;
+//static ExtendedProperties gProperties;
 bool loadProperties(std::string filename);
-#endif //ODNEAT_FUNCTIONS
-double avgNumberNodes(std::vector<Genome*> vG);
-double avgNumberLinks(std::vector<Genome*> vG);
+//#endif //ODNEAT_FUNCTIONS
+
+
+double avgNumberNodes(std::vector<NEAT::Genome*> vG);
+double avgNumberLinks(std::vector<NEAT::Genome*> vG);
 
 #endif // AUXLEARNFUNCTION_H

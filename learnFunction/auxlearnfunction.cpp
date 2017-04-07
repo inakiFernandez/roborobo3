@@ -1,6 +1,8 @@
 #include "auxlearnfunction.h"
 
 
+#include <NEAT/neat.h>
+
 
 std::vector<double> generateRandomInputs(int dim,double inBound)
 {
@@ -11,7 +13,7 @@ std::vector<double> generateRandomInputs(int dim,double inBound)
       double rdm = ((double)(rand() % 10000)/5000.0 - 1.0) * inBound;
       result.push_back(rdm);
     }
-    if(Helper::withBias)
+    if(NEAT::withBias)//if(Helper::withBias)
         result.push_back(1.0);
     return result;
 }
@@ -50,7 +52,7 @@ std::vector<double> f2(std::vector<double> inputs, int outDim)
         }
     return result;
 }
-double avgNumberNodes(std::vector<Genome*> vG)
+double avgNumberNodes(std::vector<NEAT::Genome*> vG)
 {
     double result = 0.0;
 
@@ -61,7 +63,7 @@ double avgNumberNodes(std::vector<Genome*> vG)
 
     return result/vG.size();
 }
-double avgNumberLinks(std::vector<Genome*> vG)
+double avgNumberLinks(std::vector<NEAT::Genome*> vG)
 {
     double result = 0.0;
 
@@ -131,7 +133,7 @@ std::vector<double> targetFunction(std::vector<double> inputInstance,int functio
 }
 
 
-std::vector<double> activateNN(Network* nAct, std::vector<double> inputs)
+std::vector<double> activateNN(NEAT::Network* nAct, std::vector<double> inputs)
 {
 
     nAct->load_sensors(&(inputs[0]));
@@ -141,6 +143,9 @@ std::vector<double> activateNN(Network* nAct, std::vector<double> inputs)
                       << std::endl;
             exit (-1);
         }
+    int nnDepth = 30;
+    for(int i=0; i < nnDepth; i++)
+        nAct->activate ();
     std::vector<double> outputs;
 
     for (auto out_iter  = nAct->outputs.begin();
@@ -151,10 +156,11 @@ std::vector<double> activateNN(Network* nAct, std::vector<double> inputs)
         outputs.push_back(outVal);
       }
 
+    nAct->flush();
     return outputs;
 }
 
-double functionError(Network* nTest, std::vector<std::vector<double> > inputBase,
+double functionError(NEAT::Network* nTest, std::vector<std::vector<double> > inputBase,
                std::vector<std::vector<double>> outReference)
 {
   //Average quadratic error between outputs, over all inputs samples in the base
@@ -174,14 +180,14 @@ double functionError(Network* nTest, std::vector<std::vector<double> > inputBase
     }
   return result / (double)inputBase.size();
 }
-ExtendedProperties gProperties;
+//ExtendedProperties gProperties;
 bool loadProperties(std::string filename)
 {
     std::ifstream in(filename.c_str());
 
     if ( !in.is_open() ) // WAS: if ( in == NULL )
         return false;
-    gProperties.load(in);
+    NEAT::gProperties.load(in);
     in.close();
     return true;
 }

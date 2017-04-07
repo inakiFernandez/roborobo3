@@ -98,7 +98,6 @@ bool Species::remove_org(Organism *org) {
 		++curorg;
 
 	if (curorg==organisms.end()) {
-		//cout<<"ALERT: Attempt to remove nonexistent Organism from Species"<<endl;
 		return false;
 	}
 	else {
@@ -294,14 +293,12 @@ void Species::adjust_fitness() {
 			//Extreme penalty for a long period of stagnation (divide fitness by 100)
             if(NEAT::pop_size!=1)
                 ((*curorg)->fitness)=((*curorg)->fitness)*0.01;
-			//std::cout<<"OBLITERATE Species "<<id<<" of age "<<age<<std::endl;
-			//std::cout<<"dropped fitness to "<<((*curorg)->fitness)<<std::endl;
 		}
 
 		//Give a fitness boost up to some young age (niching)
 		//The age_significance parameter is a system parameter
 		//  if it is 1, then young species get no fitness boost
-		if (age<=10) ((*curorg)->fitness)=((*curorg)->fitness)*NEAT::age_significance; 
+        //This is not used:  if (age<=10) ((*curorg)->fitness)=((*curorg)->fitness)*NEAT::age_significance;
 
 		//Do not allow negative fitness
 		if (((*curorg)->fitness)<0.0) (*curorg)->fitness=0.0001; 
@@ -312,8 +309,7 @@ void Species::adjust_fitness() {
 
 	}
 
-	//Sort the population and mark for death those after survival_thresh*pop_size
-	//organisms.qsort(order_orgs);
+	//Sort the population and mark for death those after survival_thresh*pop_size	
 	std::sort(organisms.begin(), organisms.end(), order_orgs);
 
 	//Update age_of_last_improvement here
@@ -336,7 +332,6 @@ void Species::adjust_fitness() {
 	}
 	while(curorg!=organisms.end()) {
 	  (*curorg)->eliminate=true;  //Mark for elimination
-	  //std::std::cout<<"marked org # "<<(*curorg)->gnome->genome_id<<" fitness = "<<(*curorg)->fitness<<std::std::endl;
 	  ++curorg;
 	}             
 
@@ -419,10 +414,11 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
 	Species *newspecies; //For babies in new Species
 	Organism *comporg;  //For Species determination through comparison
 
-	Species *randspecies;  //For mating outside the Species
+    /*Species *randspecies;  //For mating outside the Species
 	double randmult;
 	int randspeciesnum;
-	int spcount;  
+    int spcount;
+    int giveup; //For giving up finding a mate outside the species */
 	std::vector<Species*>::iterator cursp;
 
 	Network *net_analogue;  //For adding link to test for recurrency
@@ -435,7 +431,6 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
 
 	Organism *thechamp;
 
-	int giveup; //For giving up finding a mate outside the species
 
 	bool mut_struct_baby;
 	bool mate_baby;
@@ -449,9 +444,7 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
     double spin = 0.0;  //Fitness total while the wheel is spinning
 
 	//Compute total fitness of species for a roulette wheel
-	//Note: You don't get much advantage from a roulette here
-	// because the size of a species is relatively small.
-	// But you can use it by using the roulette code here
+    // you can use it by using the roulette code here
 
     for(curorg=organisms.begin();curorg!=organisms.end();++curorg)
     {
@@ -460,11 +453,11 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
 
 	
 	//Check for a mistake
-	if ((expected_offspring>0)&&
+    if ((expected_offspring>0) &&
         (organisms.size()==0))
     {
-			//    std::cout<<"ERROR:  ATTEMPT TO REPRODUCE OUT OF EMPTY SPECIES"<<std::endl;
-			return false;
+            std::cerr << "ERROR:  ATTEMPT TO REPRODUCE OUT OF EMPTY SPECIES" << std::endl;
+            exit(-1); //return false;
     }
 
     poolsize=organisms.size()-1;
@@ -481,24 +474,20 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
         outside=false;
 
         //Debug Trap
-        if (expected_offspring>NEAT::pop_size)
+        if (expected_offspring > NEAT::pop_size)
         {
-            //      std::cout<<"ALERT: EXPECTED OFFSPRING = "<<expected_offspring<<std::endl;
-            //      cin>>pause;
             exit(-1);
         }
-
 
         //If we have a super_champ (Population champion), finish off some special clones
         if ((thechamp->super_champ_offspring) > 0)
         {
+            //UNUSED
+            std::cerr << "Should not be in superchamp reproducing function" << std::endl;
+            exit(-1) ;
+            /*
             mom=thechamp;
             new_genome=(mom->gnome)->duplicate(count);
-
-            /*if ((thechamp->super_champ_offspring) == 1)
-            {
-
-            }*/
 
             //Most superchamp offspring will have their connection weights mutated only
             //The last offspring will be an exact duplicate of this super_champ
@@ -506,9 +495,9 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
             //      Settings used for published experiments did not use this
             if ((thechamp->super_champ_offspring) > 1)
             {
-                if ((randfloat()<0.8) || (NEAT::mutate_add_link_prob==0.0))
-                    //ABOVE LINE IS FOR:
-                    //Make sure no links get added when the system has link adding disabled
+                //Make sure no links get added when the system has link adding disabled
+                if ((randfloat()<0.8) || (NEAT::mutate_add_link_prob != 0.0))
+
                     new_genome->mutate_link_weights(mut_power,1.0,GAUSSIAN);
                 else
                 {
@@ -526,17 +515,16 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
             {
                 if (thechamp->pop_champ)
                 {
-                    //std::cout<<"The new org baby's genome is "<<baby->gnome<<std::endl;
                     baby->pop_champ_child=true;
                     baby->high_fit=mom->orig_fitness;
                 }
             }
-
-            thechamp->super_champ_offspring--;
+            thechamp->super_champ_offspring--;*/
         }
         //If we have a Species champion, just clone it
         else if ((!champ_done) && (expected_offspring>5))
         {
+            //Elitist strategy within species of size > 5
 
                 mom=thechamp; //Mom is the champ
 
@@ -547,20 +535,19 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
                 champ_done=true;
 
         }
-            //First, decide whether to mate or mutate
-            //If there is only one organism in the pool, then always mutate
+        //Decide whether to mate or mutate
         else if ((randfloat()<NEAT::mutate_only_prob) || poolsize == 0)
         {
             //Choose the random parent
             //REMOVED: fully random parent
-            /*orgnum=randint(0,poolsize);
+            orgnum=randint(0,poolsize);
             curorg=organisms.begin();
             for(orgcount=0;orgcount<orgnum;orgcount++)
-                ++curorg;*/
+                ++curorg;
 
-            ////Roulette Wheel
-            /// REACTIVATED: fitness-proportionate intra-species selection (maybe do rank-based?)
-            marble=randfloat()*total_fitness;
+            //Roulette Wheel
+            //REACTIVATED: fitness-proportionate intra-species selection (maybe do rank-based?)
+            /*marble=randfloat()*total_fitness;
             curorg=organisms.begin();
             spin=(*curorg)->fitness;
             while(spin<marble)
@@ -568,18 +555,22 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
                 ++curorg;
                 //Keep the wheel spinning
                 spin+=(*curorg)->fitness;
-            }
+            }*/
             //Finished roulette
 
 
             mom=(*curorg);
-
+            //TODO keep history of old fitnesses
+            //TODO add attribute to genome
+            //TODO aggregate history into one value?
+            //TODO somewhere else to exploit the history in selection
+            //TODO ex with which probability
             new_genome=(mom->gnome)->duplicate(count);
 
             //Do the mutation depending on probabilities of
             //various mutations
 
-            if (randfloat()<NEAT::mutate_add_node_prob)
+            if (randfloat() < NEAT::mutate_add_node_prob)
             {
                 new_genome->mutate_add_node(pop->innovations,pop->cur_node_id,pop->cur_innov_num);
                 mut_struct_baby=true;
@@ -587,17 +578,12 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
             else if (randfloat()<NEAT::mutate_add_link_prob)
             {
                 net_analogue=new_genome->genesis(generation);
-
                 new_genome->mutate_add_link(pop->innovations,pop->cur_innov_num,NEAT::newlink_tries);
-
                 delete net_analogue;
                 mut_struct_baby=true;
             }
             else
             {
-
-                //NOTE:  A link CANNOT be added directly after a node was added because the phenotype
-                //       will not be appropriately altered to reflect the change
                 //If we didn't do a structural mutation, we do the other kinds
 
                 if (randfloat()<NEAT::mutate_random_trait_prob)
@@ -636,7 +622,7 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
             std::cout << "No mating in my experiments" << std::endl;
 
             exit(-1);
-
+            /*
             //Choose the random mom
             orgnum=randint(0,poolsize);
             curorg=organisms.begin();
@@ -799,11 +785,10 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
                 //Create the baby without mutating first
                 baby=new Organism(0.0,new_genome,generation);
             }
-
+            */
         }
 
-        //Add the baby to its proper Species
-        //If it doesn't fit a Species, create a new one
+        //Add the baby to its proper Species or if it doesn't fit a Species, create a new one
 
         baby->mut_struct_baby=mut_struct_baby;
         baby->mate_baby=mate_baby;
@@ -850,7 +835,6 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
             if (found==false)
             {
               newspecies=new Species(++(pop->last_species),true);
-              //std::std::cout<<"CREATING NEW SPECIES "<<pop->last_species<<std::std::endl;
               (pop->species).push_back(newspecies);
               newspecies->add_Organism(baby);  //Add the baby
               baby->species=newspecies;  //Point baby to its species
@@ -863,6 +847,7 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
     return true;
 }
 
+//Compare species with the original fitness of best individual
 bool NEAT::order_species(Species *x, Species *y) { 
 	//std::cout<<"Comparing "<<((*((x->organisms).begin()))->orig_fitness)<<" and "<<((*((y->organisms).begin()))->orig_fitness)<<": "<<(((*((x->organisms).begin()))->orig_fitness) > ((*((y->organisms).begin()))->orig_fitness))<<std::endl;
 	return (((*((x->organisms).begin()))->orig_fitness) > ((*((y->organisms).begin()))->orig_fitness));

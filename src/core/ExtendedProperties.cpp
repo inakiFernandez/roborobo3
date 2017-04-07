@@ -7,7 +7,7 @@ using namespace zsu;
 
 ExtendedProperties::ExtendedProperties() : Properties()
 {
-	// nothing to do.
+    // nothing to do.
 }
 
 bool ExtendedProperties::checkAndGetPropertyValue( std::string __propertyName, int* __propertyValue, bool __exitProgramOnError = false)

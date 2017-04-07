@@ -113,29 +113,24 @@ void Collect2RobotSensorsWorldObserver::updateMonitoring()
     if( _lifeIterationCount >= Collect2RobotSensorsSharedData::gEvaluationTime ) // end of generation.
 	{
 		if ( gVerbose )
-		{
-            std::cout << "[gen:" << (gWorld->getIterations()/Collect2RobotSensorsSharedData::gEvaluationTime)
-                      << "]\n";
-		}
+            std::cout << "[gen:" << (gWorld->getIterations()/Collect2RobotSensorsSharedData::gEvaluationTime) << "]\n";
         // Logging here
         double sumFitness = 0.0;
         double sumAvgLocalPopFitness = 0.0;
         int gatheredGenomes = 0;
         for ( int i = 0 ; i != gNumberOfRobots ; i++ )
         {
-
              sumFitness += (dynamic_cast<Collect2RobotSensorsController*>(gWorld->getRobot(i)->getController()))
                      -> getFitness();
-             sumAvgLocalPopFitness += (dynamic_cast<Collect2RobotSensorsController*>
+             /*sumAvgLocalPopFitness += (dynamic_cast<Collect2RobotSensorsController*>
                                        (gWorld->getRobot(i)->getController())) -> getAvgPopFitness();
              gatheredGenomes += (dynamic_cast<Collect2RobotSensorsController*>
-                                 (gWorld->getRobot(i)->getController())) ->_genomesList.size();
+                                 (gWorld->getRobot(i)->getController())) ->_genomesList.size();*/
         }
         //std::cout << gWorld->getIterations() << " ";
-        //<< (sumFitness  / gNumberOfRobots) / Collect2SharedData::gEvaluationTime
-
         // divided by two because each item gives 1 fitness point to both agents
-        std::cout << sumFitness / 2 << std::endl;
+        std::cout << sumFitness // / 2
+                  << std::endl;
 	}
 
     if (gWorld->getIterations() == (gMaxIt - 1))
@@ -149,7 +144,7 @@ void Collect2RobotSensorsWorldObserver::updateMonitoring()
 
         }
 
-        std::cout << "End fitness: " << sumFitness  / gNumberOfRobots
+        std::cout << "End fitness: " << sumFitness  // / 2  // / gNumberOfRobots
                   << " at it: " << gWorld->getIterations() << std::endl;
         if(Collect2RobotSensorsSharedData::gSaveGenome)
         {
@@ -171,7 +166,7 @@ void Collect2RobotSensorsWorldObserver::updateMonitoring()
                     for(auto it = listCollected[i].begin(); it != listCollected[i].end();it++)
                     {
                         dynamic_cast<Collect2RobotSensorsController*>(gWorld->getRobot((*it))
-                            ->getController())->updateFitness(1.0);
+                            ->getController())->updateFitness(1.0 / listCollected[i].size());
                     }
                 }
                 listCollected[i].clear();

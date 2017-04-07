@@ -14,7 +14,7 @@ using namespace zsu;
 class  ExtendedProperties : public Properties {
 
 	public:
-		ExtendedProperties();
+        ExtendedProperties();
 		
 		// check and get property. Critical error OR warning if not present. return success status (boolean).
 		bool checkAndGetPropertyValue( std::string , int* , bool );

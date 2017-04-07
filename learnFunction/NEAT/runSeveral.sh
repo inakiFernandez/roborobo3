@@ -39,7 +39,7 @@ if [ $doMulti = "true" ]; then
     echo "allowMultisynapses=true" >> $templateMulti
 fi
 
-rm -rf $outbasenam
+rm -rf $outbasename
 rm -rf sandbox/$outbasename
 rm -rf headmapData/$outbasename
 mkdir -p $outbasename
@@ -153,7 +153,10 @@ echo "End paste log files"
 
 filenames=`realpath $outbasename/*.log` ;
 
-
+#In case of variable-length experiments (e.g. stop condition on performance bound)
+wcOut=($(wc -l $outbasename/noMultiBestAll.log))
+iter=${wcOut[0]}
+echo "Number of iterations: $iter"
 
     echo "Before last scripts"
     #python fitness
@@ -164,8 +167,8 @@ filenames=`realpath $outbasename/*.log` ;
     #Extract duration per function
     durPerFunction=`grep "durationPerFunction= .*$" $template | sed -e "s/durationPerFunction= \(.*\)$/\1/"`
    
-    #TODO copy results into final stats folder 
     echo "Before loop create data treatment parallel script"
+    #rm  $outbasename/dataplots.parallel
     touch $outbasename/dataplots.parallel
     sleep 2;
     mkdir -p $folderHeatmapFiles/progressbar/
@@ -179,9 +182,10 @@ filenames=`realpath $outbasename/*.log` ;
 	it=$(($j))
 	convert $folderHeatmapFiles/progressbar/empty.png -strokewidth 0 -fill "rgba( 0, 255, 50 )" -draw "rectangle 0,0 $xend,100 " -fill "rgba( 0, 0, 0 )" -gravity Center -weight 2200 -pointsize 50 -annotate 0 "It. $it"  -append $folderHeatmapFiles/progressbar/progressbar$j.jpg; 
     done;
-    avconv -loglevel quiet  -y -r 4 -start_number 1 -i $folderHeatmapFiles/progressbar/progressbar%d.jpg -b:v 1000k  -vcodec mpeg4  $folderHeatmapFiles/progressbar/progressbar.mp4 #TOFIX maybe remove -t 100
+    avconv -loglevel quiet  -y -r 4 -start_number 1 -i $folderHeatmapFiles/progressbar/progressbar%d.jpg -b:v 1000k  -vcodec mpeg4  $folderHeatmapFiles/progressbar/progressbar.mp4 
+    
     rm $folderHeatmapFiles/progressbar/progressbar*.jpg
-
+    isWithSplit="false"
     for (( j=1; j<=$nbRuns; j++))
     do
 	rm ../tmpDataFilesExp$j.py
@@ -193,7 +197,7 @@ filenames=`realpath $outbasename/*.log` ;
 	done
 	printf "]" >> ../tmpDataFilesExp$j.py
 	
-	parallelCommand="python3 $fitnessDataScript $folderFiles/$j-runFolder/$outbasename.png $nbExp --png $durPerFunction $j; echo 'Fitness Img done: run '$j; sleep 2; $videoApproxScript $folderFiles/$j-runFolder true true $j $outbasename; echo 'Video approx done: run '$j' '; sleep 2;  python3 $heatmapDataScript $folderHeatmapFiles/$j-runFolder $iter --norm --rank $j; echo 'Heatmap images done: run '$j; rm $folderHeatmapFiles/$j-runFolder/*.csv; sleep 2; avconv -loglevel quiet -y -r 4 -start_number 1 -i $folderHeatmapFiles/$j-runFolder/phenotypicDistance%d.png -b:v 1000k $folderHeatmapFiles/$j-runFolder/beh.mp4; avconv -loglevel quiet -y -r 4 -start_number 1 -i $folderHeatmapFiles/$j-runFolder/genotypicDistance%d.png -b:v 1000k $folderHeatmapFiles/$j-runFolder/gen.mp4; rm $folderHeatmapFiles/$j-runFolder/*istance*.png; echo 'Heatmap videos done: run '$j; $allVideoScript $folderHeatmapFiles $folderFiles/$j-runFolder $outbasename.png $folderFiles/$j-runFolder/vidApprox.mp4 $iter $playVideo $j; sleep 2; mv $folderHeatmapFiles/$j-runFolder/scatterRelGenoPheno$j.flv $outbasename/stats; mv $folderHeatmapFiles/$j-runFolder/binsScatterRelGenoPheno$j.flv $outbasename/stats; mv $folderHeatmapFiles/$j-runFolder/*.data $outbasename/stats; mv $folderHeatmapFiles/$j-runFolder/*.png $outbasename/stats; mv $folderFiles/$j-runFolder/$outbasename.pngAll$j.flv $outbasename/stats; rm $folderFiles/$j-runFolder/*.png; rm $folderHeatmapFiles/$j-runFolder/*.mp4; rm $folderFiles/$j-runFolder/*.nn; echo 'Full video done: run '$j; rm $folderFiles/$j-runFolder/*.dat; rm -rf $folderFiles/$j-runFolder; rm -rf $folderHeatmapFiles/$j-runFolder; " 
+	parallelCommand="python3 $fitnessDataScript $folderFiles/$j-runFolder/$outbasename.png $nbExp --png $durPerFunction $j; echo 'Fitness Img done: run '$j; sleep 2; $videoApproxScript $folderFiles/$j-runFolder $isWithSplit true $j $outbasename; echo 'Video approx done: run '$j' ';  sleep 2;  python3 $heatmapDataScript $folderHeatmapFiles/$j-runFolder $iter --norm --rank $j; echo 'Heatmap images done: run '$j; rm $folderHeatmapFiles/$j-runFolder/*.csv; sleep 2; avconv -loglevel quiet -y -r 4 -start_number 1 -i $folderHeatmapFiles/$j-runFolder/phenotypicDistance%d.png -b:v 1000k $folderHeatmapFiles/$j-runFolder/beh.mp4; avconv -loglevel quiet -y -r 4 -start_number 1 -i $folderHeatmapFiles/$j-runFolder/genotypicDistance%d.png -b:v 1000k $folderHeatmapFiles/$j-runFolder/gen.mp4; rm $folderHeatmapFiles/$j-runFolder/*istance*.png; echo 'Heatmap videos done: run '$j; $allVideoScript $folderHeatmapFiles $folderFiles/$j-runFolder $outbasename.png $folderFiles/$j-runFolder/vidApprox.mp4 $iter $playVideo $j; sleep 3; mv $folderHeatmapFiles/$j-runFolder/scatterRelGenoPheno$j.flv $outbasename/stats; mv $folderHeatmapFiles/$j-runFolder/binsScatterRelGenoPheno$j.flv $outbasename/stats; mv $folderHeatmapFiles/$j-runFolder/*.data $outbasename/stats; mv $folderHeatmapFiles/$j-runFolder/*.png $outbasename/stats; mv $folderFiles/$j-runFolder/$outbasename.pngAll$j.flv $outbasename/stats; rm $folderFiles/$j-runFolder/*.png; rm $folderHeatmapFiles/$j-runFolder/*.mp4; rm $folderFiles/$j-runFolder/*.nn; echo 'Full video done: run '$j; rm $folderFiles/$j-runFolder/*.dat; rm -rf $folderFiles/$j-runFolder; rm -rf $folderHeatmapFiles/$j-runFolder; " 
 	echo $parallelCommand >> $outbasename/dataplots.parallel  
     done
     sleep 2   

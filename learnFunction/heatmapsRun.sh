@@ -32,7 +32,7 @@ mogrify -crop 1736x1048+190+100 +repage $folderS/$errorCurveFile
 #it=$(($j))
 #convert $folderH/progressbar/empty.png -strokewidth 0 -fill "rgba( 0, 255, 50 )" -draw "rectang#le 0,0 $xend,100 " -fill "rgba( 0, 0, 0 )" -gravity Center -weight 2200 -pointsize 50 -annotate# 0 "It. $it"  -append $folderH/progressbar/progressbar$j.jpg; 
 #done;
-#avconv -loglevel quiet  -y -r 4 -start_number 1 -i $folderH/progressbar/progressbar%d.jpg -b:v #1000k  -vcodec mpeg4 -t 100  $folderH/progressbar/progressbar.mp4 #TOFIX maybe remove -t 100
+#avconv -loglevel quiet  -y -r 4 -start_number 1 -i $folderH/progressbar/progressbar%d.jpg -b:v #1000k  -vcodec mpeg4 -t 100  $folderH/progressbar/progressbar.mp4
 #rm $folderH/progressbar/progressbar*.jpg
 
 

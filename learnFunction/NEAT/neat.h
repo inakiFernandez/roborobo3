@@ -19,6 +19,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <string>
+#include <ExtendedProperties.h>
 
 namespace NEAT {
 
@@ -91,6 +92,11 @@ namespace NEAT {
     extern int numberSamples;
     extern double inputBound;
     extern double probBigGaussian;
+
+    extern double mutateIndividualWeightProb;
+
+    extern ExtendedProperties gProperties;
+
     //DEBUG
     extern double prevErr;
 

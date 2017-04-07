@@ -50,10 +50,10 @@ sigma= 0.1
 
 bias= true
 
-numberSamples= 50
+numberSamples= 200
 
 #exp: 0 first T1 then T2, 1 first T2 then T1, 2 T1 and T2 together
-exp= 1
+exp= 0
 isWithErrorInput= false
 isWithNumberTask= false
 doLogAllPoints= false

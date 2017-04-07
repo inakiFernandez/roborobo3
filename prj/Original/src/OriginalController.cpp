@@ -249,7 +249,7 @@ void OriginalController::stepBehaviour()
     {
         // distance sensors
         //If object but not "Physical object"
-        //=> wall (get distance sensor) else 0.0
+        //=> wall (get proximity sensor) else 0.0
         int objId = _wm->getObjectIdFromCameraSensor(i);
         if ( PhysicalObject::isInstanceOf(objId) || Agent::isInstanceOf(objId))
         {
@@ -314,8 +314,10 @@ void OriginalController::stepBehaviour()
     }
 
     if (OriginalSharedData::gWithBias)
+    {
         (*inputs)[inputToUse] = 1.0;
         inputToUse++;
+    }
 
     //Previous left and right wheel speeds (acts as recurrent connections from last step)
     double lW = _wm->_desiredTranslationalValue / gMaxTranslationalSpeed
