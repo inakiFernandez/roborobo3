@@ -16,6 +16,8 @@
 #include "Observers/WorldObserver.h"
 #include "WorldModels/RobotWorldModel.h"
 #include "Original/include/OriginalSharedData.h"
+#include <fstream>
+#include <sstream>
 
 //class World;
 
@@ -24,6 +26,13 @@ class OriginalWorldObserver : public WorldObserver
 	private:
 		void updateEnvironment();
         void updateMonitoring();
+
+        std::ofstream logItemFile;
+        std::ofstream logItGatheredFile;
+        std::ofstream logChangesColorFile;
+
+        std::vector<int> itemCounts;
+
 
 	protected:
 		int _generationCount;

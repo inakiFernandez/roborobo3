@@ -74,6 +74,9 @@ private:
     Genome *_genome; // current genome in evaluation (evo topo)
 
     GC _genomeId;
+    //Previous color effector (for logging reasons)
+    int _previousColor;
+    int _nbColorChanges;
 
     double _currentFitness;
     float _currentSigma;
@@ -127,7 +130,7 @@ public:
     void updateFitness(double delta);
     int getBirthdate() { return _birthdate; }
     double getFitness(){ return _currentFitness;}
-
+    int getNbColorChanges() { return _nbColorChanges;}
     double getColorEffector()
     {
         return 2.0 * ((double)_wm->getRobotLED_redValue()/256.0) - 1.0;

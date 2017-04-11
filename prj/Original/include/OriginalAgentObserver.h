@@ -25,6 +25,7 @@ class OriginalAgentObserver : public AgentObserver
 		void step();
         std::ofstream _agentLog;
         bool isRightColorValue(double v);
+        bool isSameColor(double rCol, double objCol);
 };
 
 #endif

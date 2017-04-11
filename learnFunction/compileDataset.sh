@@ -1,0 +1,1 @@
+g++ -O3 generateDataset.cpp -INEAT/ -I../include/core/Utilities -I../include/contrib -I./ -L build -lauxlearnfunction NEAT/neat.o NEAT/genome.o NEAT/network.o NEAT/nnode.o NEAT/link.o NEAT/gene.o NEAT/trait.o NEAT/innovation.o ../src/core/ExtendedProperties.o ../src/contrib/zsu/*.o -o generateDataset

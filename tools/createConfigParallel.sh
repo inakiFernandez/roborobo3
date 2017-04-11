@@ -18,10 +18,11 @@ name=$1
 
 for i in `seq 1 $2`
 do
-    #printf "$i\n"
+    printf "$i\n"
     #if different parameters needed
-    #name="$BASENAME-run$i.properties" 
-    #cp $1 $name
+    name="$BASENAME-run$i.properties" 
+    cp $1 $name
+    
 
     RESULT="$RESULT$COMMAND $DIRPATH/$BASENAME.$EXTENSION > logs/$BASENAME/$BASENAME-run$i.log\n"
 
@@ -39,5 +40,5 @@ printf "$RESULT"
 #join output files with paste logs/$BASENAME/$BASENAME-run*.log > logs/$BASENAME-allRuns.log
 
 #copy file to remote PC: scp createConfigParallel.sh adminmaia@maia1-is:~/fernandi_local/roborobo3/roborobo3/tools
-
+#python3 tools/plotItemsByColor.py logs/items.log logs/itemsIter.log logs/colorChanges.log logs/graphs
 # scp  adminmaia@maia1-is:~/fernandi_local/roborobo3/roborobo3/logs/$BASENAME-allRuns.log ./results

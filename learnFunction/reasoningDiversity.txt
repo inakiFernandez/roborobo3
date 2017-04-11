@@ -1,0 +1,23 @@
+When using an EA for learning a sequence of different tasks, selection acts on individuals based on their fitness values. 
+
+A first task T1 is learned using a fitness function reflecting the performance of that task, f1.
+
+When switching to a second task T2, its corresponding fitness function f2 is the one used to guide selection (and not f1 anymore).
+
+If a small degree of diversity is kept when the population is adapting to T2, it becomes impossible for a part of the population to avoid forgetting T1, since there is nothing pushing the population toward keeping that task.
+
+Our hypothesis is that mantaining a high degree of diversity allows to better avoid forgetting of previous skills when learning new ones.
+
+
+--------------------------------------------------------------------------------------
+
+
+The experiments we use to test this hypothesis consist in learning of a sequence of two tasks, T1 and T2.
+
+On one variant, a low diversity is kept by the algorithm, and on another variant, a high diversity is kept instead.
+--------------------------------
+There are some parameters that play a role in the level of diversity kept in NEAT, the neuroevolutionary algorithm we will use. To design experiments with different diversity being kept, we may choose different variants regarding such parameters
+
+First, in the NEAT algorithm, there is (1) a threshold allowing to speciate the population in different, genotypically similar solutions. If the threshold is high, there will be less species (less diversity?), if the threshold is low, there will be more species (more diversity?).
+
+Second, stronger mutations lead to more diverse offspring on a per-generation basis, so (2) mutation parameters can be also used to control diversity. Among mutation parameters, we find weight mutation-step sigma and probability of mutations (weight, add link, add neuron, toggle link).

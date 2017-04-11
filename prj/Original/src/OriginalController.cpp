@@ -39,8 +39,8 @@ OriginalController::OriginalController( RobotWorldModel *wm )
     _wm->setRobotLED_colorValues(128, 128, 0);
 
     _withCollectColorEffector = OriginalSharedData::gWithCollectColorEffector;
-
-
+    _previousColor = 0;
+    _nbColorChanges = 0;
     resetRobot();
 
 
@@ -110,6 +110,9 @@ void OriginalController::resetRobot()
         if(_withCollectColorEffector)
         {
             //COLOR DISPLAYED BY OTHER ROBOT
+            //OR
+            //COLOR OF THE DETECTED ITEM
+            //cf. stepBehavior()
             _nbInputs += _wm->_cameraSensorsNb;
             _nbOutputs += 1;
         }
@@ -240,6 +243,9 @@ void OriginalController::step()
 //################BEHAVIOUR METHODS################
 void OriginalController::stepBehaviour()
 {
+    //If number color changes measured on a per timestep basis
+    _nbColorChanges = 0;
+
     // ---- Build inputs ----
     std::vector<double>* inputs = new std::vector<double>(_nbInputs);
     int inputToUse = 0;
@@ -277,6 +283,13 @@ void OriginalController::stepBehaviour()
                 else
                     (*inputs)[inputToUse] = 0.0;
                 inputToUse++;
+                if(_withCollectColorEffector)
+                {                    
+                    /* Sensing the color of the item*/
+                    double colorObj = gPhysicalObjects[objectId - gPhysicalObjectIndexStartOffset]->getColorValue();
+                    (*inputs)[inputToUse] = colorObj;
+                    inputToUse++;
+                }
             }
             else
             {
@@ -294,10 +307,12 @@ void OriginalController::stepBehaviour()
 
            if(_withCollectColorEffector)
            {
-               OriginalController* c = dynamic_cast<OriginalController*>(
+               /* TORESET ALSO IN THE ELSE PART
+                * Sensing the color displayed by other robot*/
+               /*OriginalController* c = dynamic_cast<OriginalController*>(
                            (gWorld->getRobot(objId - gRobotIndexStartOffset))->getController());
                (*inputs)[inputToUse] = c->getColorEffector();
-               inputToUse++;
+               inputToUse++;*/
            }
        }
        else
@@ -307,8 +322,8 @@ void OriginalController::stepBehaviour()
 
           if(_withCollectColorEffector)
           {
-              (*inputs)[inputToUse] = 0.0;
-              inputToUse++;
+              /*(*inputs)[inputToUse] = 0.0;
+              inputToUse++;*/
           }
        }
     }
@@ -370,6 +385,10 @@ void OriginalController::stepBehaviour()
 
     if(_withCollectColorEffector)
     {
+        //Random color effector (neural output ignored). Control experiment
+        //outputs[2] = (double)(rand() % 10000)/5000.0 - 1.0;
+
+
         //Use a discrete set of color values
         int redValue = roundDown((int)((outputs[2] + 1.0)/2.0 * 256.0),32);
         _wm->setRobotLED_colorValues(redValue, 255 - redValue, 0);
@@ -384,7 +403,13 @@ void OriginalController::stepBehaviour()
     // normalize to motor interval values
     _wm->_desiredTranslationalValue =  _wm->_desiredTranslationalValue * gMaxTranslationalSpeed;
     _wm->_desiredRotationalVelocity = _wm->_desiredRotationalVelocity * gMaxRotationalSpeed;
-    
+
+    //Logging number of color changes
+    int currentColor = roundDown((int)((outputs[2] + 1.0)/2.0 * 256.0),32);
+    if(_previousColor != currentColor)
+        _nbColorChanges++;
+    _previousColor = currentColor;
+
     delete (inputs);
 }
 
@@ -412,6 +437,7 @@ void OriginalController::stepEvolution()
         loadNewGenome();
 
         _currentFitness = 0.0;
+        _nbColorChanges = 0;
         _lifetime = 0;
 
        if (OriginalSharedData::gClearPopulation)

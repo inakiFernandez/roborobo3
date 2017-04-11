@@ -11,6 +11,7 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <vector>
+#include <fstream>
 
 OriginalWorldObserver::OriginalWorldObserver( World* world ) : WorldObserver( world )
 {
@@ -94,10 +95,38 @@ OriginalWorldObserver::OriginalWorldObserver( World* world ) : WorldObserver( wo
     gProperties.checkAndGetPropertyValue("mutate_toggle_enable_prob",&Helper::mutateToggleEnableProb,true);
     gProperties.checkAndGetPropertyValue("allowMultisynapses",&Helper::allowMultisynapses,true);
 
+
+
     Helper::rangeW = OriginalSharedData::gNeuronWeightRange / 2;
 
-	// * iteration and generation counters
+    std::string logItemName = "items.log";
+    gProperties.checkAndGetPropertyValue("logItemName",&logItemName,true);
+    //logItemFile = std::ofstream("logs/items.log");// + logItemName);
+    logItemFile = std::ofstream(//"logs/" +
+                                logItemName);
 
+    std::string logItGatheredName = "itemsIter.log";
+    gProperties.checkAndGetPropertyValue("logItGatheredName",&logItGatheredName,true);
+    //logItGatheredFile = std::ofstream("logs/itemsIter.log");// + logItGatheredName);
+    logItGatheredFile = std::ofstream(//"logs/"+
+                                      logItGatheredName);
+
+    std::string logColorChangesName = "colorChanges.log";
+    gProperties.checkAndGetPropertyValue("logColorChangesName",&logColorChangesName,true);
+    //logChangesColorFile = std::ofstream("logs/colorChanges.log");// + logColorChangesName);
+    logChangesColorFile = std::ofstream(//"logs/" +
+                                        logColorChangesName);
+
+    logItemFile << "c1 c2 c3 c4 c5 c6 c7 c8" << std::endl;
+
+    int numberColors = 8;
+    itemCounts = std::vector<int>(numberColors);
+    for(int i = 0 ; i < numberColors; i++)
+    {
+        itemCounts[i] = 0;
+    }
+
+    //  iteration and generation counters
 	_lifeIterationCount = -1;
 	_generationCount = -1;
 
@@ -174,7 +203,9 @@ void OriginalWorldObserver::updateMonitoring()
             std::cout << sumFitness
                       //<< " " << (forgetMeasure/ gNumberOfRobots)
                       <<  std::endl;
+
 	}
+
 
     if (gWorld->getIterations() == (gMaxIt - 1))
     {
@@ -197,48 +228,72 @@ void OriginalWorldObserver::updateMonitoring()
                 if(!ctrl->_doEvoTopo)
                         ctrl -> logGenomeF(OriginalSharedData::gOutGenomeFile + std::to_string(i) + ".log");
                 else
-                {//TODO
+                {
+                    //TODO
                 }
             }
         }
+        logItemFile.close();
+        logItGatheredFile.close();
 
     }
+    int countItGathered = 0;
+    int countPossible = 0;
     switch (OriginalSharedData::gFitness)
     {
         case 2:
             for(int i = 0; i < gNbOfPhysicalObjects;i++)
             {
+                 //std::cout << "--------------------------------" << std::endl;
                 double color = -2.0;
-                bool isSynchColor = false;
+                //VARIANT with same color as item
+                color = gPhysicalObjects[i]->getColorValue();
+
+                //For other VARIANT bool isSynchColor = false;
+                bool isSynchColor = true;
+                int nbRobotsCorrectColor = 0;
                 if(listCollected[i].size() >= 2)
                 {
                     //test if all agents (maybe more than 2) same color
                     for(auto it = listCollected[i].begin(); it != listCollected[i].end();it++)
                     {
-                        if(color == -2.0)
+                        //std::cout << "RColor: " << it->second << std::endl;
+                        /*if(color == -2.0)
                         {
+                            //Unused now
                             color = it->second;
                             isSynchColor = true;
+
                         }
                         else
-                        {
-                            if(color != it->second)
+                        {*/
+                            if(color == it->second)
+                                nbRobotsCorrectColor++;
+                            /*if(color != it->second)
                             {
                                 isSynchColor = false;
                                 break;
-                            }
-                        }
+                            }*/
+                        //}
                     }
+                    isSynchColor = (nbRobotsCorrectColor >= 2);
                     if(isSynchColor)
                     {
                         gPhysicalObjects[i]->isWalked(0); //Default agent for callback (unused callback)
                         for(auto it = listCollected[i].begin(); it != listCollected[i].end();it++)
                         {
                             //Share reward of one item between the agents involved
-                            dynamic_cast<OriginalController*>(gWorld->getRobot(it->first)
-                            ->getController())->updateFitness(1.0 / (double)listCollected[i].size());
+                            /*dynamic_cast<OriginalController*>(gWorld->getRobot(it->first)
+                            ->getController())->updateFitness(1.0 / (double)listCollected[i].size());*/
+                            if(it->second == color)
+                                dynamic_cast<OriginalController*>(gWorld->getRobot(it->first)
+                                    ->getController())->updateFitness(1.0 / (double)nbRobotsCorrectColor);
                         }
+                        int colorInt = int((color + 1.0) * 4.0);
+                        countItGathered++;
+                        itemCounts[colorInt]++;
                     }
+                    countPossible++;
                 }
                 listCollected[i].clear();
             }
@@ -252,7 +307,9 @@ void OriginalWorldObserver::updateMonitoring()
                 wm->_groundSensorValue[1] = g;
                 wm->_groundSensorValue[2] = b;
             }
-
+            logItGatheredFile << countItGathered << " ";
+            logItGatheredFile << countPossible << " ";
+            logItGatheredFile << std::endl;
             break;
         default:
             break;
@@ -278,6 +335,32 @@ void OriginalWorldObserver::updateMonitoring()
         {
             (dynamic_cast<OriginalController*>(gWorld->getRobot(i)->getController()))->storeRepresentative();
         }
+    }
+    for(int i = 0; i < gNumberOfRobots; i++)
+    {
+        OriginalController* ctrl = (dynamic_cast<OriginalController*>(gWorld->getRobot(i)->getController()));
+
+        logChangesColorFile << ctrl->getNbColorChanges() << " ";
+    }
+    logChangesColorFile << std::endl;
+    if( _lifeIterationCount >= OriginalSharedData::gEvaluationTime ) // end of generation.
+    {
+
+        int numberColors = 8;
+        for(int i = 0 ; i < numberColors; i++)
+        {
+            logItemFile << itemCounts[i] << " ";
+            itemCounts[i] = 0;
+        }
+        logItemFile << std::endl;
+
+        /*for(int i = 0; i < gNumberOfRobots; i++)
+        {
+            OriginalController* ctrl = (dynamic_cast<OriginalController*>(gWorld->getRobot(i)->getController()));
+
+            logChangesColorFile << ctrl->getNbColorChanges() << " ";
+        }
+        logChangesColorFile << std::endl;*/
     }
 }
 

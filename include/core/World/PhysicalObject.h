@@ -72,7 +72,12 @@ public :
         return _yCenterPixel;
     }
 
-    
+    //Fernandi modification: getter for color spectrum
+    double getColorValue()
+    {
+        return (_displayColorRed / 256.0) * 2.0 - 1.0;
+    }
+
     virtual void step() = 0;
     void stepPhysicalObject(); // default step method. Suggested: call this method from step().
     

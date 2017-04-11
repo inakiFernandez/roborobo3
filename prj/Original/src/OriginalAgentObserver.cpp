@@ -73,8 +73,12 @@ void OriginalAgentObserver::step()
                     isRightColorValue(dynamic_cast<OriginalController*>(gWorld->getRobot(_wm -> _id)->getController())->getColorEffector()))
                 || !OriginalSharedData::gWithCollectColorEffector)
             {
+                OriginalController* c = dynamic_cast<OriginalController*>(gWorld->getRobot(_wm -> _id)->getController());
+                /*if(isSameColor(gPhysicalObjects[targetIndex]->getColorValue(), c->getColorEffector()))
+                {*/
                     gPhysicalObjects[targetIndex]->isWalked(_wm->getId());
-                    dynamic_cast<OriginalController*>(gWorld->getRobot(_wm -> _id)->getController())->updateFitness(1.0);
+                    c->updateFitness(1.0);
+                //}
             }
 
             break;
@@ -86,10 +90,14 @@ void OriginalAgentObserver::step()
                     dynamic_cast<OriginalController*>(gWorld->getRobot(_wm -> _id)->getController())->getColorEffector()))
                 || !OriginalSharedData::gWithCollectColorEffector)
             {
-                double color = dynamic_cast<OriginalController*>(gWorld->getRobot(_wm->_id)
-                                                         ->getController())->getColorEffector();
-                std::pair<int, double> idRobAndColor = std::make_pair(_wm->_id,color);
-                dynamic_cast<OriginalWorldObserver*>(gWorld->getWorldObserver())->listCollected[targetIndex].push_back(idRobAndColor);
+                OriginalController* c = dynamic_cast<OriginalController*>(gWorld->getRobot(_wm->_id)
+                                                                          ->getController());
+                double color = c->getColorEffector();
+                /*if(isSameColor(gPhysicalObjects[targetIndex]->getColorValue(), c->getColorEffector()))
+                {*/
+                    std::pair<int, double> idRobAndColor = std::make_pair(_wm->_id,color);
+                    dynamic_cast<OriginalWorldObserver*>(gWorld->getWorldObserver())->listCollected[targetIndex].push_back(idRobAndColor);
+                //}
             }
             break;
         default:
@@ -165,5 +173,12 @@ bool OriginalAgentObserver::isRightColorValue(double v)
         default:
         break;
     }
+    return result;
+}
+bool OriginalAgentObserver::isSameColor(double rCol, double objCol)
+{
+    bool result = false;
+    result = int((rCol + 1.0) * 4) == int((objCol + 1.0) * 4);
+
     return result;
 }
