@@ -9,7 +9,7 @@ outbasename=$2
 
 echo "Generating $outbasename dataset from $template config file"
 #g++ -I../../include/contrib/ -I../../include/contrib/odneatgc/ -I.. -I../../include/core/Utilities/ -I../../include/contrib/zsu ../generateDataset.cpp -o ../generateDataset -std=c++0x ../../src/contrib/odneatgc/*.o ../../src/core/ExtendedProperties.o ../../src/contrib/zsu/*.o ../../src/core/Misc.o -L ../build/ -l auxlearnfunction -g -DODNEAT_FUNCTIONS
-g++ -O3 ../generateDataset.cpp -I../../include/core/Utilities -I../../include/contrib -I./ -L ../build -lauxlearnfunction neat.o genome.o network.o nnode.o link.o gene.o trait.o innovation.o ../../src/core/ExtendedProperties.o ../../src/contrib/zsu/*.o -o ../generateDataset
+g++ -O3 ../generateDataset.cpp -I../../include/core/Utilities -I../../include/contrib -I./ -L ../build -lauxlearnfunction neat.o genome.o network.o nnode.o link.o gene.o trait.o innovation.o ../../src/core/ExtendedProperties.o ../../src/contrib/zsu/*.o -o ../generateDataset -std=c++11
 #generatedataset with outbasename
 
 ../generateDataset $template $outbasename

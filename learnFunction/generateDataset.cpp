@@ -94,8 +94,8 @@ int main(int argc, char *argv[])
   NEAT::Genome* g2 = createRandomGenome(nIn,nO,id);
   NEAT::Network* n2 = g2->genesis(id); //noparam
 
-  std::vector<std::vector<double>> inputSet, inputSet2;
-  std::vector<std::vector<std::vector<double>>> outputSet(2, std::vector<std::vector<double>>());
+  std::vector<std::vector<double> > inputSet, inputSet2;
+  std::vector<std::vector<std::vector<double> > > outputSet(2, std::vector<std::vector<double> >());
 
 
   std::stringstream ssFname;
