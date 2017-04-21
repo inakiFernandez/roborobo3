@@ -117,6 +117,12 @@ OriginalWorldObserver::OriginalWorldObserver( World* world ) : WorldObserver( wo
     logChangesColorFile = std::ofstream(//"logs/" +
                                         logColorChangesName);
 
+    std::string logGivenRewardName = "givenReward.log";
+    gProperties.checkAndGetPropertyValue("logGivenRewardName",&logGivenRewardName,true);
+
+    logGivenRewardFile = std::ofstream(//"logs/" +
+                                        logGivenRewardName);
+
     logItemFile << "c1 c2 c3 c4 c5 c6 c7 c8" << std::endl;
 
     int numberColors = 8;
@@ -130,6 +136,9 @@ OriginalWorldObserver::OriginalWorldObserver( World* world ) : WorldObserver( wo
 	_lifeIterationCount = -1;
 	_generationCount = -1;
 
+    //Given average individual reward
+    _averageReward = 0.0;
+    _nbRobotsCorrect = 0.0;
 }
 
 OriginalWorldObserver::~OriginalWorldObserver()
@@ -200,9 +209,25 @@ void OriginalWorldObserver::updateMonitoring()
         //<< (sumFitness  / gNumberOfRobots) / Collect2SharedData::gEvaluationTime
         //average forget measure. TODO other estimator/or all the data?
 
+
             std::cout << sumFitness
                       //<< " " << (forgetMeasure/ gNumberOfRobots)
                       <<  std::endl;
+
+            if(fabs(sumFitness) < 0.0000000001)
+            {
+                logGivenRewardFile << 0.0 << " "
+                               << 0.0 << " "
+                               << std::endl;
+            }
+            else
+            {
+                logGivenRewardFile << _averageReward / sumFitness<< " "
+                               << _nbRobotsCorrect / sumFitness << " "
+                               << std::endl;
+            }
+            _nbRobotsCorrect = 0.0;
+            _averageReward = 0.0;
 
 	}
 
@@ -286,9 +311,14 @@ void OriginalWorldObserver::updateMonitoring()
                             /*dynamic_cast<OriginalController*>(gWorld->getRobot(it->first)
                             ->getController())->updateFitness(1.0 / (double)listCollected[i].size());*/
                             if(it->second == color)
+                            {
                                 dynamic_cast<OriginalController*>(gWorld->getRobot(it->first)
                                     ->getController())->updateFitness(1.0 / (double)nbRobotsCorrectColor);
+
+                            }
                         }
+                        _averageReward += 1.0 / (double)nbRobotsCorrectColor;
+                        _nbRobotsCorrect +=(double)nbRobotsCorrectColor;
                         int colorInt = int((color + 1.0) * 4.0);
                         countItGathered++;
                         itemCounts[colorInt]++;

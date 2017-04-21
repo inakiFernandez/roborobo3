@@ -10,7 +10,7 @@ outlogbasename=$3
 nbRuns=$4
 
 nbRob='50 100 200 300 400'
-nbRob='200'
+nbRob='240' #nbRob='200' 
 
 
 #taskSeq='1,2,1,2,-1'
@@ -59,16 +59,18 @@ do
 
     mkdir $outlogbasename/$suffix
     #echo $line
-    echo $line | perl -p -e  's/^.*? //' | sed -e 's/ /\n/g' >> $outbasename-$suffix.properties
+    #echo $line | perl -p -e  's/^.*? //' | sed -e 's/ /\n/g' >> $outbasename-$suffix.properties
 
 
     for (( j=1; j<=$nbRuns; j++))
     do
 	#Different file for different runs
 	cp $tmplate $outbasename-$suffix-run$j.properties
+	echo $line | perl -p -e  's/^.*? //' | sed -e 's/ /\n/g' >> $outbasename-$suffix-run$j.properties
 	echo "logItemName = $outlogbasename/$suffix/items-run-$j.log" >>  $outbasename-$suffix-run$j.properties
 	echo "logItGatheredName = $outlogbasename/$suffix/itemsIter-run-$j.log" >>  $outbasename-$suffix-run$j.properties
-	echo "logColorChangesName = $outlogbasename/$suffix/colorChanges-run-$j.log" >>  $outbasename-$suffix-run$j.properties
+	echo "logColorChangesName = $outlogbasename/$suffix/colorChanges-run-$j.log" >>  $outbasename-$suffix-run$j.properties	
+	echo "logGivenRewardName = $outlogbasename/$suffix/givenReward-run-$j.log" >>  $outbasename-$suffix-run$j.properties
 #	echo "$program $outbasename-$suffix.properties > $outlogbasename/$suffix/run-$j.log" >> $commandFile    
 	echo "$program $outbasename-$suffix-run$j.properties > $outlogbasename/$suffix/run-$j.log" >> $commandFile    
     done
@@ -86,6 +88,7 @@ do
 done
 
 #./tools/paramsEcal-launchMultiple.sh config/tColl2/C2-8colors-sigma0.1-800steps.properties config/tColl2/C2-8colors logs/exp8Colors 30
+#for i in logs/exp8Colors/R200.Top0.S0.1.SP1.0/run-*.log ; do tail -n +19 $i | head -n -6 > tmp ; rm $i ; mv tmp $i ; done ;
 
 
 #for i in * ; do paste $i/run*.log > $i.all.log; done
@@ -98,6 +101,12 @@ done
 
 
 
-#for i in *.log ; do tail -n +21 $i > tmp ; rm $i ; mv tmp $i ; done ;
+
+
+
+###
+
+
+
 
 #for i in *.log ; do head -n -6 $i > tmp ; rm $i ; mv tmp $i ; done ;

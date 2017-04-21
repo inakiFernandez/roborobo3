@@ -28,10 +28,10 @@ def perc(data_l):
     perc_75 = np.zeros(data.shape[0])
     for i in range(0, len(median)):
         median[i] = np.median(data[i, :])
-        perc_25[i] = np.percentile(data[i, :], 5)
-        perc_75[i] = np.percentile(data[i, :], 75)
-        # perc_25[i] = np.percentile(data[i, :], 5)
-        # perc_75[i] = np.percentile(data[i, :], 95)
+        perc_25[i] = np.percentile(data[i, :], 75)
+        perc_75[i] = np.percentile(data[i, :], 25)
+        #perc_25[i] = np.percentile(data[i, :], 5)
+        #perc_75[i] = np.percentile(data[i, :], 95)
     return median, perc_25, perc_75
 
 
@@ -59,7 +59,7 @@ def plot_one_curve(data, color, axis, label, quartiles=False):
     if quartiles:
         axis.fill_between(np.arange(0, len(med)), perc_25, perc_75,
                           alpha=0.25, linewidth=0, color=color)
-    lineWidth = 5
+    lineWidth = 1
     axis.plot(med, lw=lineWidth, label=label, color=color)
     gridcolor="#FFFFFF"    
     

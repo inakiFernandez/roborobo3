@@ -30,8 +30,11 @@ class OriginalWorldObserver : public WorldObserver
         std::ofstream logItemFile;
         std::ofstream logItGatheredFile;
         std::ofstream logChangesColorFile;
+        std::ofstream logGivenRewardFile;
 
         std::vector<int> itemCounts;
+        double _averageReward;
+        double _nbRobotsCorrect;
 
 
 	protected:
