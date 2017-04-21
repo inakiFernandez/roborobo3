@@ -55,7 +55,7 @@ double computeError(vector<vector<double> > reference, vector<vector<double> > n
 Population *xor_test(int gens);
 bool xor_evaluate(Organism *org);
 int xor_epoch(Population *pop,int generation,char *filename, int &winnernum, int &winnergenes,int &winnernodes);
-
+/*
 //Single pole balancing evolution routines ***************************
 Population *pole1_test(int gens); 
 bool pole1_evaluate(Organism *org);
@@ -105,12 +105,12 @@ private:
   constexpr static double MASSCART= 1.0;
   constexpr static double MASSPOLE_1= 0.1;
 
-  constexpr static double LENGTH_1= 0.5;		  /* actually half the pole's length */
+  constexpr static double LENGTH_1= 0.5;		  // actually half the pole's length
 
   constexpr static double FORCE_MAG= 10.0;
   constexpr static double TAU= 0.01;		  //seconds between state updates
 
-  constexpr static double one_degree= 0.0174532;	/* 2pi/360 */
+  constexpr static double one_degree= 0.0174532;	// 2pi/360
   constexpr static double six_degrees= 0.1047192;
   constexpr static double twelve_degrees= 0.2094384;
   constexpr static double fifteen_degrees= 0.2617993;
@@ -132,7 +132,7 @@ private:
 
 
 
-};
+};*/
 
 #endif
 
