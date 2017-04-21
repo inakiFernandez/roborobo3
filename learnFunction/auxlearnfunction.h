@@ -45,7 +45,7 @@ std::vector<double> targetFunction(std::vector<double> inputInstance,int functio
 std::vector<double> activateNN(NEAT::Network* nAct, std::vector<double> inputs); //noNEAT
 
 double functionError(NEAT::Network* nTest, std::vector<std::vector<double> > inputBase, //noNEAT
-               std::vector<std::vector<double>> outReference);
+               std::vector<std::vector<double> > outReference);
 
 //static ExtendedProperties gProperties;
 bool loadProperties(std::string filename);
