@@ -97,21 +97,21 @@ def toggleVariableInMakefile(varName, activeValue="1"):
 	var = getVariableValueInMakefile(varName)
 	if var is None:
 		addOrChangeVariableInMakefile(varName, activeValue)
-		print "[INFO] " + varName + " option activated."
+		print("[INFO] " + varName + " option activated.")
 	else:
 		delVariableInMakefile(varName)
-		print "[INFO] " + varName + " option discarded."
+		print("[INFO] " + varName + " option discarded.")
 
 
 def createMakefileIfNotPresent():
 	if os.path.exists(referenceMakefileName) == False:
-		print "[ERROR] '" + referenceMakefileName + "'  not found. Terminating."
+		print("[ERROR] '" + referenceMakefileName + "'  not found. Terminating.")
 		return
 		
 	if os.path.exists(makefileName):
-		print "[INFO] Makefile found. Using current Makefile."
+		print("[INFO] Makefile found. Using current Makefile.")
 	else:
-		print "[INFO] Makefile not found. Creating Makefile."
+		print("[INFO] Makefile not found. Creating Makefile.")
 		shutil.copy(referenceMakefileName, makefileName)
 	addEmptyModuleLineInMakefile()
 
@@ -138,50 +138,50 @@ def printListPrj():
 
 	modulesValue = getVariableValueInMakefile(modulesVariableName)
 	if modulesValue is None:
-		print "[ERROR] a \"MODULE=\" line is missing in the Makefile file. "
-		print "[ERROR] Makefile may be incorrect. Use the -r option to reset Makefile from scratch"
+		print("[ERROR] a \"MODULE=\" line is missing in the Makefile file. ")
+		print("[ERROR] Makefile may be incorrect. Use the -r option to reset Makefile from scratch")
 		return
 
 	debugValue = getVariableValueInMakefile(debugVariableName)
 	if debugValue is not None:
-		print "DEBUG option activated"
+		print("DEBUG option activated")
 
 	verboseValue = getVariableValueInMakefile(verboseVariableName)
 	if verboseValue is not None:
-		print "VERBOSE option activated"
+		print("VERBOSE option activated")
 
 	for prjName in re.split('\s+', modulesValue):
 		if prjName in listPrj:
 			listPrj[prjName] = 'a'
 
-	print "Projects List:"
+	print("Projects List:")
 	for k, v in listPrj.iteritems():
-		print " ", v, " ", k
+		print(" ", v, " ", k)
 
 
 def reset():
-	print "[INFO] Reset Makefile (default active project(s): " + initialValueOfModulesVariable + ")"
+	print("[INFO] Reset Makefile (default active project(s): " + initialValueOfModulesVariable + ")")
 
 	createMakefileIfNotPresent()
 
 	# Run 'make clean'
 	os.system('make clean')
 
-	print "[INFO] Done."
+	print("[INFO] Done.")
 
 
 def addPrj(prjName):
-	print "[INFO] Activating project '" + prjName + "'"
+	print("[INFO] Activating project '" + prjName + "'")
 	
 	createMakefileIfNotPresent()
 	if not(prjName in getPrjNames()):
-		print "[WARNING] Project '" + prjName + "' does not exist. Command ignored."
+		print("[WARNING] Project '" + prjName + "' does not exist. Command ignored.")
 		return
 
 	modulesValue = getVariableValueInMakefile(modulesVariableName)
 	if modulesValue is None:
-		print "[ERROR] a \"MODULE=\" line is missing in the Makefile file. "
-		print "[ERROR] Makefile may be incorrect. Use the -r option to reset Makefile from scratch"
+		print("[ERROR] a \"MODULE=\" line is missing in the Makefile file. ")
+		print("[ERROR] Makefile may be incorrect. Use the -r option to reset Makefile from scratch")
 		return
 
 	newModulesValue = (modulesValue.rstrip('\n') + " ").replace(prjName + " ", "") + prjName
@@ -198,21 +198,21 @@ def addPrj(prjName):
 	# Run 'make clean'
 	os.system('make clean')
 
-	print "[SUCCESS] project '" + prjName + "' is active"
+	print("[SUCCESS] project '" + prjName + "' is active")
 
 
 def delPrj(prjName):
-	print "[INFO] Ignoring project '" + prjName + "'"
+	print("[INFO] Ignoring project '" + prjName + "'")
 
 	createMakefileIfNotPresent()
 	if not(prjName in getPrjNames()):
-		print "[WARNING] Project '" + prjName + "' does not exist. Command ignored."
+		print("[WARNING] Project '" + prjName + "' does not exist. Command ignored.")
 		return
 
 	modulesValue = getVariableValueInMakefile(modulesVariableName)
 	if modulesValue is None:
-		print "[ERROR] a \"MODULE=\" line is missing in the Makefile file. "
-		print "[ERROR] Makefile may be incorrect. Use the -r option to reset Makefile from scratch"
+		print("[ERROR] a \"MODULE=\" line is missing in the Makefile file. ")
+		print("[ERROR] Makefile may be incorrect. Use the -r option to reset Makefile from scratch")
 		return
 
 	newModulesValue = modulesValue.rstrip('\n').replace(prjName, "")
@@ -221,7 +221,7 @@ def delPrj(prjName):
 	# Run 'make clean'
 	os.system('make clean')
 
-	print "[SUCCESS] project '" + prjName + "' is inactive"
+	print("[SUCCESS] project '" + prjName + "' is inactive")
 
 
 
@@ -273,11 +273,11 @@ try:
 		sys.exit(-1)
 
 
-	print "[ERROR] Argument is missing or incorrect."
-	print "Help is avalaible with -h or --help option"
+	print("[ERROR] Argument is missing or incorrect.")
+	print("Help is avalaible with -h or --help option")
 
 # except IOError as err: -- python 2.3+ only
 except (IOError):
-	print "[ERROR] I/O Error (you may retry once)."
-	print "[ERROR] Please check your version is up-to-date."
+	print("[ERROR] I/O Error (you may retry once).")
+	print("[ERROR] Please check your version is up-to-date.")
 #	print "[ERROR] error message : ", err	-- err is defined above, by require python 2.3+
