@@ -126,7 +126,7 @@ def getPrjNames():
 
 
 def printListPrj():
-	print "[INFO] List all existing projects ('a' = active , '-' = inactive)"
+	print("[INFO] List all existing projects ('a' = active , '-' = inactive)")
 
 	createMakefileIfNotPresent()
 
