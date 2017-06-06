@@ -525,6 +525,33 @@ bool Population::epoch(int generation)
     //Log average fitness in population (original error)
     std::cout << error/total_organisms << " ";
 
+    /*if(NEAT::doHistorySelection)
+    {
+        for(curorg=organisms.begin();curorg!=organisms.end();++curorg)
+        {
+            if(!(NEAT::randfloat() < 0.8)) //0.6, 0.8, 0.9
+            {
+
+                float fitnessAncestors = 0.0;
+                for(std::vector<double>::iterator itLineage = (*curorg)->fitnessHistory.begin();
+                    itLineage != (*curorg)->fitnessHistory.end(); itLineage++)
+                {
+                    fitnessAncestors += (*itLineage);
+                }
+                if((*curorg)->fitnessHistory.size() > 1)
+                    (*curorg)->fitness = 2 - fitnessAncestors / (*curorg)->fitnessHistory.size();
+
+            }
+
+        }
+        double totalMixedFitness = 0.0; //For roulette-wheel selection...
+        for(curorg=organisms.begin();curorg!=organisms.end();++curorg)
+        {
+            totalMixedFitness+=(*curorg)->fitness;
+        }
+        overall_average=totalMixedFitness/total_organisms;
+    }*/
+
 	//Now compute expected number of offspring for each individual organism
     for(curorg=organisms.begin();curorg!=organisms.end();++curorg)
     {
@@ -667,7 +694,6 @@ bool Population::epoch(int generation)
     {
 		++highest_last_changed;
 	}
-
     //std::cout << "Species: " << species.size() << std::endl;
 	//Check for stagnation- if there is stagnation, perform delta-coding
     /*if (highest_last_changed>=NEAT::dropoff_age+5) {
@@ -862,14 +888,12 @@ bool Population::epoch(int generation)
 
 		}
         else
-        {
 			++curorg;
-		}
-
 	}
 
 	//Perform reproduction.  Reproduction is done on a per-Species
 	//basis.  (So this could be paralellized potentially.)
+
 
 	curspecies=species.begin();
 	int last_id=(*curspecies)->id;
@@ -895,6 +919,7 @@ bool Population::epoch(int generation)
 	    last_id=(*curspecies)->id;
 
 	}
+
 	//Destroy and remove the old generation from the organisms and species  
 	curorg=organisms.begin();
 	while(curorg!=organisms.end()) {
@@ -1223,4 +1248,23 @@ bool Population::rank_within_species() {
 	}
 
 	return true;
+}
+//Log history of the lineages of current genomes
+void Population::logHistory(std::string filename)
+{
+    std::ofstream oFile(filename);
+
+    for(std::vector<Organism*>::iterator it = organisms.begin();
+        it != organisms.end(); it++)
+    {
+        std::vector<double> fHistory = (*it)->fitnessHistory;
+        for(std::vector<double>::iterator itFitness = fHistory.begin();
+            itFitness != fHistory.end(); itFitness++)
+        {
+            oFile << *itFitness << " ";
+        }
+        oFile << std::endl;
+    }
+
+    oFile.close();
 }

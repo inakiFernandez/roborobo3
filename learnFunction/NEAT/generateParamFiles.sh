@@ -15,12 +15,10 @@ outbasename=$2
 #"disjoint_coeff" "excess_coeff" "mutdiff_coeff" 
 #"recur_prob" "recur_only_prob" "mutate_only_prob"
 paramNames=("weigh_mut_power" "compat_thresh" "mutate_link_weights_prob" "mutate_toggle_enable_prob" "mutate_add_node_prob" "mutate_add_link_prob" "pop_size")
-
-
 listVal=("0.1" "0.75" "0.6" "0.0" "0.0" "0.0" "100") #"40 100") 
 
 paramEqNames=("durationPerFunction=" "loadGenome=" "randomTopoInit=" "injectGenome=" "initTopoN" "initTopoL" "probbiggaussian")
-listEqVal=("100000" "false" "true" "false" "50" "150" "0.0")
+listEqVal=("20" "false" "true" "false" "50" "150" "0.0")
 
 commandParallel="parallel echo "
 for((i=0;i<${#paramNames[@]};i++))

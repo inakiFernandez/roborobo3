@@ -292,6 +292,7 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
     _nnModel1 = generateNNFunction(gcid,iNNFile1);
     iNNFile1.close();
     gcid++;
+
     std::ifstream iNNFile2(("../datasets/o2-"+expBasename+".nn").c_str());
     _nnModel2 = generateNNFunction(gcid, iNNFile2);
     iNNFile2.close();
@@ -333,6 +334,7 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
             exit(-1);
     }
     */
+
     //ATTENTION if fixed precomputed dataset is used
     if(NEAT::experiment == 1)
         f = 1;
@@ -375,13 +377,16 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
 
           //Spawn the Population
           pop=new Population(start_genome,NEAT::pop_size);
-          double epsilon = 0.005;//0.0001; //5e-3 target error (epsilon on the error)
-          bool doChangingSigma = true;
+          double epsilon = 0.0005;//0.0001; //5e-3 target error (epsilon on the error)
+          bool doChangingSigma = false; //true;
           //Verifying Spawned Pop
           pop->verify();
+
           for (gen=1;
-               //gen<=gens;
-               epsilon < NEAT::minError;
+               (gen<=gens)
+               //&&
+               //(epsilon < NEAT::minError)
+               ;
                gen++)
           {
               //ATTENTION to multiple runs inside NEAT code (decreasing sigma is not correct)
@@ -408,18 +413,24 @@ Population *rdmNNFunction_test(int gens, std::string paramfile, std::string labe
 
             char temp[50];
             sprintf (temp, "gen_%d", gen);
+            pop->logHistory((expBasename + "/" + labelRun + "-pop" + to_string(gen) + ".history").c_str());
+            if(labelRun.compare("1-runFolder") == 0)
+                pop->logHistory((expBasename + "/pop" + to_string(gen) + ".history").c_str());
 
             //Check for success
             if (rdmNNFunction_epoch(pop,gen,temp,winnernum,winnergenes,winnernodes))
             {
-              //Collect Stats on end of experiment
-              //evals[expcount]=NEAT::pop_size*(gen-1)+winnernum;
-              //genes[expcount]=winnergenes;
-              //nodes[expcount]=winnernodes;
-              //gen=gens;
+              /*Collect Stats on end of experiment
+                evals[expcount]=NEAT::pop_size*(gen-1)+winnernum;
+                genes[expcount]=winnergenes;
+                nodes[expcount]=winnernodes;
+                gen=gens;*/
             }
 
         }
+        pop->logHistory((expBasename + "/" + labelRun + "-lastPop.history").c_str());
+        if(labelRun.compare("1-runFolder") == 0)
+            pop->logHistory((expBasename + "/lastPop.history").c_str());
 
         if (expcount<NEAT::num_runs-1)
             delete pop;
@@ -526,14 +537,15 @@ bool rdmNNFunction_evaluate(Organism *org)
     for (relax=0;relax<=net_depth;relax++)
     {
       success=net->activate();      
-    }*/
-    vector<double> outputInstance = activateNN(net, inInstance);
-    /*for(vector<NNode*>::iterator itONN = net->outputs.begin();
-        itONN != net->outputs.end();itONN++)
-    {
-        outputInstance.push_back((*itONN)->activation);        
-    }    
-    net->flush();*/
+    }
+      for(vector<NNode*>::iterator itONN = net->outputs.begin();
+          itONN != net->outputs.end();itONN++)
+      {
+          outputInstance.push_back((*itONN)->activation);
+      }
+      net->flush();*/
+      vector<double> outputInstance = activateNN(net, inInstance);
+
 
     //Activate model NN
     NEAT::Network* nnModel = NULL;//ODNEATGC
@@ -555,10 +567,8 @@ bool rdmNNFunction_evaluate(Organism *org)
     for (relax=0;relax<=net_depth;relax++)
     {
       success=net->activate();
-    }*/
-
-    vector<double> outputInstanceModel = activateNN(nnModel,inInstance);
-    /*for (vector<NEAT::NNode*>::iterator out_iter  = nnModel->outputs.begin();//ODNEATGC
+    }
+    for (vector<NEAT::NNode*>::iterator out_iter  = nnModel->outputs.begin();//ODNEATGC
              out_iter != nnModel->outputs.end();
              out_iter++)
       {
@@ -567,6 +577,7 @@ bool rdmNNFunction_evaluate(Organism *org)
       }
     nnModel->flush();*/
 
+    vector<double> outputInstanceModel = activateNN(nnModel,inInstance);
 
 
     if(NEAT::isWithErrorInput)
@@ -632,9 +643,6 @@ bool rdmNNFunction_evaluate(Organism *org)
   }
 
 
-
-
-
   //Store neuralnet
   /*std::stringstream ssfilenameNet;
   ssfilenameNet << "sandbox/" << NEAT::expBasename << "/" << NEAT::labelRunExp << "/net" << org->generation
@@ -645,7 +653,7 @@ bool rdmNNFunction_evaluate(Organism *org)
   org->gnome->print_to_file(oFileNet);
   oFileNet.close();*/
 
-    /*TORESET FOR T1 T2
+  //TODEACTIVATE for speedup FOR T1 T2
   previousError = 0.0;
   //Load and activate the network on each input
   //for(count=0;count<inputSet[1-f].size();count++)
@@ -666,42 +674,18 @@ bool rdmNNFunction_evaluate(Organism *org)
             taskInput = (count < inputSet1.size())? 1:-1;
         inInstanceOther.push_back(taskInput);
     }
-    net->load_sensors(&(inInstanceOther[0]));
-    //Relax net and get output
-    success=net->activate();
 
-    //use depth to ensure relaxation
-    for (relax=0;relax<=net_depth;relax++)
-    {
-      success=net->activate();
-    }
-    vector<double>outputInstanceOther;
-    for(vector<NNode*>::iterator itONN = net->outputs.begin();
-        itONN != net->outputs.end();itONN++)
-    {
-        outputInstanceOther.push_back((*itONN)->activation);
-    }
+    vector<double>outputInstanceOther = activateNN(net, inInstanceOther);
+
     //Activate model NN
     NEAT::Network* nnModel; //ODNEATGC
     if(f==0)
         nnModel = _nnModel2;
     else if (f==1)
         nnModel = _nnModel1;
-    nnModel->flush();
-    nnModel->load_sensors(&(inInstanceOther[0]));
-    if (!(nnModel->activate ()))
-        {
-            std::cerr << "[ERROR] Activation of ANN not correct"
-                      << std::endl;
-            exit (-1);
-        }
-    vector<double>outputInstanceModelOther;
-    for (vector<NEAT::NNode*>::iterator out_iter  = nnModel->outputs.begin();//ODNEATGC
-             out_iter != nnModel->outputs.end();
-             out_iter++)
-      {
-        outputInstanceModelOther.push_back((*out_iter)->activation);
-      }
+
+
+    vector<double> outputInstanceModelOther = activateNN(nnModel,inInstanceOther);
 
 
     if(NEAT::isWithErrorInput)
@@ -711,17 +695,17 @@ bool rdmNNFunction_evaluate(Organism *org)
     outOther.push_back(outputInstanceOther);
     outModelOther.push_back(outputInstanceModelOther);
     inOther.push_back(inInstanceOther);
-    net->flush();
-  }*/
+
+  }
   if (success)
   {     
     errorsum=computeError(outModel,out);
-    //double errorOther = computeError(outModelOther,outOther);
+    double errorOther = computeError(outModelOther,outOther);
 
     //normalize error and transform into fitness
     org->fitness=(2-errorsum);
     org->error=errorsum;
-    org->otherError = 1.0;//errorOther;
+    org->otherError = errorOther;//1.0;//
   }
   else
   {

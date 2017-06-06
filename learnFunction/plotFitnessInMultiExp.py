@@ -66,7 +66,7 @@ if __name__ == '__main__':
     dpi = 100
     winch = pixw/dpi # width in inches is pixel width / dpi
     hinch = pixh/dpi
-    bgcolor="gainsboro"
+    bgcolor="white" # "gainsboro"
     figurePlt = plt.figure(nameExp,figsize=(winch, hinch), dpi=dpi,facecolor=bgcolor)
     
     data = []
@@ -81,7 +81,8 @@ if __name__ == '__main__':
     
     for i in range(len(fnames)):
         #depends on alphabetical order of files and locale order
-        if((i % (len(fnames) / nbExp)) in [0,2,6,7]): #[1,3,7,8]): 
+        #if((i % (len(fnames) / nbExp)) in [0,2,6,7]): 
+        if((i % (len(fnames) / nbExp)) in [2,7]): 
             multirunFitness.plot_one_curve(multirunFitness.read_logfile(fnames[i]), 
                                            colors[(i)%len(colors)], 
                                            axis, labels[i], True)

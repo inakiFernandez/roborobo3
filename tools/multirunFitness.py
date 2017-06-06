@@ -59,22 +59,23 @@ def plot_one_curve(data, color, axis, label, quartiles=False):
     if quartiles:
         axis.fill_between(np.arange(0, len(med)), perc_25, perc_75,
                           alpha=0.25, linewidth=0, color=color)
-    lineWidth = 1
-    axis.plot(med, lw=lineWidth, label=label, color=color)
+    lineWidth = 1 # 5
+    axis.plot(med, lw=lineWidth, label=label,               
+              color=color,linestyle="-")
     gridcolor="#FFFFFF"    
     
-    axis.spines['top'].set_visible(False)
-    axis.spines['right'].set_visible(False)
-    axis.spines['left'].set_visible(False)
+    #axis.spines['top'].set_visible(False)
+    #axis.spines['right'].set_visible(False)
+    #axis.spines['left'].set_visible(False)
     axis.get_xaxis().tick_bottom()
-    #axis.get_yaxis().tick_left()
+    axis.get_yaxis().tick_left()
     axis.tick_params(axis='x', direction='out')
     axis.tick_params(axis='y', length=0)
-    for spine in axis.spines.values():
-        spine.set_position(('outward', 5))
-    axis.set_axisbelow(True)
+    #for spine in axis.spines.values():
+    #    spine.set_position(('outward', 5))
+    #axis.set_axisbelow(True)
     #axis.grid(color='red', linestyle='-', linewidth=1)  
-    plt.grid(color=gridcolor,linewidth=1,linestyle='-') 
+    #plt.grid(color=gridcolor,linewidth=1,linestyle='-') 
 
 def taskIntervals(horSize,interv=25):
     #vertical coordinates for taskswitch

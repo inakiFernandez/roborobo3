@@ -43,7 +43,7 @@ namespace NEAT {
 		bool spawn(Genome *g,int size);
 
 	public:
-
+        void logHistory(std::string filename); //Log history of the lineages of current genomes
         std::vector<Organism*> organisms; //The organisms in the Population
 
         std::vector<Species*> species;  // Species in the Population. Note that the species should comprise all the genomes 

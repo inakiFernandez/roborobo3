@@ -11,6 +11,7 @@
 #include "Config/Collect2ConfigurationLoader.h"
 #include "Config/Collect2RobotSensorsConfigurationLoader.h"
 #include "Config/OriginalConfigurationLoader.h"
+#include "Config/OriginalEA2017ConfigurationLoader.h"
 //###DO-NOT-DELETE-THIS-LINE###TAG:INCLUDE###//
 
 
@@ -88,6 +89,12 @@ ConfigurationLoader* ConfigurationLoader::make_ConfigurationLoader (std::string 
 	else if (configurationLoaderObjectName == "OriginalConfigurationLoader" )
 	{
 		return new OriginalConfigurationLoader();
+	}
+#endif
+#if defined PRJ_ORIGINALEA2017 || !defined MODULAR
+	else if (configurationLoaderObjectName == "OriginalEA2017ConfigurationLoader" )
+	{
+		return new OriginalEA2017ConfigurationLoader();
 	}
 #endif
     //###DO-NOT-DELETE-THIS-LINE###TAG:SWITCH###//

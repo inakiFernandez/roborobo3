@@ -41,7 +41,6 @@ int main(int argc, char *argv[])
          << endl;
     return -1;
   }
-
   //Load in the params
   NEAT::load_neat_params(argv[1],false);
   int gens = atoi(argv[2]);

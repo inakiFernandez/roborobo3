@@ -60,7 +60,7 @@ if __name__ == '__main__':
    
     labelFontSize = 14
     #print(dirFilesColorChanges)
-    bgcolor="gainsboro"
+    bgcolor="white"
     figAll = plt.figure(1,figsize=[8,6])
     gs = gridspec.GridSpec(1, 2, width_ratios=[8, 1]) 
     axisAll = plt.subplot(gs[0],facecolor=bgcolor) #plt.subplot2grid((1, 1), (0, 0), facecolor=bgcolor)
@@ -86,7 +86,7 @@ if __name__ == '__main__':
 
     plotRuns.plot_one_curve(fitnessAllB, "blue", axisAll, "Best", True)
     plotRuns.plot_one_curve(fitnessAllR, "orange", axisAll, "Random", True)
-    axisAll.grid(color="#FFFFFF", linestyle='-', linewidth=1)
+    #axisAll.grid(color="#FFFFFF", linestyle='-', linewidth=1)
     
     axisAll.tick_params(axis='both', which='major', labelsize=labelFontSize-3)
     legend = axisAll.legend(loc='upper left', shadow=True)
@@ -98,7 +98,7 @@ if __name__ == '__main__':
     for label in legend.get_lines():
         label.set_linewidth(1.5)  # the legend line width
 
-    bgcolor="gainsboro"
+    bgcolor="white"
     #figFitCumulAll = plt.figure(152)
     
     violin_parts = axisFitCumulAll.violinplot([fitnessCumulatedB,fitnessCumulatedR], positions=[0.5,1.0],
@@ -231,7 +231,7 @@ if __name__ == '__main__':
     print("P-val mann whitney U Cumulated possible best vs. random" + str(mannWhitCumulPossible[1]))
     print("P-val mann whitney U Cumulated gathered best vs. random" + str(mannWhitCumulGathered[1]))
 
-    bgcolor="gainsboro"
+    bgcolor="white"
     fig2 = plt.figure(2,figsize=[8,6])
     gs = gridspec.GridSpec(1, 2, width_ratios=[8, 1])
     axis2 = plt.subplot(gs[0],facecolor=bgcolor) # plt.subplot2grid((1, 2), (0, 0), facecolor=bgcolor)
@@ -244,7 +244,7 @@ if __name__ == '__main__':
     plt.suptitle("Proportion of possible items to be collected per generation",fontsize=labelFontSize)
     axis2.set_xlabel("Generations",fontsize=labelFontSize)
     axis2.set_ylabel("% of possible items",fontsize=labelFontSize)
-    axis2.grid(color="#FFFFFF", linestyle='-', linewidth=1)    
+    #axis2.grid(color="#FFFFFF", linestyle='-', linewidth=1)    
     axis2.tick_params(axis='both', which='major', labelsize=labelFontSize-3)    
     
     legend = axis2.legend(loc='upper left', shadow=True)
@@ -254,7 +254,7 @@ if __name__ == '__main__':
         label.set_fontsize('large')
     for label in legend.get_lines():
         label.set_linewidth(1.5)
-    bgcolor="gainsboro"
+    bgcolor="white"
     #figFitCumulAll = plt.figure(152)
     
     violin_parts = axisBxpPossible.violinplot([possibleCumulatedB,possibleCumulatedR], positions=[0.5,1.0],
@@ -285,7 +285,7 @@ if __name__ == '__main__':
         plt.close(fig2)       
     
     
-    bgcolor="gainsboro"
+    bgcolor="white"
     fig2 = plt.figure(2,figsize=[8,6])
     gs = gridspec.GridSpec(1,2,width_ratios=[8,1])
     axis2 = plt.subplot(gs[0],facecolor=bgcolor)
@@ -295,7 +295,7 @@ if __name__ == '__main__':
     plt.suptitle("Proportion of collected items over number of possible per generation",fontsize=labelFontSize)
     axis2.set_xlabel("Generations",fontsize=labelFontSize)
     axis2.set_ylabel("% of collected items over possible",fontsize=labelFontSize)
-    axis2.grid(color="#FFFFFF", linestyle='-', linewidth=1)    
+    #axis2.grid(color="#FFFFFF", linestyle='-', linewidth=1)    
     axis2.tick_params(axis='both', which='major', labelsize=labelFontSize-3)    
     legend = axis2.legend(loc='upper left', shadow=True)
     frame = legend.get_frame()
@@ -370,7 +370,7 @@ if __name__ == '__main__':
     
     #.pdf in savefig() no need for dpi
     
-    bgcolor="gainsboro"
+    bgcolor="white"
     fig3 = plt.figure(3)
     axis3 = plt.subplot2grid((1, 1), (0, 0), facecolor=bgcolor)    
     
@@ -430,7 +430,7 @@ if __name__ == '__main__':
         ranksFitR = stats.rankdata(colorChangesAvgAggGenerationR[i])
         spearmanRandom.append([stats.spearmanr(ranksChR,ranksFitR[:-1])])
         
-    bgcolor="gainsboro"
+    bgcolor="white"
     figSpearman = plt.figure(3587)
     axisSpearman = plt.subplot2grid((1, 1), (0, 0), facecolor=bgcolor)    
     
@@ -482,7 +482,7 @@ if __name__ == '__main__':
     givenRewardAllR = [list(x) for x in zip(*givenRewardAllR)]
     givenRewardAllR = [[y[0] if y[0] <= 0.5 else 0.5 for y in x] for x in givenRewardAllR]
     
-    bgcolor="gainsboro"
+    bgcolor="white"
     figGivenReward = plt.figure(122)
     axisGivenReward = plt.subplot2grid((1, 1), (0, 0), facecolor=bgcolor)
     axisGivenReward.set_title("Average given individual reward per generation")
@@ -528,10 +528,10 @@ if __name__ == '__main__':
         
         contentIncrB= [list(x) for x in zip(*contentIncrB)] # contentSplitB)]
         
-        bgcolor="gainsboro"
+        bgcolor="white"
         fig1 = plt.figure(1)
         axis1 = plt.subplot2grid((1, 1), (0, 0), facecolor=bgcolor)
-        axis1.grid(color="#FFFFFF", linestyle='-', linewidth=1)    
+        #axis1.grid(color="#FFFFFF", linestyle='-', linewidth=1)    
         
         for j,lColor in enumerate(contentIncrB):
             if j == 0:
@@ -593,7 +593,7 @@ if __name__ == '__main__':
         
         contentIncrR = [list(x) for x in zip(*contentIncrR)] # contentSplitR)]
         
-        bgcolor="gainsboro"
+        bgcolor="white"
         fig1 = plt.figure(1)
         axis1 = plt.subplot2grid((1, 1), (0, 0), facecolor=bgcolor)
         for j,lColor in enumerate(contentIncrR):
@@ -748,7 +748,7 @@ if __name__ == '__main__':
     axisColorItems.set_xlabel(#"Value of i" + \
                                "Item color (Best and Random)",fontsize=labelFontSize)
     axisColorItems.set_ylabel("Proportion of collected items",fontsize=labelFontSize)  
-    axisColorItems.grid(axis='y',color="#FFFFFF", linestyle='-', linewidth=1)
+    #axisColorItems.grid(axis='y',color="#FFFFFF", linestyle='-', linewidth=1)
     axisColorItems.xaxis.set_ticks_position('none') 
     axisColorItems.set_xticklabels([])
     #plt.tick_params(axis='x',          # changes apply to the x-axis
@@ -775,7 +775,7 @@ if __name__ == '__main__':
     axisBxpEntropy.set_ylim([0.0,3.1])
     axisBxpEntropy.set_ylabel("Entropy")
     axisBxpEntropy.set_xlim([0.2,1.4])
-    axisBxpEntropy.grid(color="#FFFFFF", linestyle='-', linewidth=1)
+    #axisBxpEntropy.grid(color="#FFFFFF", linestyle='-', linewidth=1)
     violin_parts['bodies'][0].set_facecolor((0.0,0.0,1.0,0.5))
     violin_parts['bodies'][0].set_edgecolor("blue")
     violin_parts['bodies'][1].set_facecolor((1.0,0.75,0.0,0.5))
@@ -857,7 +857,7 @@ if __name__ == '__main__':
     
     contentIncr= [list(x) for x in zip(*contentIncr)] # contentSplit)]
     
-    bgcolor="gainsboro"
+    bgcolor="white"
     fig1 = plt.figure(1)
     axis1 = plt.subplot2grid((1, 1), (0, 0), facecolor=bgcolor)
     for i,lColor in enumerate(contentIncr):
@@ -895,7 +895,7 @@ if __name__ == '__main__':
         aggPerIter = [np.average(x[nbSteps * i:nbSteps * (i + 1)]) for i in range(nbGen)]
         valuesItemsAggGeneration[i] = aggPerIter
     
-    bgcolor="gainsboro"
+    bgcolor="white"
     fig2 = plt.figure(2)
     axis2 = plt.subplot2grid((1, 1), (0, 0), facecolor=bgcolor)
     
@@ -908,7 +908,7 @@ if __name__ == '__main__':
     #                   np.zeros(len(valuesItems[0])) ,  valuesItems[0],
     #                   alpha=0.95, linewidth=0, color="red")
     
-    bgcolor="gainsboro"
+    bgcolor="white"
     fig21 = plt.figure(21)
     axis21 = plt.subplot2grid((1, 1), (0, 0), facecolor=bgcolor)
     
@@ -928,7 +928,7 @@ if __name__ == '__main__':
     contentSplit = [x.split(" ") for x in content]         
     
     contentAgg = [np.average(np.array([int(y) for y in x])) for x in contentSplit] # Only if measured per generation /500.0
-    bgcolor="gainsboro"
+    bgcolor="white"
     fig3 = plt.figure(3)
     axis3 = plt.subplot2grid((1, 1), (0, 0), facecolor=bgcolor)
     

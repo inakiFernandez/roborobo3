@@ -76,6 +76,7 @@ double NEAT::minError = 10000.0;
 int NEAT::numberSamples = 2000;
 double NEAT::inputBound = 0.0; // Bound for sampled inputs when diff. inputs per evaluation
 double NEAT::probBigGaussian = 0.0;
+bool NEAT::doHistorySelection = true;
 
 double NEAT::mutateIndividualWeightProb = 1.0;
 

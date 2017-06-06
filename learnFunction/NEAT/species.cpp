@@ -414,12 +414,7 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
 	Species *newspecies; //For babies in new Species
 	Organism *comporg;  //For Species determination through comparison
 
-    /*Species *randspecies;  //For mating outside the Species
-	double randmult;
-	int randspeciesnum;
-    int spcount;
-    int giveup; //For giving up finding a mate outside the species */
-	std::vector<Species*>::iterator cursp;
+    std::vector<Species*>::iterator cursp;
 
 	Network *net_analogue;  //For adding link to test for recurrency
 
@@ -450,6 +445,32 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
     {
       total_fitness += (*curorg)->fitness;
     }
+    std::vector<double> fitnessAncestorsList;
+
+    double totalMixedFitness = 0.0; //For roulette-wheel selection...
+    //Compute the individual and total ancestor fitness values
+    if(NEAT::doHistorySelection)
+    {
+        for(curorg=organisms.begin();curorg!=organisms.end();++curorg)
+        {
+            float fitnessAncestors = 0.0;
+            for(std::vector<double>::iterator itLineage = (*curorg)->fitnessHistory.begin();
+                itLineage != (*curorg)->fitnessHistory.end(); itLineage++)
+            {
+                fitnessAncestors += (*itLineage);
+            }
+            if(generation > 1)
+                fitnessAncestorsList.push_back(2 - fitnessAncestors / (*curorg)->fitnessHistory.size());
+            else
+                fitnessAncestorsList.push_back((*curorg)->fitness);
+        }
+
+
+        for(curorg=organisms.begin();curorg!=organisms.end();++curorg)
+        {
+            totalMixedFitness+=(*curorg)->fitness;
+        }
+    }
 
 	
 	//Check for a mistake
@@ -463,6 +484,8 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
     poolsize=organisms.size()-1;
 
     thechamp=(*(organisms.begin()));
+    std::vector<double> fitnessHistory;
+    std::vector<Genome*> genomeHistory;
 
     //Create the designated number of offspring for the Species
     //one at a time
@@ -476,6 +499,7 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
         //Debug Trap
         if (expected_offspring > NEAT::pop_size)
         {
+            std::cerr << "expected_offspring higher than pop_size" << std::endl;
             exit(-1);
         }
 
@@ -545,9 +569,10 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
             for(orgcount=0;orgcount<orgnum;orgcount++)
                 ++curorg;
 
+
             //Roulette Wheel
             //REACTIVATED: fitness-proportionate intra-species selection (maybe do rank-based?)
-            /*marble=randfloat()*total_fitness;
+            marble=randfloat()*total_fitness;
             curorg=organisms.begin();
             spin=(*curorg)->fitness;
             while(spin<marble)
@@ -555,70 +580,89 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
                 ++curorg;
                 //Keep the wheel spinning
                 spin+=(*curorg)->fitness;
-            }*/
-            //Finished roulette
+            }
+            bool isHistorySelection = false;
+            if(NEAT::doHistorySelection)
+            {
+                double probOld = 0.6; //0.6, 0.8, 0.9
+                if(!(NEAT::randfloat() < probOld) && (generation > 1))
+                {
+                    marble=randfloat() * totalMixedFitness;
+                    curorg=organisms.begin();
+                    std::vector<double>::iterator itAncestorFitness = fitnessAncestorsList.begin();
+                    spin=(*itAncestorFitness);
+                    while(spin<marble)
+                    {
+                        ++curorg;
+                        itAncestorFitness++;
+                        //Keep the wheel spinning
+                        spin+=(*itAncestorFitness);
+                    }
+                    isHistorySelection = true;
+                }
+            }
 
 
             mom=(*curorg);
-            //TODO keep history of old fitnesses
-            //TODO add attribute to genome
+
+
             //TODO aggregate history into one value?
             //TODO somewhere else to exploit the history in selection
-            //TODO ex with which probability
+            //TODO "old" with which probability
             new_genome=(mom->gnome)->duplicate(count);
-
-            //Do the mutation depending on probabilities of
-            //various mutations
-
-            if (randfloat() < NEAT::mutate_add_node_prob)
+            if(!isHistorySelection)
             {
-                new_genome->mutate_add_node(pop->innovations,pop->cur_node_id,pop->cur_innov_num);
-                mut_struct_baby=true;
-            }
-            else if (randfloat()<NEAT::mutate_add_link_prob)
-            {
-                net_analogue=new_genome->genesis(generation);
-                new_genome->mutate_add_link(pop->innovations,pop->cur_innov_num,NEAT::newlink_tries);
-                delete net_analogue;
-                mut_struct_baby=true;
-            }
-            else
-            {
-                //If we didn't do a structural mutation, we do the other kinds
+                //Do the mutation depending on probabilities of
+                //various mutations
 
-                if (randfloat()<NEAT::mutate_random_trait_prob)
+                if (randfloat() < NEAT::mutate_add_node_prob)
                 {
-                    new_genome->mutate_random_trait();
+                    new_genome->mutate_add_node(pop->innovations,pop->cur_node_id,pop->cur_innov_num);
+                    mut_struct_baby=true;
                 }
-                if (randfloat()<NEAT::mutate_link_trait_prob)
+                else if (randfloat()<NEAT::mutate_add_link_prob)
                 {
-                    new_genome->mutate_link_trait(1);
+                    net_analogue=new_genome->genesis(generation);
+                    new_genome->mutate_add_link(pop->innovations,pop->cur_innov_num,NEAT::newlink_tries);
+                    delete net_analogue;
+                    mut_struct_baby=true;
                 }
-                if (randfloat()<NEAT::mutate_node_trait_prob)
+                else
                 {
-                    new_genome->mutate_node_trait(1);
-                }
-                if (randfloat()<NEAT::mutate_link_weights_prob)
-                {
-                    new_genome->mutate_link_weights(mut_power,1.0,GAUSSIAN);
-                }
-                if (randfloat()<NEAT::mutate_toggle_enable_prob)
-                {
-                    new_genome->mutate_toggle_enable(1);
-                }
-                if (randfloat()<NEAT::mutate_gene_reenable_prob)
-                {
-                    new_genome->mutate_gene_reenable();
+                    //If we didn't do a structural mutation, we do the other kinds
+
+                    if (randfloat()<NEAT::mutate_random_trait_prob)
+                    {
+                        new_genome->mutate_random_trait();
+                    }
+                    if (randfloat()<NEAT::mutate_link_trait_prob)
+                    {
+                        new_genome->mutate_link_trait(1);
+                    }
+                    if (randfloat()<NEAT::mutate_node_trait_prob)
+                    {
+                        new_genome->mutate_node_trait(1);
+                    }
+                    if (randfloat()<NEAT::mutate_link_weights_prob)
+                    {
+                        new_genome->mutate_link_weights(mut_power,1.0,GAUSSIAN);
+                    }
+                    if (randfloat()<NEAT::mutate_toggle_enable_prob)
+                    {
+                        new_genome->mutate_toggle_enable(1);
+                    }
+                    if (randfloat()<NEAT::mutate_gene_reenable_prob)
+                    {
+                        new_genome->mutate_gene_reenable();
+                    }
                 }
             }
-
             baby=new Organism(0.0,new_genome,generation);
 
         }
         else
         {
             //Otherwise we should mate
-            //TOCHECK trap to avoid mating
             std::cout << "No mating in my experiments" << std::endl;
 
             exit(-1);
@@ -788,7 +832,20 @@ bool Species::reproduce(int generation, Population *pop,std::vector<Species*> &s
             */
         }
 
+        fitnessHistory = mom->fitnessHistory;
+        fitnessHistory.push_back(mom->error);//mom->orig_fitness);
         //Add the baby to its proper Species or if it doesn't fit a Species, create a new one
+        if(fitnessHistory.empty())
+        {
+            std::cerr << "History not recorded" << std::endl;
+            exit(-1);
+        }
+        baby->fitnessHistory = fitnessHistory;
+
+        genomeHistory = mom->genomeHistory;
+        genomeHistory.push_back(mom->gnome->duplicate(-1));
+
+        baby->genomeHistory = genomeHistory;
 
         baby->mut_struct_baby=mut_struct_baby;
         baby->mate_baby=mate_baby;

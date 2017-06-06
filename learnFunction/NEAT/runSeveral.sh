@@ -211,7 +211,8 @@ if [ "$buildVideo" = true ] ; then
     parallel -j $nbCores -a $outbasename/dataplots.parallel
  
 else
-    echo "TODO parallel -j $nbCores -a $outbasename/dataplots.parallel"
+    echo "TODO"
+    echo "parallel -j $nbCores -a $outbasename/dataplots.parallel"
 fi
 
 end=`date +%s`

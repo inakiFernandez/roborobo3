@@ -75,7 +75,7 @@ public :
     //Fernandi modification: getter for color spectrum
     double getColorValue()
     {
-        return (_displayColorRed / 256.0) * 2.0 - 1.0;
+        return (_displayColorRed / 256.0) * 2.0 - 0.875; //1.0;
     }
 
     virtual void step() = 0;

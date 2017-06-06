@@ -93,6 +93,8 @@ namespace NEAT {
     extern double inputBound;
     extern double probBigGaussian;
 
+    extern bool doHistorySelection;
+
     extern double mutateIndividualWeightProb;
 
     extern ExtendedProperties gProperties;

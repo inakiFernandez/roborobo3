@@ -84,6 +84,11 @@ Organism::~Organism() {
 
     delete net;
 	delete gnome;
+
+    //TODO MEMORY LEAK!!!
+    /*for(std::vector<Genome*>::iterator it = genomeHistory.begin();
+        it != genomeHistory.end(); it++)
+        delete (*it);*/
 }
 
 void Organism::update_phenotype() {

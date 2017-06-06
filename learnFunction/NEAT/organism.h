@@ -37,6 +37,8 @@ namespace NEAT {
         double otherError;
 
 		double orig_fitness;  //A fitness measure that won't change during adjustments
+        std::vector<double> fitnessHistory;
+        std::vector<Genome*> genomeHistory;
 		double error;  //Used just for reporting purposes
 		bool winner;  //Win marker (if needed for a particular task)
 		Network *net;  //The Organism's phenotype
