@@ -102,26 +102,30 @@ OriginalEA2017WorldObserver::OriginalEA2017WorldObserver( World* world ) : World
     std::string logItemName = "items.log";
     gProperties.checkAndGetPropertyValue("logItemName",&logItemName,true);
     //logItemFile = std::ofstream("logs/items.log");// + logItemName);
-    logItemFile = std::ofstream(//"logs/" +
-                                logItemName);
+    /*logItemFile = std::ofstream(//"logs/" +
+                                logItemName);*/
+    logItemFile.open(logItemName);
 
     std::string logItGatheredName = "itemsIter.log";
     gProperties.checkAndGetPropertyValue("logItGatheredName",&logItGatheredName,true);
     //logItGatheredFile = std::ofstream("logs/itemsIter.log");// + logItGatheredName);
-    logItGatheredFile = std::ofstream(//"logs/"+
-                                      logItGatheredName);
+    /*logItGatheredFile = std::ofstream(//"logs/"+
+                                      logItGatheredName);*/
+    logItGatheredFile.open(logItGatheredName);
 
     std::string logColorChangesName = "colorChanges.log";
     gProperties.checkAndGetPropertyValue("logColorChangesName",&logColorChangesName,true);
     //logChangesColorFile = std::ofstream("logs/colorChanges.log");// + logColorChangesName);
-    logChangesColorFile = std::ofstream(//"logs/" +
-                                        logColorChangesName);
+    /*logChangesColorFile = std::ofstream(//"logs/" +
+                                        logColorChangesName);*/
+    logChangesColorFile.open(logColorChangesName);
 
     std::string logGivenRewardName = "givenReward.log";
     gProperties.checkAndGetPropertyValue("logGivenRewardName",&logGivenRewardName,true);
 
-    logGivenRewardFile = std::ofstream(//"logs/" +
-                                        logGivenRewardName);
+    /*logGivenRewardFile = std::ofstream(//"logs/" +
+                                        logGivenRewardName);*/
+    logGivenRewardFile.open(logGivenRewardName);
 
     logItemFile << "c1 c2 c3 c4 c5 c6 c7 c8" << std::endl;
 
