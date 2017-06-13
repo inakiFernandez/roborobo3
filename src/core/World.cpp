@@ -440,4 +440,21 @@ int World::getNbOfRobots()
 {
 	return (int)robots.size();
 }
+ //Fernandi modification: get the number of robots on top of an item's footprint
+int World::getNumberRobotsOnPhysicalObject(int idItem)
+{
+    int result = 0;
+    for ( int i = 0 ; i != gNumberOfRobots ; i++ )
+    {
+        int targetIndex = gWorld->getRobot(i)->getWorldModel()->getGroundSensorValue();
 
+
+        if(PhysicalObject::isInstanceOf(targetIndex))
+        {
+            if((targetIndex - gPhysicalObjectIndexStartOffset) == idItem)//TOCHECK idItem
+                result++;
+        }
+    }
+
+    return result;
+}

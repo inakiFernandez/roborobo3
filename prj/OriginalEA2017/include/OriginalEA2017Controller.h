@@ -132,7 +132,7 @@ public:
     double getFitness(){ return _currentFitness;}
     int getNbColorChanges() { return _nbColorChanges;}
     double getColorEffector()
-    {
+    {        
         return 2.0 * ((double)_wm->getRobotLED_redValue()/256.0) - 0.875; //- 1.0; //Non-symmetric colors :(
     }
 

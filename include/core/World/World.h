@@ -64,6 +64,9 @@ class World
 		int getIterations();
 		WorldObserver* getWorldObserver();
 		int getNbOfRobots();
+        //Fernandi modification: get the number of robots on top of an item's footprint
+        int getNumberRobotsOnPhysicalObject(int idItem);
+
 };
 
 

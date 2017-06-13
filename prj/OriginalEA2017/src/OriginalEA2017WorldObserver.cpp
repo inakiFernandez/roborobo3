@@ -81,7 +81,18 @@ OriginalEA2017WorldObserver::OriginalEA2017WorldObserver( World* world ) : World
     gProperties.checkAndGetPropertyValue("gBrait",&OriginalEA2017SharedData::gBrait,true);
     gProperties.checkAndGetPropertyValue("gSelPressure",&OriginalEA2017SharedData::gSelPressure, true);
     gProperties.checkAndGetPropertyValue("gForgetMethod",&OriginalEA2017SharedData::gForgetMethod,true);
+    gProperties.checkAndGetPropertyValue("gRegrowOnGenerationOnly",&OriginalEA2017SharedData::regrowOnGenerationOnly,true);
 
+    if(OriginalEA2017SharedData::regrowOnGenerationOnly)
+    {
+        if(gPhysicalObjectDefaultRegrowTimeMax != -1)
+        {
+            std::cerr << "Wrong regrowing policy" << std::endl;
+            exit(-1);
+        }
+    }
+
+    gProperties.checkAndGetPropertyValue("gNumberCollaboratingRobots",&OriginalEA2017SharedData::gNumberCollaboratingRobots,true);
     //OdNeat----------------------------------
     //Mutations
     gProperties.checkAndGetPropertyValue("mutate_only_prob",&Helper::mutateProb,true);
@@ -120,6 +131,11 @@ OriginalEA2017WorldObserver::OriginalEA2017WorldObserver( World* world ) : World
                                         logColorChangesName);*/
     logChangesColorFile.open(logColorChangesName);
 
+    std::string logRobotsPerItemName = "robotsPerItem.log";
+    gProperties.checkAndGetPropertyValue("logRobotsPerItemName",&logRobotsPerItemName,true);
+
+    logRobotsPerItemFile.open(logRobotsPerItemName);
+
     std::string logGivenRewardName = "givenReward.log";
     gProperties.checkAndGetPropertyValue("logGivenRewardName",&logGivenRewardName,true);
 
@@ -139,7 +155,7 @@ OriginalEA2017WorldObserver::OriginalEA2017WorldObserver( World* world ) : World
     //  iteration and generation counters
 	_lifeIterationCount = -1;
 	_generationCount = -1;
-
+    nbCollectedItems = 0;
     //Given average individual reward
     _averageReward = 0.0;
     _nbRobotsCorrect = 0.0;
@@ -176,10 +192,23 @@ void OriginalEA2017WorldObserver::updateEnvironment()
 
 void OriginalEA2017WorldObserver::updateMonitoring()
 {
+    if(gWorld->getIterations() == -2) //120000)//
+    {
+        OriginalEA2017SharedData::gNumberCollaboratingRobots = 3;
+        std::cerr << "Now cooperate with " << OriginalEA2017SharedData::gNumberCollaboratingRobots << " robots." << std::endl;
+    }
+
     // * Log at end of each generation
     //std::cout << gWorld->getIterations() << std::endl;
     if( _lifeIterationCount >= OriginalEA2017SharedData::gEvaluationTime ) // end of generation.
 	{
+        if(OriginalEA2017SharedData::regrowOnGenerationOnly)
+        {
+            for(int i = 0; i < gNbOfPhysicalObjects;i++)
+            {
+               gPhysicalObjects[i]->doRegrow();
+            }
+        }
 		if ( gVerbose )
 		{
             std::cout << "[gen:" << (gWorld->getIterations()/OriginalEA2017SharedData::gEvaluationTime)
@@ -198,7 +227,7 @@ void OriginalEA2017WorldObserver::updateMonitoring()
                                          (gWorld->getRobot(i)->getController()));
              gatheredGenomes += (ctrl->_doEvoTopo? ctrl ->_genomesList.size():ctrl ->_genomesFList.size());
 
-             if(ctrl -> _storedF.empty())
+            if(ctrl -> _storedF.empty())
             {
                  forgetMeasure += -1.0;
             }
@@ -213,10 +242,13 @@ void OriginalEA2017WorldObserver::updateMonitoring()
         //<< (sumFitness  / gNumberOfRobots) / Collect2SharedData::gEvaluationTime
         //average forget measure. TODO other estimator/or all the data?
 
+            std::cout << nbCollectedItems << " "
+                      << sumFitness //TOCHECK matplotlib scripts etc
+                      << std::endl;
 
-            std::cout << sumFitness
+            /*std::cout << sumFitness
                       //<< " " << (forgetMeasure/ gNumberOfRobots)
-                      <<  std::endl;
+                      <<  std::endl;*/
 
             if(fabs(sumFitness) < 0.0000000001)
             {
@@ -226,12 +258,14 @@ void OriginalEA2017WorldObserver::updateMonitoring()
             }
             else
             {
-                logGivenRewardFile << _averageReward / sumFitness << " "
-                               << _nbRobotsCorrect / sumFitness << " "
+                logGivenRewardFile << _averageReward / nbCollectedItems<< " "//To check /sumFitness
+                               << _nbRobotsCorrect / nbCollectedItems << " " // / sumFitness
                                << std::endl;
             }
+            logRobotsPerItemFile << std::endl;
             _nbRobotsCorrect = 0.0;
             _averageReward = 0.0;
+            nbCollectedItems = 0;
 
 	}
 
@@ -265,6 +299,11 @@ void OriginalEA2017WorldObserver::updateMonitoring()
         logItemFile.close();
         logItGatheredFile.close();
 
+
+        logChangesColorFile.close();
+        logGivenRewardFile.close();
+        logRobotsPerItemFile.close();
+
     }
     int countItGathered = 0;
     int countPossible = 0;
@@ -283,7 +322,7 @@ void OriginalEA2017WorldObserver::updateMonitoring()
                 //For other VARIANT bool isSynchColor = false;
                 bool isSynchColor = true;
                 int nbRobotsCorrectColor = 0;
-                if(listCollected[i].size() >= 2)
+                if((int)listCollected[i].size() >= OriginalEA2017SharedData::gNumberCollaboratingRobots)
                 {
                     //test if all agents (maybe more than 2) same color
                     for(auto it = listCollected[i].begin(); it != listCollected[i].end();it++)
@@ -306,7 +345,7 @@ void OriginalEA2017WorldObserver::updateMonitoring()
                             }*/
                         //}
                     }
-                    isSynchColor = (nbRobotsCorrectColor >= 2);
+                    isSynchColor = (nbRobotsCorrectColor >= OriginalEA2017SharedData::gNumberCollaboratingRobots);
                     if(isSynchColor)
                     {
                         gPhysicalObjects[i]->isWalked(0); //Default agent for callback (unused callback)
@@ -314,18 +353,29 @@ void OriginalEA2017WorldObserver::updateMonitoring()
                         {
                             //Share reward of one item between the agents involved
                             //TOCHANGE for different reward
-                            if(it->second == color)
+                            if(fabs(it->second - color) < 0.0000001)//Comparing with double (it->second == color)
                             {
                                 dynamic_cast<OriginalEA2017Controller*>(gWorld->getRobot(it->first)
-                                    ->getController())->updateFitness(1.0 / (double)nbRobotsCorrectColor);
+                                    ->getController())->//updateFitness(1.0 / (double)nbRobotsCorrectColor); //Split among robots
+                                                        //updateFitness(1.0 * ((double)nbRobotsCorrectColor - 1)); //The more robots the better reward. -1 because 1 robot can not collect items
+                                                        updateFitness(1.0 * ((double)nbRobotsCorrectColor - 1) *((double)nbRobotsCorrectColor - 1) *((double)nbRobotsCorrectColor - 1) *((double)nbRobotsCorrectColor - 1) * ((double)nbRobotsCorrectColor - 1) * ((double)nbRobotsCorrectColor - 1)); //The more robots the better reward. -1 because 1 robot can not collect items
 
                             }
                         }
-                        _averageReward += 1.0 / (double)nbRobotsCorrectColor; //TOCHECK
-                        _nbRobotsCorrect +=(double)nbRobotsCorrectColor;
+                        _averageReward +=  //1.0 / (double)nbRobotsCorrectColor; //TOCHECK //Split among robots
+
+                                //1.0 * ((double)nbRobotsCorrectColor - 1);
+
+                                1.0 * ((double)nbRobotsCorrectColor - 1) *((double)nbRobotsCorrectColor - 1) *((double)nbRobotsCorrectColor - 1) *((double)nbRobotsCorrectColor - 1)
+                                       * ((double)nbRobotsCorrectColor - 1)
+                                       * ((double)nbRobotsCorrectColor - 1); //The more robots the better reward. -1 because 1 robot can not collect items
+
+                        _nbRobotsCorrect += (double)nbRobotsCorrectColor;
                         int colorInt = int((color + 0.875) * 4.0); // int((color + 1.0) * 4.0);
                         countItGathered++;
+                        nbCollectedItems++;
                         itemCounts[colorInt]++;
+                        logRobotsPerItemFile << nbRobotsCorrectColor << " ";
                     }
                     countPossible++;
                 }

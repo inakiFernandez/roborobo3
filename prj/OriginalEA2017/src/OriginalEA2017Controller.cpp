@@ -16,7 +16,7 @@
 #include <neuralnetworks/Elman.h>
 #include <boost/algorithm/string.hpp>
 
-
+#include <algorithm>
 using namespace Neural;
 
 OriginalEA2017Controller::OriginalEA2017Controller( RobotWorldModel *wm )
@@ -106,7 +106,8 @@ void OriginalEA2017Controller::resetRobot()
         _nbInputs +=  _wm->_cameraSensorsNb;
         // agents
         _nbInputs +=  _wm->_cameraSensorsNb;
-
+        //For cooperative foraging: sensor for estimating reward
+        _nbInputs +=1;
         if(_withCollectColorEffector)
         {
             //COLOR DISPLAYED BY OTHER ROBOT
@@ -120,7 +121,8 @@ void OriginalEA2017Controller::resetRobot()
 
     //Current translational and rotational speeds
     _nbInputs += 2;
-
+    //Current color
+    //_nbInputs += 1;
 
     if(!_doEvoTopo)
     {
@@ -328,21 +330,58 @@ void OriginalEA2017Controller::stepBehaviour()
        }
     }
 
+
+    int targetIndex = _wm->getGroundSensorValue();
+    // ground sensor is upon a physical object (OR: on a place marked with
+    //this physical object footprint, cf. groundsensorvalues image)
+    //If on top of an item: sensor of estimated reward (how many other robots next to it: 1/number of robots)
+    if(PhysicalObject::isInstanceOf(targetIndex))//on top  of an item
+    {
+        //How many robots on top of item
+        int numberRobotsOnItem =  gWorld->getNumberRobotsOnPhysicalObject(targetIndex - gPhysicalObjectIndexStartOffset);
+        if(numberRobotsOnItem > 50)
+        {
+            std::cerr << "Too many robots on item" << std::endl;
+            exit(-1);
+        }
+        if(numberRobotsOnItem >= 2)
+            //TOCHECK depending on definition of reward (split or cumulate when several)
+            //(*inputs)[inputToUse] = 1.0/(double)numberRobotsOnItem; //TONORMALIZE? max 5 robots? Depending on size item vs robot
+            (*inputs)[inputToUse] = 0.25 * (numberRobotsOnItem - 1);//[0.0 for 0|1,0.25 for 2,0.5 for 3,0.75 for 4,1.0 for 5]
+            //(*inputs)[inputToUse] = std::min(0.125 * (numberRobotsOnItem - 1),1.0);//[0.0 for 0|1,0.25 for 2,0.5 for 3,0.75 for 4,1.0 for 5]
+        else
+            (*inputs)[inputToUse] = 0.0;
+        inputToUse++;
+        //std::cout << "Robots on same item than R" << _wm->getId() << ":  " << numberRobotsOnItem << std::endl;
+
+    }
+    else
+    {
+        (*inputs)[inputToUse] = 0.0;
+        inputToUse++;
+    }
+    //Previous left and right wheel speeds (acts as recurrent connections from last step)
+    double lW = _wm->_desiredTranslationalValue / gMaxTranslationalSpeed
+            + _wm->_desiredRotationalVelocity / gMaxRotationalSpeed;
+    double rW = _wm->_desiredTranslationalValue / gMaxTranslationalSpeed
+            - _wm->_desiredRotationalVelocity / gMaxRotationalSpeed;
+
+    (*inputs)[inputToUse] = lW;
+    inputToUse++;
+    (*inputs)[inputToUse] = rW;
+    inputToUse++;
+    /*if(_withCollectColorEffector)
+    {
+        (*inputs)[inputToUse] = ((_previousColor / 256.0) * 2.0) - 0.875; // -1.0
+        inputToUse++;
+    }*/
     if (OriginalEA2017SharedData::gWithBias)
     {
         (*inputs)[inputToUse] = 1.0;
         inputToUse++;
     }
 
-    //Previous left and right wheel speeds (acts as recurrent connections from last step)
-    double lW = _wm->_desiredTranslationalValue / gMaxTranslationalSpeed
-            + _wm->_desiredRotationalVelocity / gMaxRotationalSpeed;
-    double rW = _wm->_desiredTranslationalValue / gMaxTranslationalSpeed
-            - _wm->_desiredRotationalVelocity / gMaxRotationalSpeed;
-    (*inputs)[inputToUse] = lW;
-    inputToUse++;
-    (*inputs)[inputToUse] = rW;
-    inputToUse++;
+
     std::vector<double> outputs;
     // compute and read out
     if(!_doEvoTopo)
@@ -353,7 +392,23 @@ void OriginalEA2017Controller::stepBehaviour()
                 && (OriginalEA2017SharedData::gBrait != 5)
                 && (OriginalEA2017SharedData::gBrait != 6);
         if (doBraitenberg)
-            nnF->setWeigths(_braitWeights);
+        {
+            //17, 29, 41 (item proximity NW,N,NE) to color
+            //23,35,47 (item color NW,N,NE) to color
+            //98 number of robots sensor to color
+            //101 bias to color
+            std::vector<double> hybridBraitEvoWeights = _braitWeights;
+
+            /*hybridBraitEvoWeights[23] = _genomeF[0];
+            hybridBraitEvoWeights[35] = _genomeF[1];
+            hybridBraitEvoWeights[47] = _genomeF[2];
+            hybridBraitEvoWeights[98] = _genomeF[3];
+            hybridBraitEvoWeights[101] = _genomeF[4];*/
+            /*hybridBraitEvoWeights[17] = _genomeF[5];
+            hybridBraitEvoWeights[29] = _genomeF[6];
+            hybridBraitEvoWeights[41] = _genomeF[7];*/
+            nnF->setWeigths(hybridBraitEvoWeights);
+        }
         nnF->setInputs(*inputs);
         nnF->step();
         outputs = nnF->readOut();
@@ -385,12 +440,14 @@ void OriginalEA2017Controller::stepBehaviour()
     lW = outputs[0];
     rW = outputs[1];
 
+
     if(_withCollectColorEffector)
     {
         //Random color effector (neural output ignored). Control experiment
         //outputs[2] = (double)(rand() % 10000)/5000.0 - 1.0;
         //Use a discrete set of color values
-        int redValue = roundDown((int)((outputs[2] + 1.0)/2.0 * 256.0),32);
+        //int redValue = roundDown((int)((outputs[2] + 0.875)/2.0 * 256.0),32); // +1.0
+        int redValue = (outputs[2] < 0.0) ? 0:255; // two colors
         _wm->setRobotLED_colorValues(redValue, 255 - redValue, 0);
     }
 
@@ -405,7 +462,7 @@ void OriginalEA2017Controller::stepBehaviour()
     _wm->_desiredRotationalVelocity = _wm->_desiredRotationalVelocity * gMaxRotationalSpeed;
 
     //Logging number of color changes
-    int currentColor = roundDown((int)((outputs[2] + 1.0)/2.0 * 256.0),32);
+    int currentColor = roundDown((int)((outputs[2] + 0.875)/2.0 * 256.0),32); // +1.0
     if(_previousColor != currentColor)
         _nbColorChanges++;
     _previousColor = currentColor;
@@ -967,7 +1024,7 @@ std::vector<double> OriginalEA2017Controller::getBraitenberg()
                                    0.0, 0.0, 0.0, //lW recurrent
                                    0.0, 0.0, 0.0 //rW recurrent
                                 };
-
+    /*
     //braitenberg genome Colors intermediate (8sensors x (obst,item,robot,colorrobot) color=T1, red if alone, green if item + robot)
     std::vector<double>  arr3 = {0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, //0.0, 0.0, 0.0, //W
                                    0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, -1.0, //0.0, 0.0, 0.0, //NW
@@ -978,6 +1035,24 @@ std::vector<double> OriginalEA2017Controller::getBraitenberg()
                                    0.5, 0.5, 0.0, -1.0, -1.0, 0.0,  0.5, 0.5, 0.0, //0.0, 0.0, 0.0, //S
                                    0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, //0.0, 0.0, 0.0, //SW
                                    0.5, 0.5, 0.5, //bias
+                                   0.0, 0.0, 0.0, //lW recurrent
+                                   0.0, 0.0, 0.0 //rW recurrent
+                                };*/
+//20, 32, 44 (robot NW,N,NE) to color
+//98 number of robots sensor to color
+//101 bias to color
+
+    //braitenberg genome Colors intermediate (8sensors x (obst,item,robot,coloritem) color)
+    std::vector<double>  arr3 = {0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //W
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, -1.0, 0.0, 0.0, 0.0, //NW
+                                   -0.5, -0.5, 0.0, 1.0, 1.0, 0.0, -0.5, -0.5, 1.0, 0.0, 0.0, 0.0, //N
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, -1.0, 0.0, 0.0, 0.0, //NE
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //E
+                                   -0.5, 0.5, 0.0, 1.0,-1.0, 0.0, -0.25, 0.75, 0.0, 0.0, 0.0, 0.0, //SE
+                                   0.5, 0.5, 0.0, -1.0, -1.0, 0.0,  0.5, 0.5, 0.0, 0.0, 0.0, 0.0, //S
+                                   0.5, -0.5, 0.0, -1.0, 1.0, 0.0, 0.75, -0.25, 0.0, 0.0, 0.0, 0.0, //SW
+                                   0.0,0.0,0.0,  //Number of robots sensor
+                                   0.5, 0.5, 0.0, //bias
                                    0.0, 0.0, 0.0, //lW recurrent
                                    0.0, 0.0, 0.0 //rW recurrent
                                 };

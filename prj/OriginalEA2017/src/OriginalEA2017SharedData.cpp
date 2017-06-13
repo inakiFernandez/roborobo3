@@ -45,3 +45,7 @@ int OriginalEA2017SharedData::gForgetMethod = -1;
 int OriginalEA2017SharedData::gUpdateGC = true;
 
 double OriginalEA2017SharedData::gSelPressure= 1.0;
+
+bool OriginalEA2017SharedData::regrowOnGenerationOnly = true;
+
+int OriginalEA2017SharedData::gNumberCollaboratingRobots = 2;

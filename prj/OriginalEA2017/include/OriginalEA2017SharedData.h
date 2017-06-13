@@ -48,6 +48,9 @@ class OriginalEA2017SharedData {
     static int gUpdateGC;
 
     static double gSelPressure;
+
+    static bool regrowOnGenerationOnly;
+    static int gNumberCollaboratingRobots;
 };
 
 

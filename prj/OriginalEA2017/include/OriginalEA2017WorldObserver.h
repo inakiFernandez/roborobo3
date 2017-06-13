@@ -31,10 +31,11 @@ class OriginalEA2017WorldObserver : public WorldObserver
         std::ofstream logItGatheredFile;
         std::ofstream logChangesColorFile;
         std::ofstream logGivenRewardFile;
-
+        std::ofstream logRobotsPerItemFile;
         std::vector<int> itemCounts;
         double _averageReward;
         double _nbRobotsCorrect;
+        int nbCollectedItems;
 
 
 	protected:

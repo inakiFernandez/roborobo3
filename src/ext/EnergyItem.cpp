@@ -58,7 +58,7 @@ void EnergyItem::isWalked( int __idAgent )
 
     double energyRequestedValueByRobot;
     double energyProvided;
-    
+
     switch ( energyMode )
     {
         case 0: // give all
